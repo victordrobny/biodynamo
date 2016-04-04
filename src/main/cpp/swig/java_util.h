@@ -21,16 +21,14 @@ class JavaUtil {
    * returns a
    */
   virtual std::array<int, 4> generateTriangleOrder() {
-    throw std::logic_error(
-        "JavaUtil::generateTriangleOrder must never be called - Java must provide implementation at this point");
+    return {0, 1, 2, 3};
   }
 
   /**
    * redirects call, because static methods cannot be handled by SWIG direcotr
    */
   virtual std::shared_ptr<spatial_organization::OpenTriangleOrganizer<T>> oto_createSimpleOpenTriangleOrganizer() {
-    throw std::logic_error(
-        "JavaUtil::oto_createSimpleOpenTriangleOrganizer must never be called - Java must provide implementation at this point");
+    return spatial_organization::OpenTriangleOrganizer<T>::createSimpleOpenTriangleOrganizer();
   }
 };
 

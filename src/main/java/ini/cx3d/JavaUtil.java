@@ -27,12 +27,13 @@ public class JavaUtil extends JavaUtilT_PhysicalNode {
 
     @Override
     public int[] generateTriangleOrder() {
-        Collections.shuffle(list, NewDelaunayTest.rand);
-        int[] ret = new int[4];
-        for (int i = 0; i < list.size(); i++) {
-            ret[i] = list.get(i);
-        }
-        return ret;
+        return new int[]{0, 1, 2, 3};
+//        Collections.shuffle(list, NewDelaunayTest.rand);
+//        int[] ret = new int[4];
+//        for (int i = 0; i < list.size(); i++) {
+//            ret[i] = list.get(i);
+//        }
+//        return ret;
     }
 
     public double[] matrixRandomNoise3(double k){

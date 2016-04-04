@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.9)
-project(directory_test)
+project(cx3d-cpp)
 #set(CMAKE_BUILD_TYPE Release)
 
 # include custom cmake files
@@ -31,7 +31,7 @@ if(COMPILER_SUPPORTS_CXX11)
 elseif(COMPILER_SUPPORTS_CXX0X)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 else()
-        message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
+    message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
 #--------------------- setup GMP ------------------------------
@@ -56,12 +56,12 @@ include_directories(${CPP_MAIN_SRC_PATH}/include/physics)
 include_directories(${CPP_MAIN_SRC_PATH}/swig)
 
 #add the sources into the project
-file(GLOB SOURCES "${CPP_MAIN_SRC_PATH}/src/*.cc")
-file(GLOB SOURCES "${CPP_MAIN_SRC_PATH}/src/spatial_organization/*.cc")
-file(GLOB SOURCES "${CPP_MAIN_SRC_PATH}/src/physics/*.cc")
-file(GLOB SOURCES "${CPP_MAIN_SRC_PATH}/src/local_biology/*.cc")
+file(GLOB SOURCES "${CPP_MAIN_SRC_PATH}/src/*.cc"
+     "${CPP_MAIN_SRC_PATH}/src/spatial_organization/*.cc"
+     "${CPP_MAIN_SRC_PATH}/src/physics/*.cc"
+     "${CPP_MAIN_SRC_PATH}/src/local_biology/*.cc")
 
 #--------------------- build cx3d-cpp  ----------------
-#add_library(cx3d-cpp SHARED ${SOURCES})
+# add_library(cx3d-cpp SHARED ${SOURCES})
 add_executable(cx3d-cpp ${SOURCES})
 target_link_libraries(cx3d-cpp ${GMP_LIBRARY})
