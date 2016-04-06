@@ -29,7 +29,7 @@ class AbstractLocalBiologyModule : public LocalBiologyModule {
   }
 
   virtual void run() override {
-    throw std::logic_error(
+    //fnoexceptionthrow std::logic_error(
         "AbstractLocalBiologyModule::run must never be called - Java must provide implementation at this point");
   }
 
@@ -42,7 +42,7 @@ class AbstractLocalBiologyModule : public LocalBiologyModule {
   }
 
   virtual std::shared_ptr<LocalBiologyModule> getCopy() const override {
-    throw std::logic_error(
+    //fnoexceptionthrow std::logic_error(
         "AbstractLocalBiologyModule::getCopy must never be called - Java must provide implementation at this point");
   }
 

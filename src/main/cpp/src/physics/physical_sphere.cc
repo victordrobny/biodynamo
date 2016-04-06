@@ -158,7 +158,7 @@ void PhysicalSphere::setSomaElement(const std::shared_ptr<local_biology::SomaEle
   if (soma_element != nullptr) {
     soma_element_ = soma_element;
   } else {
-    throw std::logic_error("ERROR  PhysicalSphere: somaElement already exists");
+    //fnoexceptionthrow std::logic_error("ERROR  PhysicalSphere: somaElement already exists");
   }
 }
 
@@ -394,7 +394,7 @@ void PhysicalSphere::runPhysics() {
       auto n = std::static_pointer_cast<PhysicalObject>(neighbor);
       // if it is a direct relative, we don't take it into account
       if (neighbor->isAPhysicalCylinder()
-          && STLUtil::listContains(daughters_, std::static_pointer_cast<PhysicalCylinder>(neighbor))) {  // no physical effect of a member of the family...
+          && STLUtil::vectorContains(daughters_, std::static_pointer_cast<PhysicalCylinder>(neighbor))) {  // no physical effect of a member of the family...
         continue;
       }
       // if we have a PhysicalBond with him, we also don't take it into account
@@ -520,7 +520,7 @@ std::array<double, 3> PhysicalSphere::getAxis() const {
   return z_axis_;
 }
 
-std::list<std::shared_ptr<PhysicalCylinder>> PhysicalSphere::getDaughters() const {
+std::vector<std::shared_ptr<PhysicalCylinder>> PhysicalSphere::getDaughters() const {
   return daughters_;
 }
 
@@ -623,7 +623,7 @@ std::shared_ptr<local_biology::CellElement> PhysicalSphere::getCellElement() con
 }
 
 bool PhysicalSphere::isRelative(const std::shared_ptr<PhysicalObject>& po) const {
-  return po->isAPhysicalCylinder() && STLUtil::listContains(daughters_, std::static_pointer_cast<PhysicalCylinder>(po));
+  return po->isAPhysicalCylinder() && STLUtil::vectorContains(daughters_, std::static_pointer_cast<PhysicalCylinder>(po));
 }
 
 double PhysicalSphere::getLength() const {
@@ -638,7 +638,7 @@ std::array<double, 3> PhysicalSphere::forceTransmittedFromDaugtherToMother(
 void PhysicalSphere::removeDaugther(const std::shared_ptr<PhysicalObject>& po) {
   if (po->isAPhysicalCylinder()) {
     auto daughter = std::static_pointer_cast<PhysicalCylinder>(po);
-    daughters_.remove(daughter);
+    STLUtil::vectorRemove(daughters_, daughter);
     daughters_coord_.erase(daughter);
   }
 }
@@ -648,7 +648,7 @@ void PhysicalSphere::updateRelative(const std::shared_ptr<PhysicalObject>& old_r
   std::array<double, 3> coord = daughters_coord_[std::static_pointer_cast<PhysicalCylinder>(old_rel)];
   auto old_cyl = std::static_pointer_cast<PhysicalCylinder>(old_rel);
   auto new_cyl = std::static_pointer_cast<PhysicalCylinder>(new_rel);
-  daughters_.remove(old_cyl);
+  STLUtil::vectorRemove(daughters_, old_cyl);
   daughters_.push_back(new_cyl);
   daughters_coord_[new_cyl] = coord;
 }

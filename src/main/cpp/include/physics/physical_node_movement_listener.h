@@ -1,7 +1,7 @@
 #ifndef PHYSICS_PHYSICAL_NODE_MOVEMENT_LISTENER_H_
 #define PHYSICS_PHYSICAL_NODE_MOVEMENT_LISTENER_H_
 
-#include <list>
+#include <vector> //former list
 #include <vector>
 #include <array>
 #include <memory>
@@ -119,7 +119,7 @@ class PhysicalNodeMovementListener : public spatial_organization::SpatialOrganiz
   /**
    * all the neighbors of the PhysicalNode.
    */
-  std::list<std::shared_ptr<PhysicalNode>> neighbors_before_;
+  std::vector<std::shared_ptr<PhysicalNode>> neighbors_before_;
 };
 
 }  // namespace physics

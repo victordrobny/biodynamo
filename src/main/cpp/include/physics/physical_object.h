@@ -2,7 +2,7 @@
 #define PHYSICS_PHYSICAL_OBJECT_H_
 
 #include <string>
-#include <list>
+#include <vector> //former list
 #include <array>
 #include <memory>
 #include <exception>
@@ -138,7 +138,7 @@ class PhysicalObject : public PhysicalNode {
    * Returns all the neighboring objects considered as being in contact with this PhysicalObject.
    * @return
    */
-  virtual std::list<std::shared_ptr<PhysicalObject>> getPhysicalObjectsInContact();  //todo change to vector
+  virtual std::vector<std::shared_ptr<PhysicalObject>> getPhysicalObjectsInContact();  //todo change to vector
 
   /**
    * Returns the position in the local coordinate system (xAxis, yXis, zAxis)
@@ -338,18 +338,18 @@ class PhysicalObject : public PhysicalNode {
 
   /** Returns the vector containing all the PhysicalBonds of this PhysicalObject.*/
   // todo change to vector if porting has been finished
-  virtual std::list<std::shared_ptr<PhysicalBond>> getPhysicalBonds() const;
+  virtual std::vector<std::shared_ptr<PhysicalBond>> getPhysicalBonds() const;
 
   /** Sets the vector containing all the PhysicalBonds of this PhysicalObject.
    * This methof should not be used during the simulation. */
-  virtual void setPhysicalBonds(const std::list<std::shared_ptr<PhysicalBond> >& physicalBonds);  //todo change to vector
+  virtual void setPhysicalBonds(const std::vector<std::shared_ptr<PhysicalBond> >& physicalBonds);  //todo change to vector
 
   /** Returns the vector containing all the Excrescences (PhysicalSpine, PhysicalBouton).*/
-  virtual std::list<std::shared_ptr<synapse::Excrescence> > getExcrescences() const;  //todo change to vector
+  virtual std::vector<std::shared_ptr<synapse::Excrescence> > getExcrescences() const;  //todo change to vector
 
   /** Sets the vector containing all the Excrescences (PhysicalSpine, PhysicalBouton).
    * This method should not be used during a simulation. */
-  virtual void setExcrescences(const std::list<std::shared_ptr<synapse::Excrescence> >& excrescences);  //todo change to vector
+  virtual void setExcrescences(const std::vector<std::shared_ptr<synapse::Excrescence> >& excrescences);  //todo change to vector
 
   /** Returns the adherence to the extracellular matrix, i.e. the static friction
    * (the minimum force amplitude needed for triggering a movement). */
@@ -419,7 +419,7 @@ class PhysicalObject : public PhysicalNode {
   /** All the intracellular and membrane-bound chemicals that are present
    *  in this PhysicalNode. */
   //virtual std::unordered_map<std::string, std::shared_ptr<IntracellularSubstance>> getIntracellularSubstances();
-  virtual std::list<std::shared_ptr<IntracellularSubstance>> getIntracellularSubstances1() const;  //todo return map after porting has been finished
+  virtual std::vector<std::shared_ptr<IntracellularSubstance>> getIntracellularSubstances1() const;  //todo return map after porting has been finished
 
   /** All the intracellular and membrane-bound chemicals that are present
    *  in this PhysicalNode. */
@@ -527,10 +527,10 @@ class PhysicalObject : public PhysicalNode {
   std::unordered_map<std::string, std::shared_ptr<IntracellularSubstance> > intracellular_substances_;
 
   /** List of the Physical bonds that this object can do (for cell adhesion where synapse formation occurs)*/
-  std::list<std::shared_ptr<PhysicalBond> > physical_bonds_;  //todo change to vector once porting has been finished
+  std::vector<std::shared_ptr<PhysicalBond> > physical_bonds_;  //todo change to vector once porting has been finished
 
   /** List of the Physical bonds that this object can do (for cell adhesion, to restore proper configuration)*/
-  std::list<std::shared_ptr<synapse::Excrescence> > excrescences_;  //todo change to vector once porting has been finished
+  std::vector<std::shared_ptr<synapse::Excrescence> > excrescences_;  //todo change to vector once porting has been finished
 
   /**
    * Tells if a PhysicalObject is still part of the simulation.

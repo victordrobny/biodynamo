@@ -2,7 +2,7 @@
 #define SPATIAL_ORGANIZATION_TETRAHEDRON_H_
 
 #include <array>
-#include <list>
+#include <vector> //former list
 #include <string>
 #include <memory>
 #include <stdexcept>
@@ -255,7 +255,7 @@ class Tetrahedron : public std::enable_shared_from_this<Tetrahedron<T>> {
    * @return A list of tetrahedra that were originally adjacent to either one
    *         of the two flat tetrahedra that were removed.
    */
-  static std::list<std::shared_ptr<Tetrahedron<T>> > remove2FlatTetrahedra(
+  static std::vector<std::shared_ptr<Tetrahedron<T>> > remove2FlatTetrahedra(
       const std::shared_ptr<Tetrahedron<T>>& tetrahedron_a,
       const std::shared_ptr<Tetrahedron<T>>& tetrahedron_b);
 
@@ -536,9 +536,9 @@ class Tetrahedron : public std::enable_shared_from_this<Tetrahedron<T>> {
   /**
    * Checks if a node may be moved to a given coordinate.
    * @param position The coordinate of interest.
-   * @throws PositionNotAllowedException If the position is equal to any endpoint of this tetrahedron.
+   * @//fnoexceptionthrows PositionNotAllowedException If the position is equal to any endpoint of this tetrahedron.
    */
-  virtual void testPosition(const std::array<double, 3>& position) const throw(std::exception);
+  virtual void testPosition(const std::array<double, 3>& position) const; //fnoexceptionthrow(std::exception);
 
   /**
    * When this tetrahedron is removed, there might still be references to

@@ -2,7 +2,7 @@
 #define JAVA_DEFINED_CLASS_TEST_H_
 
 #include <array>
-#include <list>
+#include <vector> //former list
 #include <stdexcept>
 #include <memory>
 
@@ -18,7 +18,7 @@ class NotPorted {
   }
 
   virtual int multBy2(int i) {
-    throw std::runtime_error(
+    //fnoexceptionthrow std::runtime_error(
         "must never be called - Java must provide implementation");
     return 0;
   }
@@ -69,8 +69,8 @@ class Ported {
     return std::shared_ptr<NotPorted>(not_ported_);
   }
 
-  virtual std::list<std::shared_ptr<NotPorted>> getNotPortedList(
-      const std::list<std::shared_ptr<NotPorted>>& list) {
+  virtual std::vector<std::shared_ptr<NotPorted>> getNotPortedList(
+      const std::vector<std::shared_ptr<NotPorted>>& list) {
     return list;
   }
 };
@@ -90,7 +90,7 @@ class NotPortedTemplated {
   }
 
   virtual int multBy2(int i) {
-    throw std::runtime_error(
+    //fnoexceptionthrow std::runtime_error(
         "must never be called - Java must provide implementation");
     return 0;
   }
@@ -127,8 +127,8 @@ class PortedTemplated {
     return arr;
   }
 
-  virtual std::list<std::shared_ptr<NotPortedTemplated<T>> > getNotPortedemplatedList(
-      const std::list<std::shared_ptr<NotPortedTemplated<T>> >& list) {
+  virtual std::vector<std::shared_ptr<NotPortedTemplated<T>> > getNotPortedemplatedList(
+      const std::vector<std::shared_ptr<NotPortedTemplated<T>> >& list) {
     return list;
   }
 };

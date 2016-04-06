@@ -94,7 +94,7 @@ void Plane3D<T>::initPlane(const std::array<double, 3>& direction_vector_1,
     normal_vector_ = Matrix::crossProduct(direction_vector_1, direction_vector_2);
     tolerance_ = Matrix::dot(normal_vector_, normal_vector_) * 0.000000001;
     if (tolerance_ == 0.0) {
-      throw std::range_error("tolerance was set to 0!");
+      //fnoexceptionthrow std::range_error("tolerance was set to 0!");
     }
   }
   if (normalize) {
@@ -186,4 +186,3 @@ template class Plane3D<cx3d::physics::PhysicalNode>;
 
 }  // namespace spatial_organization
 }  // namespace cx3d
-

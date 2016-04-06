@@ -155,7 +155,7 @@ class PhysicalNodeDebug : public PhysicalNode {
     logReturnVoid();
   }
 
-  std::list<std::shared_ptr<Substance>> getExtracellularSubstances() {
+  std::vector<std::shared_ptr<Substance>> getExtracellularSubstances() {
     logCallParameterless();
     auto ret = PhysicalNode::getExtracellularSubstances();
     logReturn(ret);

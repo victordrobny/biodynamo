@@ -4,12 +4,12 @@
 #include <stdint.h>
 #include <memory>
 #include <string>
-#include "gmpxx.h"
+//#include "gmpxx.h"
 
 namespace cx3d {
 namespace spatial_organization {
 
-using BigInteger = mpz_class;
+//using BigInteger = mpz_class;
 
 /**
  * Used to represent numbers as fractions. Each number therefore consists of a numerator and
@@ -50,10 +50,10 @@ class Rational : public std::enable_shared_from_this<Rational> {
   /**
    * @see static std::shared_ptr<Rational> create(long numerator, long denominator)
    */
-  static std::shared_ptr<Rational> create(const BigInteger& numerator,
-                                          const BigInteger& denominator) {
-    return std::shared_ptr<Rational>(new Rational(numerator, denominator));
-  }
+//  static std::shared_ptr<Rational> create(const BigInteger& numerator,
+//                                          const BigInteger& denominator) {
+//    return std::shared_ptr<Rational>(new Rational(numerator, denominator));
+//  }
 
   /**
    * @see static std::shared_ptr<Rational> create(long numerator, long denominator)
@@ -169,12 +169,13 @@ class Rational : public std::enable_shared_from_this<Rational> {
   /**
    * The numerator of this rational number.
    */
-  BigInteger numerator_;
+//  BigInteger numerator_;
 
   /**
    * The denominator of this rational number.
    */
-  BigInteger denominator_;
+//  BigInteger denominator_;
+  double value_;
 
 #ifdef RATIONAL_NATIVE
   Rational() = delete;
@@ -195,7 +196,7 @@ class Rational : public std::enable_shared_from_this<Rational> {
    * @param numerator The numerator of the new rational.
    * @param denominator The denominator of the new rational.
    */
-  Rational(const BigInteger& numerator, const BigInteger& denominator);
+//  Rational(const BigInteger& numerator, const BigInteger& denominator);
 
   /**
    * Creates a rational number from a <code>double</code> value.
@@ -212,14 +213,14 @@ class Rational : public std::enable_shared_from_this<Rational> {
    * @param exp The exponent.
    * @return A <code>BigInteger</code> storing the value of 2^<code>exp</code>.
    */
-  const BigInteger pow2(int exp) const;
+//  const BigInteger pow2(int exp) const;
 
-  /**
-   * Sets the BigInteger object to value
-   * @param big_int The BigInteger object whose internal representation should be changed
-   * @param value The target value which big_int should be set to
-   */
-  void setBigIntTo(BigInteger& big_int, int64_t value);
+//  /**
+//   * Sets the BigInteger object to value
+//   * @param big_int The BigInteger object whose internal representation should be changed
+//   * @param value The target value which big_int should be set to
+//   */
+//  void setBigIntTo(BigInteger& big_int, int64_t value);
 };
 
 }  // namespace spatial_organization

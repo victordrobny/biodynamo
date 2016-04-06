@@ -150,7 +150,7 @@ std::array<double, 3> Triangle3D<T>::calculateCircumSphereCenter(
     double sd = calculateSDDistance(fourth_point);
     return Matrix::add(circum_center_, Matrix::scalarMult(sd, this->normal_vector_));
   }
-  throw std::logic_error("could not calculate circum sphere, because triangle is infinite");
+  //fnoexceptionthrow std::logic_error("could not calculate circum sphere, because triangle is infinite");
 }
 
 template<class T>
@@ -159,7 +159,7 @@ std::array<double, 3> Triangle3D<T>::calculateCircumSphereCenterIfEasy(
   if (circum_center_updated_) {
     return calculateCircumSphereCenter(fourth_point);
   }
-  throw std::logic_error("could not calculate circum sphere, because triangle is infinite");
+  //fnoexceptionthrow std::logic_error("could not calculate circum sphere, because triangle is infinite");
 }
 
 template<class T>
@@ -227,7 +227,7 @@ std::shared_ptr<Tetrahedron<T>> Triangle3D<T>::getOppositeTetrahedron(
   } else if (adjacent_tetrahedra_[1] == incident_tetrahedron) {
     return adjacent_tetrahedra_[0];
   } else {
-    std::cout << __FUNCTION__ << std::endl; throw std::invalid_argument("Tetrahedron not known!");
+    std::cout << __FUNCTION__ << std::endl; //fnoexceptionthrow std::invalid_argument("Tetrahedron not known!");
   }
 }
 
@@ -281,8 +281,8 @@ void Triangle3D<T>::orientToSide(const std::array<double, 3>& position) {
       auto dot_2 = normal_vector->dotProduct(ExactVector::create(position));
       int comparison = dot_1->compareTo(dot_2);
       if (comparison == 0) {
-        throw std::logic_error(
-            "The triangle cannot be oriented to because that point lies in the plane!");
+        //fnoexceptionthrow std::logic_error(
+//            "The triangle cannot be oriented to because that point lies in the plane!");
       }
       upper_side_positive_ = comparison < 0;
     }
@@ -294,7 +294,7 @@ void Triangle3D<T>::orientToOpenSide() {
   if (!isInfinite()) {
     if (adjacent_tetrahedra_[0].get() == nullptr) {
       if (adjacent_tetrahedra_[1].get() == nullptr) {
-        throw std::logic_error("The triangle has two open sides!");
+        //fnoexceptionthrow std::logic_error("The triangle has two open sides!");
       }
       if (!adjacent_tetrahedra_[1]->isInfinite()) {
         orientToSide(
@@ -308,7 +308,7 @@ void Triangle3D<T>::orientToOpenSide() {
         upper_side_positive_ ^= true;
       }
     } else {
-      throw std::logic_error("The triangle has no open side!");
+      //fnoexceptionthrow std::logic_error("The triangle has no open side!");
     }
   }
 }

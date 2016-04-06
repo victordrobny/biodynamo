@@ -1,7 +1,7 @@
 #ifndef SPATIAL_ORGANIZATION_BINARY_TREE_ELEMENT_H_
 #define SPATIAL_ORGANIZATION_BINARY_TREE_ELEMENT_H_
 
-#include <list>
+#include <vector> //former list
 #include <memory>
 #include <string>
 
@@ -28,7 +28,7 @@ class BinaryTreeElement {
                       BinaryTreeElement<T>* parent);
 
   // todo replace with STL iterator
-  virtual std::list<std::shared_ptr<SpaceNode<T>>>inOrderTraversal() const;
+  virtual std::vector<std::shared_ptr<SpaceNode<T>>>inOrderTraversal() const;
 
   std::string toString() const;
 
@@ -66,7 +66,7 @@ class TreeHead : public BinaryTreeElement<T> {
   void remove(const std::shared_ptr<SpaceNode<T>>& content,
               BinaryTreeElement<T>* parent) override;
 
-  std::list<std::shared_ptr<SpaceNode<T>>>inOrderTraversal() const override;
+  std::vector<std::shared_ptr<SpaceNode<T>>>inOrderTraversal() const override;
 
 private:
   TreeHead(const TreeHead&) = delete;

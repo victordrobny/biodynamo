@@ -252,7 +252,7 @@ class FlatTetrahedronDebug : public FlatTetrahedron<T> {
     return ret;
   }
 
-  void testPosition(const std::array<double, 3>& position) const throw(std::exception)
+  void testPosition(const std::array<double, 3>& position) const //fnoexceptionthrow(std::exception)
   override {
     logCall(position);
     FlatTetrahedron<T>::testPosition(position);

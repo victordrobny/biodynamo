@@ -234,7 +234,7 @@ class Triangle3D : public Plane3D<T>, public std::enable_shared_from_this<Triang
    * this triangle.
    * @param incident_tetrahedron A tetrahedron incident to this triangle.
    * @return The tetrahedron opposite to <code>incidentTetrahedron</code> at this triangle.
-   * @throws RuntimeException if <code>incidentTetrahedron</code> is not incident to this triangle.
+   * @//fnoexceptionthrows RuntimeException if <code>incidentTetrahedron</code> is not incident to this triangle.
    */
   virtual std::shared_ptr<Tetrahedron<T>> getOppositeTetrahedron(
       const std::shared_ptr<Tetrahedron<T>>& incident_tetrahedron) const;
@@ -259,7 +259,7 @@ class Triangle3D : public Plane3D<T>, public std::enable_shared_from_this<Triang
    * triangle a given point lies. This side is then defined to be the
    * upper side of this triangle.
    * @param position A coordinate that defines the 'upper side' of this triangle
-   *      A runtime exception is thrown if the given point lies in the plane
+   *      A runtime exception is //fnoexceptionthrown if the given point lies in the plane
    *      defined by this triangle.
    */
   virtual void orientToSide(const std::array<double, 3>& position);
@@ -268,7 +268,7 @@ class Triangle3D : public Plane3D<T>, public std::enable_shared_from_this<Triang
    * This function determines whether this triangle has a single open side.
    * If this is the case, the fourth point incident to the tetrahedron incident to this triangle
    * is defined to be on the lower side of the triangle, thereby defining the open side as the upper side.
-   * If this triangle has either two open sides or no open sides, this function throws a RuntimeException.
+   * If this triangle has either two open sides or no open sides, this function //fnoexceptionthrows a RuntimeException.
    */
   virtual void orientToOpenSide();
 

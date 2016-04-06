@@ -1,7 +1,7 @@
 #ifndef SPATIAL_ORGANIZATION_ABSTRACT_TRIANGULATION_NODE_ORGANIZER_H_
 #define SPATIAL_ORGANIZATION_ABSTRACT_TRIANGULATION_NODE_ORGANIZER_H_
 
-#include <list>
+#include <vector> //former list
 #include <memory>
 #include <string>
 
@@ -26,7 +26,7 @@ class AbstractTriangulationNodeOrganizer {
   virtual ~AbstractTriangulationNodeOrganizer() {
   }
 
-  virtual std::list<std::shared_ptr<SpaceNode<T>> > getNodes(const std::shared_ptr<SpaceNode<T>>& reference_point) = 0;
+  virtual std::vector<std::shared_ptr<SpaceNode<T>> > getNodes(const std::shared_ptr<SpaceNode<T>>& reference_point) = 0;
 
   virtual void addTriangleNodes(const std::shared_ptr<Triangle3D<T>>& triangle) = 0;
 

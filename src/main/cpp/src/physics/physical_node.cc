@@ -297,14 +297,14 @@ void PhysicalNode::removeExtracellularSubstance(const std::shared_ptr<Substance>
   extracellular_substances_.erase(is->getId());  //TODO critical
 }
 
-std::list<std::shared_ptr<Substance>> PhysicalNode::getExtracellularSubstances() const {  //todo refactor - originally returned the whole map
-  std::list<std::shared_ptr<Substance>> list;
+std::vector<std::shared_ptr<Substance>> PhysicalNode::getExtracellularSubstances() const {  //todo refactor - originally returned the whole map
+  std::vector<std::shared_ptr<Substance>> list;
   for (auto i : extracellular_substances_) {
-    list.push_front(i.second);
+    list.push_back(i.second);
   }
 
-  list.sort(
-      [](const std::shared_ptr<Substance> & a, const std::shared_ptr<Substance> & b) {return a->toString() < b->toString();});
+//  list.sort(
+//      [](const std::shared_ptr<Substance> & a, const std::shared_ptr<Substance> & b) {return a->toString() < b->toString();});
 
   return list;
 }

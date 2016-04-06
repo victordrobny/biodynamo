@@ -186,12 +186,12 @@ int Tetrahedron<T>::getEdgeNumber(int node_number_1, int node_number_2) {
 }
 
 template<class T>
-std::list<std::shared_ptr<Tetrahedron<T> > > Tetrahedron<T>::remove2FlatTetrahedra(
+std::vector<std::shared_ptr<Tetrahedron<T> > > Tetrahedron<T>::remove2FlatTetrahedra(
     const std::shared_ptr<Tetrahedron<T> >& tetrahedron_a,
     const std::shared_ptr<Tetrahedron<T> >& tetrahedron_b) {
   auto triangle_list_a = tetrahedron_a->getAdjacentTriangles();
   auto triangle_list_b = tetrahedron_b->getAdjacentTriangles();
-  std::list<std::shared_ptr<Tetrahedron<T>> > adjacent_tetrahedra;
+  std::vector<std::shared_ptr<Tetrahedron<T>> > adjacent_tetrahedra;
   std::array<double, 3> outer_triangles_a = { -1.0, -1.0, -1.0 };
   std::array<double, 3> outer_triangles_b = { -1.0, -1.0, -1.0 };
   int outer_triangle_count = 0;
@@ -492,8 +492,9 @@ int Tetrahedron<T>::getNodeNumber(const std::shared_ptr<SpaceNode<T> >& node) co
       return i;
     }
   }
-  throw std::invalid_argument(
-      "The node " + node->toString() + " is not adjacent to " + toString() + "!");
+  return -1;
+//  //fnoexceptionthrow std::invalid_argument(
+//      "The node " + node->toString() + " is not adjacent to " + toString() + "!");
 }
 
 template<class T>
@@ -503,8 +504,8 @@ int Tetrahedron<T>::getTriangleNumber(const std::shared_ptr<Triangle3D<T> >& tri
       return i;
     }
   }
-  throw std::runtime_error(
-      "The triangle " + triangle->toString() + " is not adjacent to " + toString() + "!");
+//  //fnoexceptionthrow std::runtime_error(
+//      "The triangle " + triangle->toString() + " is not adjacent to " + toString() + "!");
 }
 
 template<class T>
@@ -531,8 +532,8 @@ std::shared_ptr<Triangle3D<T> > Tetrahedron<T>::getOppositeTriangle(
     if (adjacent_nodes_[i] == node)
       return adjacent_triangles_[i];
   }
-  throw std::runtime_error(
-      "The SpaceNode " + node->toString() + " is not adjacent to the Tetrahedron " + toString());
+//  //fnoexceptionthrow std::runtime_error(
+//      "The SpaceNode " + node->toString() + " is not adjacent to the Tetrahedron " + toString());
 }
 
 template<class T>
@@ -543,8 +544,8 @@ std::shared_ptr<SpaceNode<T> > Tetrahedron<T>::getOppositeNode(
       return adjacent_nodes_[i];
     }
   }
-  throw std::runtime_error(
-      "The Triangle " + triangle->toString() + " is not adjacent to the Tetrahedron " + toString());
+//  //fnoexceptionthrow std::runtime_error(
+//      "The Triangle " + triangle->toString() + " is not adjacent to the Tetrahedron " + toString());
 }
 
 template<class T>
@@ -554,8 +555,8 @@ std::shared_ptr<Triangle3D<T> > Tetrahedron<T>::getConnectingTriangle(
     if (adjacent_triangles_[i]->isAdjacentTo(tetrahedron))
       return adjacent_triangles_[i];
   }
-  throw std::runtime_error(
-      "The Tetrahedron " + tetrahedron->toString() + " is not adjacent to " + toString() + "!");
+//  //fnoexceptionthrow std::runtime_error(
+//      "The Tetrahedron " + tetrahedron->toString() + " is not adjacent to " + toString() + "!");
 }
 
 template<class T>
@@ -565,8 +566,8 @@ int Tetrahedron<T>::getConnectingTriangleNumber(
     if (adjacent_triangles_[i]->isAdjacentTo(tetrahedron))
       return i;
   }
-  throw std::runtime_error(
-      "The Tetrahedron " + tetrahedron->toString() + " is not adjacent to " + toString() + "!");
+//  //fnoexceptionthrow std::runtime_error(
+//      "The Tetrahedron " + tetrahedron->toString() + " is not adjacent to " + toString() + "!");
 }
 
 template<class T>
@@ -656,15 +657,15 @@ std::shared_ptr<Tetrahedron<T> > Tetrahedron<T>::getAdjacentTetrahedron(int numb
 }
 
 template<class T>
-void Tetrahedron<T>::testPosition(const std::array<double, 3>& position) const
-    throw(std::exception) {
+void Tetrahedron<T>::testPosition(const std::array<double, 3>& position) const{
+    //fnoexceptionthrow(std::exception) {
   for (auto node : adjacent_nodes_) {
     if (node != nullptr) {
       auto diff = Matrix::subtract(position, node->getPosition());
       if ((std::abs(diff[0]) == 0) && (std::abs(diff[1]) == 0) && (std::abs(diff[2]) == 0)) {
-        // TODO throw new PositionNotAllowedException(node.proposeNewPosition());
+        // TODO //fnoexceptionthrow new PositionNotAllowedException(node.proposeNewPosition());
         // and write swig code to translate it into Java
-        throw std::invalid_argument("position not allowed");
+//        //fnoexceptionthrow std::invalid_argument("position not allowed");
       }
     }
   }
@@ -780,7 +781,7 @@ std::array<std::array<double, 3>, 3> Tetrahedron<T>::getPlaneNormals() const {
     }
     return ret;
   }
-  throw std::range_error("returning null array not supported");
+//  //fnoexceptionthrow std::range_error("returning null array not supported");
 }
 
 template<class T>

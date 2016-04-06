@@ -1,7 +1,7 @@
 #ifndef SPATIAL_ORGANIZATION_SPATIAL_ORGANIZATION_NODE_MOVEMENT_LISTENER_H_
 #define SPATIAL_ORGANIZATION_SPATIAL_ORGANIZATION_NODE_MOVEMENT_LISTENER_H_
 
-#include <list>
+#include <vector> //former list
 #include <array>
 #include <memory>
 

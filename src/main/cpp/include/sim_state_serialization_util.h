@@ -1,7 +1,7 @@
 #ifndef SIM_STATE_SERIALIZATION_UTIL_H_
 #define SIM_STATE_SERIALIZATION_UTIL_H_
 
-#include <list>
+#include <vector> //former list
 #include <array>
 #include <string>
 #include <sstream>
@@ -144,7 +144,7 @@ class SimStateSerializationUtil {
 
   template<class T>
   static StringBuilder& unorderedCollection(StringBuilder& sb, const string& key,
-                                            const std::list<std::shared_ptr<T> >& elements) {
+                                            const std::vector<std::shared_ptr<T> >& elements) {
     //simple implementation of unorderedCollection did not work
     //for now forward call to ordered collection (position of an element matters in equality comparisons)
     //if true position invariance in a collection is needed implement a more sophisticated solution
@@ -155,7 +155,7 @@ class SimStateSerializationUtil {
 
   template<class T>
   static StringBuilder& orderedCollection(StringBuilder& sb, const string& key,
-                                          const std::list<std::shared_ptr<T> >& elements) {
+                                          const std::vector<std::shared_ptr<T> >& elements) {
     SimStateSerializationUtil::key(sb, key).append("[");
     for (auto el : elements) {
       el->simStateToJson(sb);

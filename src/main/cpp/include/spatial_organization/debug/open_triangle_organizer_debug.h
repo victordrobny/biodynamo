@@ -31,7 +31,7 @@ class OpenTriangleOrganizerDebug : public OpenTriangleOrganizer<T> {
     logReturnVoid();
   }
 
-  std::list<std::shared_ptr<Tetrahedron<T> > > getNewTetrahedra() {
+  std::vector<std::shared_ptr<Tetrahedron<T> > > getNewTetrahedra() {
     logCallParameterless();
     auto ret = OpenTriangleOrganizer<T>::getNewTetrahedra();
     logReturn(ret);

@@ -28,48 +28,48 @@ class LocalBiologyModule : public SimStateSerializable {
   }
 
   virtual StringBuilder& simStateToJson(StringBuilder& sb) const override {
-    throw std::logic_error(
-        "LocalBiologyModule::simStateToJson must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(
+        //"LocalBiologyModule::simStateToJson must never be called - Java must provide implementation at this point");
   }
 
   /** Performs your specific action */
   virtual void run() {
-    throw std::logic_error(
-        "LocalBiologyModule::run must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(
+        //"LocalBiologyModule::run must never be called - Java must provide implementation at this point");
   }
 
   /** returns the cell element this module lives in */
   virtual std::shared_ptr<CellElement> getCellElement() const {
-    throw std::logic_error(
-        "LocalBiologyModule::getCellElement must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(
+        //"LocalBiologyModule::getCellElement must never be called - Java must provide implementation at this point");
   }
 
   /** @param cell_element the cell element this module lives in */
   virtual void setCellElement(const std::shared_ptr<CellElement>& cell_element) {
-    throw std::logic_error(
-        "LocalBiologyModule::setCellElement must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(
+        //"LocalBiologyModule::setCellElement must never be called - Java must provide implementation at this point");
   }
 
   /** returns a copy of itself */
   virtual std::shared_ptr<LocalBiologyModule> getCopy() const {
-    throw std::logic_error(
-        "LocalBiologyModule::getCopy must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(
+        //"LocalBiologyModule::getCopy must never be called - Java must provide implementation at this point");
   }
 
   /**
    * Specifies if instances of LocalBiologicalModules are are copied into new branches.
    */
   virtual bool isCopiedWhenNeuriteBranches() const {
-    throw std::logic_error(
-        "LocalBiologyModule::isCopiedWhenNeuriteBranches must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(
+        //"LocalBiologyModule::isCopiedWhenNeuriteBranches must never be called - Java must provide implementation at this point");
   }
 
   /**
    * Specifies if instances of LocalBiologicalModules are copied when the soma divides.
    */
   virtual bool isCopiedWhenSomaDivides() const {
-    throw std::logic_error(
-        "LocalBiologyModule::isCopiedWhenSomaDivides must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(
+        //"LocalBiologyModule::isCopiedWhenSomaDivides must never be called - Java must provide implementation at this point");
   }
 
   /**
@@ -77,8 +77,8 @@ class LocalBiologyModule : public SimStateSerializable {
    * (not in new branches!).
    */
   virtual bool isCopiedWhenNeuriteElongates() const {
-    throw std::logic_error(
-        "LocalBiologyModule::isCopiedWhenNeuriteElongates must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(
+        //"LocalBiologyModule::isCopiedWhenNeuriteElongates must never be called - Java must provide implementation at this point");
   }
 
   /**
@@ -86,8 +86,8 @@ class LocalBiologyModule : public SimStateSerializable {
    * extension of a new neurte from a soma.
    */
   virtual bool isCopiedWhenNeuriteExtendsFromSoma() const {
-    throw std::logic_error(
-        "LocalBiologyModule::isCopiedWhenNeuriteExtendsFromSoma must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(
+        //"LocalBiologyModule::isCopiedWhenNeuriteExtendsFromSoma must never be called - Java must provide implementation at this point");
   }
 
   /**
@@ -95,8 +95,8 @@ class LocalBiologyModule : public SimStateSerializable {
    * has just bifurcated (and is thus no longer a terminal neurite element).
    */
   virtual bool isDeletedAfterNeuriteHasBifurcated() const {
-    throw std::logic_error(
-        "LocalBiologyModule::isDeletedAfterNeuriteHasBifurcated must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(
+        //"LocalBiologyModule::isDeletedAfterNeuriteHasBifurcated must never be called - Java must provide implementation at this point");
   }
 
  private:

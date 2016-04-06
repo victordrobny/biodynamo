@@ -139,8 +139,8 @@ void BinaryTreeElement<T>::changeLink(BinaryTreeElement* old_el,
 }
 
 template<class T>
-std::list<std::shared_ptr<SpaceNode<T>>>BinaryTreeElement<T>::inOrderTraversal() const {
-  std::list<std::shared_ptr<SpaceNode<T>>> traversal;
+std::vector<std::shared_ptr<SpaceNode<T>>>BinaryTreeElement<T>::inOrderTraversal() const {
+  std::vector<std::shared_ptr<SpaceNode<T>>> traversal;
   std::stack<const BinaryTreeElement<T>*> stack;
   const BinaryTreeElement<T>* dummy = this;
   while(dummy != nullptr) {
@@ -195,11 +195,11 @@ void TreeHead<T>::remove(const std::shared_ptr<SpaceNode<T>>& content,
 }
 
 template<class T>
-std::list<std::shared_ptr<SpaceNode<T>>>TreeHead<T>::inOrderTraversal() const {
+std::vector<std::shared_ptr<SpaceNode<T>>>TreeHead<T>::inOrderTraversal() const {
   if(BinaryTreeElement<T>::bigger_ != nullptr) {
     return BinaryTreeElement<T>::bigger_->inOrderTraversal();
   }
-  return std::list<std::shared_ptr<SpaceNode<T>>>();
+  return std::vector<std::shared_ptr<SpaceNode<T>>>();
 }
 
 template class BinaryTreeElement<cx3d::physics::PhysicalNode>;

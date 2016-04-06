@@ -146,7 +146,7 @@ class PhysicalSphereDebug : public PhysicalSphere {
     return ret;
   }
 
-  std::list<std::shared_ptr<PhysicalCylinder>> getDaughters() const {
+  std::vector<std::shared_ptr<PhysicalCylinder>> getDaughters() const {
     logCallParameterless();
     auto ret = PhysicalSphere::getDaughters();
     logReturn(ret);

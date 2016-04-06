@@ -251,7 +251,7 @@ class TetrahedronDebug : public Tetrahedron<T> {
     return ret;
   }
 
-  void testPosition(const std::array<double, 3>& position) const throw(std::exception)
+  void testPosition(const std::array<double, 3>& position) const //fnoexceptionthrow(std::exception)
   override {
     logCall(position);
     Tetrahedron<T>::testPosition(position);

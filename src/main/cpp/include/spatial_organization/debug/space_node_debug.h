@@ -42,14 +42,14 @@ class SpaceNodeDebug : public SpaceNode<T> {
     logReturnVoid();
   }
 
-  std::list<std::shared_ptr<Edge<T> > > getEdges() const {
+  std::vector<std::shared_ptr<Edge<T> > > getEdges() const {
     logCallParameterless();
     auto ret = SpaceNode<T>::getEdges();
     logReturn(ret);
     return ret;
   }
 
-  std::list<std::shared_ptr<T> > getNeighbors() const {
+  std::vector<std::shared_ptr<T> > getNeighbors() const {
     logCallParameterless();
     auto ret = SpaceNode<T>::getNeighbors();
     logCall(ret);
@@ -65,7 +65,7 @@ class SpaceNodeDebug : public SpaceNode<T> {
     return ret;
   }
 
-  std::list<std::shared_ptr<T> > getPermanentListOfNeighbors() const {
+  std::vector<std::shared_ptr<T> > getPermanentListOfNeighbors() const {
     logCallParameterless();
     auto ret = SpaceNode<T>::getPermanentListOfNeighbors();
     logReturn(ret);
@@ -113,7 +113,7 @@ class SpaceNodeDebug : public SpaceNode<T> {
     logReturnVoid();
   }
 
-  std::list<std::shared_ptr<Tetrahedron<T> > > getAdjacentTetrahedra() const {
+  std::vector<std::shared_ptr<Tetrahedron<T> > > getAdjacentTetrahedra() const {
     logCallParameterless();
     auto ret = SpaceNode<T>::getAdjacentTetrahedra();
     logReturn(ret);
@@ -174,7 +174,7 @@ class SpaceNodeDebug : public SpaceNode<T> {
   }
 
   void setListenerList(
-      const std::list<std::shared_ptr<SpatialOrganizationNodeMovementListener<T> > >& listeners) {
+      const std::vector<std::shared_ptr<SpatialOrganizationNodeMovementListener<T> > >& listeners) {
     logCall(listeners);
     SpaceNode<T>::setListenerList(listeners);
     logReturnVoid();
@@ -209,7 +209,7 @@ class SpaceNodeDebug : public SpaceNode<T> {
     return ret;
   }
 
-  std::list<std::shared_ptr<Edge<T> > > getAdjacentEdges() const {
+  std::vector<std::shared_ptr<Edge<T> > > getAdjacentEdges() const {
     logCallParameterless();
     auto ret = SpaceNode<T>::getAdjacentEdges();
     logReturn(ret);
@@ -239,7 +239,7 @@ class SpaceNodeDebug : public SpaceNode<T> {
 
   void processTetrahedron(
       std::shared_ptr<Tetrahedron<T> >& tetrahedron,
-      std::list<std::shared_ptr<Triangle3D<T> > >& queue,
+      std::vector<std::shared_ptr<Triangle3D<T> > >& queue,
       std::shared_ptr<OpenTriangleOrganizer<T> >& oto) {
     logCall(tetrahedron, queue, oto);
     SpaceNode<T>::processTetrahedron(tetrahedron, queue, oto);
@@ -256,8 +256,8 @@ class SpaceNodeDebug : public SpaceNode<T> {
 
   bool removeTetrahedronDuringCleanUp(
       std::shared_ptr<Tetrahedron<T> >& tetrahedron_to_remove,
-      std::list<std::shared_ptr<Tetrahedron<T> > >& list,
-      std::list<std::shared_ptr<SpaceNode<T> > >& node_list,
+      std::vector<std::shared_ptr<Tetrahedron<T> > >& list,
+      std::vector<std::shared_ptr<SpaceNode<T> > >& node_list,
       std::shared_ptr<OpenTriangleOrganizer<T> >& oto) {
     logCall(tetrahedron_to_remove, list, node_list, oto);
     auto ret = SpaceNode<T>::removeTetrahedronDuringCleanUp(tetrahedron_to_remove, list, node_list, oto);
@@ -266,7 +266,7 @@ class SpaceNodeDebug : public SpaceNode<T> {
   }
 
   void cleanUp(
-      const std::list<std::shared_ptr<Tetrahedron<T> > >& messed_up_tetrahedra) {
+      const std::vector<std::shared_ptr<Tetrahedron<T> > >& messed_up_tetrahedra) {
     logCall(messed_up_tetrahedra);
     SpaceNode<T>::cleanUp(messed_up_tetrahedra);
     logReturnVoid();

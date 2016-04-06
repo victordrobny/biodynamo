@@ -30,7 +30,7 @@ class InterObjectForce : public SimStateSerializable {
    */
   virtual std::array<double, 3> forceOnASphereFromASphere(const std::shared_ptr<PhysicalSphere>& sphere_1,
                                                           const std::shared_ptr<PhysicalSphere>& sphere_2) const{ //todo change =0 after porting has been finished
-    throw std::logic_error("InterObjectForce::forceOnASphereFromASphere");
+    //fnoexceptionthrow std::logic_error("InterObjectForce::forceOnASphereFromASphere");
   }
 
   /**
@@ -44,7 +44,7 @@ class InterObjectForce : public SimStateSerializable {
    */
   virtual std::array<double, 4> forceOnACylinderFromASphere(const std::shared_ptr<PhysicalCylinder>& cylinder,
                                                             const std::shared_ptr<PhysicalSphere>& sphere) const{ //todo change =0 after porting has been finished
-    throw std::logic_error("InterObjectForce::forceOnACylinderFromASphere must no be called - Java must provide implementation");
+    //fnoexceptionthrow std::logic_error("InterObjectForce::forceOnACylinderFromASphere must no be called - Java must provide implementation");
   }
 
   /**
@@ -55,7 +55,7 @@ class InterObjectForce : public SimStateSerializable {
    */
   virtual std::array<double, 3> forceOnASphereFromACylinder(
       const std::shared_ptr<PhysicalSphere>& sphere, const std::shared_ptr<PhysicalCylinder>& cylinder) const { //todo change =0 after porting has been finished
-    throw std::logic_error("InterObjectForce::forceOnASphereFromACylinder must no be called - Java must provide implementation");
+    //fnoexceptionthrow std::logic_error("InterObjectForce::forceOnASphereFromACylinder must no be called - Java must provide implementation");
   }
 
   /**
@@ -68,11 +68,11 @@ class InterObjectForce : public SimStateSerializable {
    */
   virtual std::array<double, 4> forceOnACylinderFromACylinder(
       const std::shared_ptr<PhysicalCylinder>& cylinder1, const std::shared_ptr<PhysicalCylinder>& cylinder2) const { //todo change =0 after porting has been finished
-    throw std::logic_error("InterObjectForce::forceOnACylinderFromACylinder must no be called - Java must provide implementation");
+    //fnoexceptionthrow std::logic_error("InterObjectForce::forceOnACylinderFromACylinder must no be called - Java must provide implementation");
   }
 
   virtual StringBuilder& simStateToJson(StringBuilder& sb) const override { //todo change =0 after porting has been finished
-    throw std::logic_error("InterObjectForce::simStateToJson must no be called - Java must provide implementation");
+    //fnoexceptionthrow std::logic_error("InterObjectForce::simStateToJson must no be called - Java must provide implementation");
   }
 
   virtual bool equalTo(const std::shared_ptr<InterObjectForce>& other){

@@ -2,7 +2,7 @@
 #define SPATIAL_ORGANIZATION_SPATIAL_ORGANIZATION_NODE_H_
 
 #include <string>
-#include <list>
+#include <vector> //former list
 #include <array>
 #include <memory>
 
@@ -34,16 +34,16 @@ class SpatialOrganizationNode {
    * Returns a list that allows to iterate over all edges
    * incident to this node.
    */
-  virtual std::list<std::shared_ptr<Edge<T>> > getEdges() const = 0;  //TODO change to SpatialOrganizationEdge once porting has been finished
+  virtual std::vector<std::shared_ptr<Edge<T>> > getEdges() const = 0;  //TODO change to SpatialOrganizationEdge once porting has been finished
 
-  virtual std::list<std::shared_ptr<T>> getNeighbors() const = 0;
+  virtual std::vector<std::shared_ptr<T>> getNeighbors() const = 0;
 
   // todo change to interface type
   virtual std::shared_ptr<SpaceNode<T>> getNewInstance(
       const std::array<double, 3>& position,
       const std::shared_ptr<T>& user_object) = 0;
 
-  virtual std::list<std::shared_ptr<T>> getPermanentListOfNeighbors() const = 0;
+  virtual std::vector<std::shared_ptr<T>> getPermanentListOfNeighbors() const = 0;
 
   virtual std::array<double, 3> getPosition() const = 0;
 

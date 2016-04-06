@@ -4,6 +4,7 @@
 #include <array>
 #include <stdexcept>
 #include <string>
+#include <vector> //former list
 #include <list>
 #include <memory>
 
@@ -95,12 +96,12 @@ class SpaceNode : public SpatialOrganizationNode<T>,
    * @param coordinate
    *            The coordinate of interest.
    * @return A tetrahedron which contains the position of this node.
-   * @throws PositionNotAllowedException
+   * @//fnoexceptionthrows PositionNotAllowedException
    */
   static std::shared_ptr<Tetrahedron<T>> searchInitialInsertionTetrahedron(
       const std::shared_ptr<Tetrahedron<T>>& start,
       const std::array<double, 3>& coordinate);
-//        throws PositionNotAllowedException {
+//        //fnoexceptionthrows PositionNotAllowedException {
 
 #ifndef SPACENODE_NATIVE
   SpaceNode();
@@ -113,15 +114,15 @@ class SpaceNode : public SpatialOrganizationNode<T>,
       const std::shared_ptr<SpatialOrganizationNodeMovementListener<T>>& listener)
           override;
 
-  virtual std::list<std::shared_ptr<Edge<T>> > getEdges() const override;  //TODO change back to SpatialOrganizationEdge afte porting has been finished
+  virtual std::vector<std::shared_ptr<Edge<T>> > getEdges() const override;  //TODO change back to SpatialOrganizationEdge afte porting has been finished
 
-  virtual std::list<std::shared_ptr<T>> getNeighbors() const override;
+  virtual std::vector<std::shared_ptr<T>> getNeighbors() const override;
 
   virtual std::shared_ptr<SpaceNode<T>> getNewInstance(
       const std::array<double, 3>& position,
       const std::shared_ptr<T>& user_object) override;
 
-  virtual std::list<std::shared_ptr<T>> getPermanentListOfNeighbors() const
+  virtual std::vector<std::shared_ptr<T>> getPermanentListOfNeighbors() const
       override;
 
   virtual std::array<double, 3> getPosition() const override;
@@ -135,7 +136,7 @@ class SpaceNode : public SpatialOrganizationNode<T>,
 
   virtual double getVolume() const override;
 
-  virtual void moveFrom(const std::array<double, 3>& delta) override;  //fimxe throw(PositionNotAllowedException)
+  virtual void moveFrom(const std::array<double, 3>& delta) override;  //fimxe //fnoexceptionthrow(PositionNotAllowedException)
 
   virtual void remove() override;
 
@@ -144,7 +145,7 @@ class SpaceNode : public SpatialOrganizationNode<T>,
   /**
    * @return The list of tetrahedra incident to this node.
    */
-  virtual std::list<std::shared_ptr<Tetrahedron<T>> > getAdjacentTetrahedra() const;
+  virtual std::vector<std::shared_ptr<Tetrahedron<T>> > getAdjacentTetrahedra() const;
 
   /**
    * Adds an element to the list of adjacent tetrahedra incident to this node.
@@ -165,7 +166,7 @@ class SpaceNode : public SpatialOrganizationNode<T>,
   /**
    * Moves this node to a new position.
    * @param new_position The new coordinate for this node.
-   * @throws PositionNotAllowedException
+   * @//fnoexceptionthrows PositionNotAllowedException
    */
   virtual void moveTo(const std::array<double, 3>& new_position);
 
@@ -178,7 +179,7 @@ class SpaceNode : public SpatialOrganizationNode<T>,
   virtual void changeVolume(double change);
 
   /**
-   * Adds a new edge to the std::list of adjacent edges.
+   * Adds a new edge to the std::vector of adjacent edges.
    *
    * @param newEdge
    *            The edge to be added.
@@ -198,14 +199,14 @@ class SpaceNode : public SpatialOrganizationNode<T>,
    *            The other node to which the required edge should be connected
    *            to.
    * @return An edge connecting this node and <code>oppositeNode</code>. If
-   *         such an edge didn't exist in the std::list of edges incident to this
+   *         such an edge didn't exist in the std::vector of edges incident to this
    *         node, a new edge is created.
    */
   virtual std::shared_ptr<Edge<T>> searchEdge(
       const std::shared_ptr<SpaceNode<T>>& opposite_node);
 
   /**
-   * Removes a given edge from the std::list of incident edges.
+   * Removes a given edge from the std::vector of incident edges.
    *
    * @param edge
    *            The edge to be removed.
@@ -221,7 +222,7 @@ class SpaceNode : public SpatialOrganizationNode<T>,
    *            movements.
    */
   virtual void setListenerList(
-      const std::list<
+      const std::vector<
           std::shared_ptr<SpatialOrganizationNodeMovementListener<T>> >& listeners);
 
   /**
@@ -231,7 +232,7 @@ class SpaceNode : public SpatialOrganizationNode<T>,
    * @param start
    *            The starting tetrahedron.
    * @return A tetrahedron which contains the position of this node.
-   * @throws PositionNotAllowedException
+   * @//fnoexceptionthrows PositionNotAllowedException
    */
   virtual std::shared_ptr<Tetrahedron<T>> searchInitialInsertionTetrahedron(
       const std::shared_ptr<Tetrahedron<T>>& start);
@@ -245,7 +246,7 @@ class SpaceNode : public SpatialOrganizationNode<T>,
    * @param start Any tetrahedron of the triangulation which will be used as a starting point for the
    * stochastic visibility walk.
    * @return A tetrahedron which was created while inserting this node.
-   * @throws PositionNotAllowedException
+   * @//fnoexceptionthrows PositionNotAllowedException
    */
   virtual std::shared_ptr<Tetrahedron<T>> insert(
       const std::shared_ptr<Tetrahedron<T>>& start);
@@ -270,7 +271,7 @@ class SpaceNode : public SpatialOrganizationNode<T>,
    * Returns a list of all edges that are incident to this node.
    * @return A list of edges.
    */
-  virtual std::list<std::shared_ptr<Edge<T>> > getAdjacentEdges() const;
+  virtual std::vector<std::shared_ptr<Edge<T>> > getAdjacentEdges() const;
 
   /**
    * Returns a string representation of this node.
@@ -350,11 +351,11 @@ class SpaceNode : public SpatialOrganizationNode<T>,
   std::shared_ptr<T> content_;
 
   /**
-   * A std::list of std::listener objects that are called whenever this node is beeing
+   * A std::vector of std::vectorener objects that are called whenever this node is beeing
    * moved.
    */
-  // LinkedList<SpatialOrganizationNodeMovementListener<T>> std::listeners = null;
-  std::list<std::shared_ptr<SpatialOrganizationNodeMovementListener<T>> > listeners_;
+  // LinkedList<SpatialOrganizationNodeMovementListener<T>> std::vectoreners = null;
+  std::vector<std::shared_ptr<SpatialOrganizationNodeMovementListener<T>> > listeners_;
 
   /**
    * The coordinate of this SpaceNode.
@@ -362,16 +363,16 @@ class SpaceNode : public SpatialOrganizationNode<T>,
   std::array<double, 3> position_;
 
   /**
-   * A std::list of all edges incident to this node.
+   * A std::vector of all edges incident to this node.
    */
   // LinkedList<SpatialOrganizationEdge<T>> adjacentEdges = new LinkedList<SpatialOrganizationEdge<T>>();
-  std::list<std::shared_ptr<Edge<T>> > adjacent_edges_;
+  std::vector<std::shared_ptr<Edge<T>> > adjacent_edges_;
 
   /**
-   * A std::list of all tetrahedra incident to this node.
+   * A std::vector of all tetrahedra incident to this node.
    */
   // LinkedList<Tetrahedron<T>> adjacentTetrahedra = new LinkedList<Tetrahedron<T>>();
-  std::list<std::shared_ptr<Tetrahedron<T>> > adjacent_tetrahedra_;
+  std::vector<std::shared_ptr<Tetrahedron<T>> > adjacent_tetrahedra_;
 
   /**
    * The volume associated with this SpaceNode.
@@ -389,7 +390,7 @@ class SpaceNode : public SpatialOrganizationNode<T>,
    * @param oto The open triangle organizer that keeps track of all open triangles.
    */
   void processTetrahedron(std::shared_ptr<Tetrahedron<T>>& tetrahedron,
-                          std::list<std::shared_ptr<Triangle3D<T>> >& queue,
+                          std::vector<std::shared_ptr<Triangle3D<T>> >& queue,
                           std::shared_ptr<OpenTriangleOrganizer<T>>& oto);
 
   /**
@@ -399,7 +400,7 @@ class SpaceNode : public SpatialOrganizationNode<T>,
    * @param newPosition The new coordinate to which this point should be moved to.
    * @return <code>true</code>, if the triangulation would not be corrupted by moving this node to
    * the specified position and <code>false</code>, if not.
-   * @throws PositionNotAllowedException
+   * @//fnoexceptionthrows PositionNotAllowedException
    */
   bool checkIfTriangulationIsStillValid(
       const std::array<double, 3>& new_position);
@@ -419,8 +420,8 @@ class SpaceNode : public SpatialOrganizationNode<T>,
    */
   bool removeTetrahedronDuringCleanUp(
       std::shared_ptr<Tetrahedron<T>>& tetrahedron_to_remove,
-      std::list<std::shared_ptr<Tetrahedron<T>> >& list,
-      std::list<std::shared_ptr<SpaceNode<T>> >& node_list,
+      std::vector<std::shared_ptr<Tetrahedron<T>> >& list,
+      std::vector<std::shared_ptr<SpaceNode<T>> >& node_list,
       std::shared_ptr<OpenTriangleOrganizer<T>>& oto);
   /**
    * Restores the Delaunay criterion for  a section of the triangulation which
@@ -433,7 +434,7 @@ class SpaceNode : public SpatialOrganizationNode<T>,
    * flip algorithm.
    */
   void cleanUp(
-      const std::list<std::shared_ptr<Tetrahedron<T>> >& messed_up_tetrahedra);
+      const std::vector<std::shared_ptr<Tetrahedron<T>> >& messed_up_tetrahedra);
 };
 
 }  // namespace spatial_organization

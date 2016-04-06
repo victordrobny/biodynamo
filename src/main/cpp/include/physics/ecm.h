@@ -22,8 +22,8 @@ class ECM {
 
   /** Returns true if some artificial gradient (of any sorts) have been defined.*/
   virtual bool thereAreArtificialGradients() {
-    throw std::logic_error(
-        "ECM::thereAreArtificialGradients must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(
+//        //"ECM::thereAreArtificialGradients must never be called - Java must provide implementation at this point");
   }
 
   /**
@@ -34,12 +34,12 @@ class ECM {
    */
   virtual double getValueArtificialConcentration(const std::string& nameOfTheChemical,
                                                  const std::array<double, 3>& position) {
-    throw std::logic_error(
-        "ECM::getValueArtificialConcentration must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(
+//        //"ECM::getValueArtificialConcentration must never be called - Java must provide implementation at this point");
   }
 
   virtual double getECMtime() {
-    throw std::logic_error("ECM::getECMtime must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(//"ECM::getECMtime must never be called - Java must provide implementation at this point");
   }
 
   /**
@@ -50,8 +50,8 @@ class ECM {
    */
   virtual std::array<double, 3> getGradientArtificialConcentration(const std::string& nameOfTheChemical,
                                                                    const std::array<double, 3>& position) {
-    throw std::logic_error(
-        "ECM::getGradientArtificialConcentration must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(
+//        //"ECM::getGradientArtificialConcentration must never be called - Java must provide implementation at this point");
   }
 
   /** Returns an instance of <code>Substance</code>. If a similar substance (with the same id)
@@ -63,8 +63,8 @@ class ECM {
    * @return new Substance instance
    */
   virtual std::shared_ptr<Substance> substanceInstance(const std::string& id) {
-    throw std::logic_error(
-        "ECM::substanceInstance must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(
+//        //"ECM::substanceInstance must never be called - Java must provide implementation at this point");
   }
 
   /** Returns an instance of <code>IntracellularSubstance</code>. If a similar
@@ -78,87 +78,87 @@ class ECM {
    * @return new IntracellularSubstance instance
    */
   virtual std::shared_ptr<IntracellularSubstance> intracellularSubstanceInstance(const std::string& id) {
-    throw std::logic_error(
-        "ECM::intracellularSubstanceInstance must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(
+//        //"ECM::intracellularSubstanceInstance must never be called - Java must provide implementation at this point");
   }
 
   virtual void addPhysicalCylinder(const std::shared_ptr<PhysicalCylinder>& cyl) {
-    throw std::logic_error(
-        "ECM::addPhysicalCylinder must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(
+//        //"ECM::addPhysicalCylinder must never be called - Java must provide implementation at this point");
   }
 
   virtual void removePhysicalCylinder(const std::shared_ptr<PhysicalCylinder>& cyl) {
-    throw std::logic_error(
-        "ECM::removePhysicalCylinder must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(
+        //"ECM::removePhysicalCylinder must never be called - Java must provide implementation at this point");
   }
 
   virtual void addPhysicalSphere(const std::shared_ptr<PhysicalSphere>& cyl) {
-    throw std::logic_error(
-        "ECM::addPhysicalSphere must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(
+        //"ECM::addPhysicalSphere must never be called - Java must provide implementation at this point");
   }
 
   virtual bool getArtificialWallForSpheres() {
-    throw std::logic_error(
-        "ECM::getArtificialWallForSpheres must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(
+        //"ECM::getArtificialWallForSpheres must never be called - Java must provide implementation at this point");
   }
 
   virtual bool getArtificialWallForCylinders() {
-    throw std::logic_error(
-        "ECM::getArtificialWallForCylinders must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(
+        //"ECM::getArtificialWallForCylinders must never be called - Java must provide implementation at this point");
   }
 
   virtual std::array<double, 3> forceFromArtificialWall(const std::array<double, 3>& location, double radius) {
-    throw std::logic_error(
-        "ECM::forceFromArtificialWall must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(
+        //"ECM::forceFromArtificialWall must never be called - Java must provide implementation at this point");
   }
 
   virtual double getRandomDouble1() {
-    throw std::logic_error(
-        "ECM::getRandomDouble must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(
+        //"ECM::getRandomDouble must never be called - Java must provide implementation at this point");
   }
 
   virtual double matrixNextRandomDouble(){
-    throw std::logic_error(
-            "ECM::matrixNextRandomDouble must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(
+            //"ECM::matrixNextRandomDouble must never be called - Java must provide implementation at this point");
   }
 
   virtual double exp(double d) {
-    throw std::logic_error("ECM::exp must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(//"ECM::exp must never be called - Java must provide implementation at this point");
   }
 
   virtual double cbrt(double d) {
-    throw std::logic_error("ECM::cbrt must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(//"ECM::cbrt must never be called - Java must provide implementation at this point");
   }
 
   virtual double sqrt(double d) {
-    throw std::logic_error("ECM::sqrt must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(//"ECM::sqrt must never be called - Java must provide implementation at this point");
   }
 
   virtual double cos(double d) {
-    throw std::logic_error("ECM::cos must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(//"ECM::cos must never be called - Java must provide implementation at this point");
   }
 
   virtual double sin(double d) {
-    throw std::logic_error("ECM::sin must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(//"ECM::sin must never be called - Java must provide implementation at this point");
   }
 
   virtual double atan2(double d, double d1) {
-    throw std::logic_error("ECM::atan2 must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(//"ECM::atan2 must never be called - Java must provide implementation at this point");
   }
 
   virtual std::shared_ptr<PhysicalCylinder> newPhysicalCylinder() const {
-    throw std::logic_error(
-        "ECM::newPhysicalCylinder must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(
+        //"ECM::newPhysicalCylinder must never be called - Java must provide implementation at this point");
   }
 
   virtual std::array<double, 3> matrixRandomNoise3(double k) {
-    throw std::logic_error(
-        "ECM::matrixRandomNoise must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(
+        //"ECM::matrixRandomNoise must never be called - Java must provide implementation at this point");
   }
 
   virtual std::shared_ptr<PhysicalSphere> newPhysicalSphere() {
-    throw std::logic_error(
-        "ECM::newPhysicalSphere must never be called - Java must provide implementation at this point");
+    //fnoexceptionthrow std::logic_error(
+        //"ECM::newPhysicalSphere must never be called - Java must provide implementation at this point");
   }
 };
 

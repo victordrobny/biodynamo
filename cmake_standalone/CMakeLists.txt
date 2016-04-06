@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8.9)
+set(CMAKE_CXX_COMPILER "/opt/intel/compilers_and_libraries/linux/bin/intel64/icc")
+
 project(cx3d-cpp)
-#set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_BUILD_TYPE Release)
 
 # include custom cmake files
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "../cmake/modules/")
@@ -16,7 +18,7 @@ SET(JAVA_TEST_RESOURCE_PATH ../src/test/resources)
 SET(JAVA_TEST_SWIG_PATH ../src/test/java/ini/cx3d/swig)
 
 #--------------------- set compiler flags -------------
-SET(GCC_COMPILE_FLAGS "-Wall -Wextra -g")
+SET(GCC_COMPILE_FLAGS "-w -g -O2 -xavx -fno-exceptions -qopt-report=10 -openmp-simd")
 SET(GCC_LINK_FLAGS    "")
 # append
 SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COMPILE_FLAGS}" )

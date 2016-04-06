@@ -1,7 +1,7 @@
 #ifndef PHYSICS_PHYSICAL_SPHERE_H_
 #define PHYSICS_PHYSICAL_SPHERE_H_
 
-#include <list>
+#include <vector> //former list
 #include <array>
 #include <memory>
 #include <unordered_map>
@@ -129,7 +129,7 @@ class PhysicalSphere : public PhysicalObject {
   /**
    * @return the daughters
    */
-  virtual std::list<std::shared_ptr<PhysicalCylinder>> getDaughters() const;
+  virtual std::vector<std::shared_ptr<PhysicalCylinder>> getDaughters() const;
 
   virtual void runIntracellularDiffusion() override;
 
@@ -247,7 +247,7 @@ class PhysicalSphere : public PhysicalObject {
   std::shared_ptr<local_biology::SomaElement> soma_element_ { nullptr };
 
   /* The PhysicalCylinders attached to this sphere*/
-  std::list<std::shared_ptr<PhysicalCylinder>> daughters_;
+  std::vector<std::shared_ptr<PhysicalCylinder>> daughters_;
   /* Position in local coordinates (std::shared_ptr<PhysicalObject>'s xAxis,yAxis,zAxis) of
    * the attachment point of my daughters.*/
   std::unordered_map<std::shared_ptr<PhysicalCylinder>, std::array<double, 3>, PhysicalCylinderHash,

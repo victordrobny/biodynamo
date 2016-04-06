@@ -41,8 +41,8 @@ class JavaUtil2 {
   }
 
   virtual std::array<double, 3> matrixRandomNoise3(double k) {
-    throw std::logic_error(
-        "JavaUtil::matrixRandomNoise must never be called - Java must provide implementation at this point");
+//    //fnoexceptionthrow std::logic_error(
+//        "JavaUtil::matrixRandomNoise must never be called - Java must provide implementation at this point");
   }
 };
 

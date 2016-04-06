@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <string>
-#include <list>
+#include <vector> //former list
 
 #include "spatial_organization/spatial_organization_edge.h"
 
@@ -140,7 +140,7 @@ class Edge : public SpatialOrganizationEdge<T>, public std::enable_shared_from_t
    * Returns the list of incident tetrahedra.
    * @return The list of incident tetrahedra.
    */
-  virtual std::list<std::shared_ptr<Tetrahedron<T>> > getAdjacentTetrahedra() const;
+  virtual std::vector<std::shared_ptr<Tetrahedron<T>> > getAdjacentTetrahedra() const;
 
   /**
    * Changes the cross section area of this edge.
@@ -173,7 +173,7 @@ class Edge : public SpatialOrganizationEdge<T>, public std::enable_shared_from_t
   /**
    * A list of all tetrahedra that are adjacent to this edge.
    */
-  std::list<std::shared_ptr<Tetrahedron<T>> > adjacent_tetrahedra_;
+  std::vector<std::shared_ptr<Tetrahedron<T>> > adjacent_tetrahedra_;
 
   /**
    * Stores the cross section area associated with this edge.

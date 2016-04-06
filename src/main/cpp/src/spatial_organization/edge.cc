@@ -2,6 +2,7 @@
 
 #include <sstream>
 #include <stdexcept>
+#include "stl_util.h"
 
 #include "physics/physical_node.h"
 #include "string_util.h"
@@ -27,8 +28,8 @@ std::shared_ptr<SpaceNode<T>> Edge<T>::getOpposite(
   } else if (node == b_) {
     return a_;
   } else {
-    throw std::invalid_argument(
-        "The edge " + toString() + " is not adjacent to the node " + node->toString());
+    //fnoexceptionthrow std::invalid_argument(
+//        "The edge " + toString() + " is not adjacent to the node " + node->toString());
   }
 }
 
@@ -88,7 +89,7 @@ bool Edge<T>::equals(const std::shared_ptr<SpaceNode<T>>& a,
 
 template<class T>
 void Edge<T>::removeTetrahedron(const std::shared_ptr<Tetrahedron<T>>& tetrahedron) {
-  adjacent_tetrahedra_.remove(tetrahedron);
+  STLUtil::vectorRemove(adjacent_tetrahedra_, tetrahedron);
   if (adjacent_tetrahedra_.empty()) {
     remove();
   }
@@ -110,7 +111,7 @@ void Edge<T>::remove() {
 }
 
 template<class T>
-std::list<std::shared_ptr<Tetrahedron<T>> > Edge<T>::getAdjacentTetrahedra() const {
+std::vector<std::shared_ptr<Tetrahedron<T>> > Edge<T>::getAdjacentTetrahedra() const {
   return adjacent_tetrahedra_;
 }
 

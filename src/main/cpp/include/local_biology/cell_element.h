@@ -15,11 +15,11 @@ class CellElement : public SimStateSerializable {
   }
 
   virtual StringBuilder& simStateToJson(StringBuilder& sb) const override {
-    throw std::logic_error("CellElement::simStateToJson must not be called - Java must provide implementation");
+    //fnoexceptionthrow std::logic_error("CellElement::simStateToJson must not be called - Java must provide implementation");
   }
 
   virtual std::string toString() const{
-    throw std::logic_error("CellElement::toString must not be called - Java must provide implementation");
+    //fnoexceptionthrow std::logic_error("CellElement::toString must not be called - Java must provide implementation");
   }
 };
 

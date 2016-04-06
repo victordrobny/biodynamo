@@ -40,7 +40,7 @@ class SimpleTriangulationNodeOrganizer :
   // this function on the java side
   virtual void addTriangleNodes(const std::shared_ptr<Triangle3D<T>>& triangle) override;
 
-  std::list<std::shared_ptr<SpaceNode<T>>>getNodes(const std::shared_ptr<SpaceNode<T>>& reference_point) override;
+  std::vector<std::shared_ptr<SpaceNode<T>>>getNodes(const std::shared_ptr<SpaceNode<T>>& reference_point) override;
 
   bool equalTo(const std::shared_ptr<SimpleTriangulationNodeOrganizer<T>>& other);
 

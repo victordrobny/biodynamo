@@ -49,8 +49,8 @@ StringBuilder& PhysicalObject::simStateToJson(StringBuilder& sb) const {
   SimStateSerializationUtil::keyValue(sb, "color", SimStateSerializationUtil::colorToHexString(color_.getValue()), true);
   SimStateSerializationUtil::keyValue(sb, "totalForceLastTimeStep", total_force_last_time_step_);
   SimStateSerializationUtil::map(sb, "intracellularSubstances", intracellular_substances_);
-  SimStateSerializationUtil::unorderedCollection(sb, "physicalBonds", physical_bonds_);
-  SimStateSerializationUtil::unorderedCollection(sb, "excrescences", excrescences_);
+//  SimStateSerializationUtil::unorderedCollection(sb, "physicalBonds", physical_bonds_);
+//  SimStateSerializationUtil::unorderedCollection(sb, "excrescences", excrescences_);
 
   return sb;
 }
@@ -64,7 +64,7 @@ void PhysicalObject::addExcrescence(const std::shared_ptr<synapse::Excrescence>&
 }
 
 void PhysicalObject::removeExcrescence(const std::shared_ptr<synapse::Excrescence>& ex) {
-  excrescences_.remove(ex);
+  STLUtil::vectorRemove(excrescences_, ex);
 }
 
 bool PhysicalObject::isInContact(const std::shared_ptr<PhysicalObject>& o){
@@ -75,8 +75,8 @@ bool PhysicalObject::isInContact(const std::shared_ptr<PhysicalObject>& o){
   }
 }
 
-std::list<std::shared_ptr<PhysicalObject>> PhysicalObject::getPhysicalObjectsInContact(){
-  std::list<std::shared_ptr<PhysicalObject> > po;
+std::vector<std::shared_ptr<PhysicalObject>> PhysicalObject::getPhysicalObjectsInContact(){
+  std::vector<std::shared_ptr<PhysicalObject> > po;
   for (auto n : getSoNode()->getNeighbors()) {
     if (n->isAPhysicalObject() && isInContact(std::static_pointer_cast<PhysicalObject>(n))) {
       po.push_back(std::static_pointer_cast<PhysicalObject>(n));
@@ -104,7 +104,7 @@ void PhysicalObject::addPhysicalBond(const std::shared_ptr<PhysicalBond>& bond) 
 }
 
 void PhysicalObject::removePhysicalBond(const std::shared_ptr<PhysicalBond>& bond) {
-  physical_bonds_.remove(bond);
+  STLUtil::vectorRemove(physical_bonds_, bond);
 }
 
 bool PhysicalObject::getHasAPhysicalBondWith(const std::shared_ptr<PhysicalObject>& po) {
@@ -127,8 +127,8 @@ bool PhysicalObject::removePhysicalBondWith(const std::shared_ptr<PhysicalObject
   while (it != physical_bonds_.end()) {
     auto pb = *it;
     if (po == pb->getOppositePhysicalObject(std::static_pointer_cast<PhysicalObject>(this->shared_from_this()))) {
-      physical_bonds_.remove(*it);
-      po->physical_bonds_.remove(pb);
+      physical_bonds_.erase(it);
+      po->physical_bonds_.erase(it);
       if (!removeThemAll) {
         return true;
       } else {
@@ -343,23 +343,23 @@ void PhysicalObject::setOnTheSchedulerListForPhysicalObjects(bool on_scheduler_l
   on_scheduler_list_for_physical_objects_ = on_scheduler_list;
 }
 
-std::list<std::shared_ptr<PhysicalBond>> PhysicalObject::getPhysicalBonds() const {
-  std::list<std::shared_ptr<PhysicalBond> > list;
+std::vector<std::shared_ptr<PhysicalBond>> PhysicalObject::getPhysicalBonds() const {
+  std::vector<std::shared_ptr<PhysicalBond> > list;
   for (auto pb : physical_bonds_) {
     list.push_back(pb);
   }
   return list;
 }
 
-void PhysicalObject::setPhysicalBonds(const std::list<std::shared_ptr<PhysicalBond> >& bonds) {  //todo change to vector
+void PhysicalObject::setPhysicalBonds(const std::vector<std::shared_ptr<PhysicalBond> >& bonds) {  //todo change to vector
   physical_bonds_ = bonds;
 }
 
-std::list<std::shared_ptr<synapse::Excrescence> > PhysicalObject::getExcrescences() const {  //todo change to vector
+std::vector<std::shared_ptr<synapse::Excrescence> > PhysicalObject::getExcrescences() const {  //todo change to vector
   return excrescences_;
 }
 
-void PhysicalObject::setExcrescences(const std::list<std::shared_ptr<synapse::Excrescence> >& list) {  //todo change to vector
+void PhysicalObject::setExcrescences(const std::vector<std::shared_ptr<synapse::Excrescence> >& list) {  //todo change to vector
   excrescences_ = list;
 }
 
@@ -425,8 +425,8 @@ void PhysicalObject::removeIntracellularSubstance(std::shared_ptr<IntracellularS
   intracellular_substances_.erase(is->getId());
 }
 
-std::list<std::shared_ptr<IntracellularSubstance>> PhysicalObject::getIntracellularSubstances1() const {
-  std::list<std::shared_ptr<IntracellularSubstance>> list;
+std::vector<std::shared_ptr<IntracellularSubstance>> PhysicalObject::getIntracellularSubstances1() const {
+  std::vector<std::shared_ptr<IntracellularSubstance>> list;
   for(auto el : intracellular_substances_){
     list.push_back(el.second);
   }

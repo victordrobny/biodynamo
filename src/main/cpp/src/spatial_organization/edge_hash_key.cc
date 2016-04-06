@@ -97,7 +97,7 @@ std::shared_ptr<SpaceNode<T>> EdgeHashKey<T>::oppositeNode(
   } else if (node == b_) {
     return a_;
   } else {
-    throw std::invalid_argument("Could not find an opposite node for" + node->toString());
+    //fnoexceptionthrow std::invalid_argument("Could not find an opposite node for" + node->toString());
   }
 }
 

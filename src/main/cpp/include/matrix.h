@@ -16,7 +16,7 @@ class Matrix {
    *
    * <p>
    * There is no dimension check. It <code>a.length is smaller than b.length</code>, the subtraction will occur with
-   * the first elements of vectB. In the opposite case, a IndexOutOfBoundsException will be thrown.
+   * the first elements of vectB. In the opposite case, a IndexOutOfBoundsException will be //fnoexceptionthrown.
    *
    * @param a the first vector
    * @param b the second vector
@@ -37,7 +37,7 @@ class Matrix {
    * <p>
    * There is no dimension check. If one of the vectors has more than 3 elements, only the 3 first
    * will be taken into account. If one vector is smaller, an <code>IndexOutOfBoundsException</code>
-   * will be thrown.
+   * will be //fnoexceptionthrown.
    *
    * @param a
    * @param b
@@ -61,7 +61,7 @@ class Matrix {
    * <p>
    * The determinant is only defined on a square matrix. But here is no dimension check. If the number of columns is bigger than the
    * number of lines of the second, the methods returns the determinant of a truncated matrix.
-   * In the opposite case, an <code>IndexOutOfBoundsException</code> will be thrown.
+   * In the opposite case, an <code>IndexOutOfBoundsException</code> will be //fnoexceptionthrown.
    *
    * @param A the matrix
    * @return its determinant.
@@ -94,7 +94,7 @@ class Matrix {
    * The determinant is only defined on a square matrix. But here is no dimension check.
    * If the number of columns is bigger than the number of lines of the second,
    * the methods returns the determinant of a truncated matrix.
-   * In the opposite case, an <code>IndexOutOfBoundsException</code> will be thrown.
+   * In the opposite case, an <code>IndexOutOfBoundsException</code> will be //fnoexceptionthrown.
    *
    * @param A the matrix
    * @return its determinant.
@@ -299,7 +299,7 @@ class Matrix {
     auto m = A.size();
     auto n = A[0].size();
     if (n < m) {
-      throw std::logic_error("not yet implemented");
+      //fnoexceptionthrow std::logic_error("not yet implemented");
 //      return solveQR(A, b);
     }
     if (n < 4) {
@@ -352,7 +352,7 @@ class Matrix {
       double z = det_1 * (a * (e * l - h * k) - d * (bb * l - h * j) + g * (k * bb - j * e));
       return std::array<double, N>( { x, y, z });
     } else {
-      throw std::logic_error("not implemented yet - should return null");
+      //fnoexceptionthrow std::logic_error("not implemented yet - should return null");
 //      return null;//fixme proper way to return null array
     }
   }

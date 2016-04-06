@@ -1,21 +1,21 @@
 #ifndef LIST_ITERATOR_CPP_H_
 #define LIST_ITERATOR_CPP_H_
 
-#include <list>
+#include <vector> //former list
 
 namespace cx3d {
 
 /**
  * LisIteratorCpp is a helper class used by the std_list_typemap
  * that performs all the iterator modifications needed to access
- * a std::list as AbstractSequentialList on the Java side
+ * a std::vector as AbstractSequentialList on the Java side
  */
 template<class T>
 class ListIteratorCpp {
  public:
   typedef const T& const_reference;
 
-  explicit ListIteratorCpp(std::list<T>* l)
+  explicit ListIteratorCpp(std::vector<T>* l)
       : iterator_(l->begin()),
         list_ptr_(l),
         index_(0) {
@@ -81,8 +81,8 @@ class ListIteratorCpp {
   }
 
  private:
-  typename std::list<T>::iterator iterator_;
-  std::list<T>* list_ptr_;
+  typename std::vector<T>::iterator iterator_;
+  std::vector<T>* list_ptr_;
   int index_;
 };
 

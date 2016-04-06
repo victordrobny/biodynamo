@@ -22,7 +22,7 @@ SimpleTriangulationNodeOrganizer<T>::~SimpleTriangulationNodeOrganizer() {
 }
 
 template<class T>
-std::list<std::shared_ptr<SpaceNode<T>>>SimpleTriangulationNodeOrganizer<T>::getNodes(const std::shared_ptr<SpaceNode<T>>& reference_point) {
+std::vector<std::shared_ptr<SpaceNode<T>>>SimpleTriangulationNodeOrganizer<T>::getNodes(const std::shared_ptr<SpaceNode<T>>& reference_point) {
   return tree_head_->inOrderTraversal();
 }
 

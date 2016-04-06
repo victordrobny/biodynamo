@@ -125,7 +125,7 @@ std::array<double, 3> PhysicalCylinder::originOf(const std::shared_ptr<PhysicalO
   if (daughter == daughter_left_ || daughter == daughter_right_) {
     return mass_location_;
   }
-  throw std::logic_error("PhysicalCylinder.getOrigin() says : this is not one of my relatives !!!");
+  //fnoexceptionthrow std::logic_error("PhysicalCylinder.getOrigin() says : this is not one of my relatives !!!");
 }
 
 void PhysicalCylinder::removeDaugther(const std::shared_ptr<PhysicalObject>& daughter) {
@@ -141,7 +141,7 @@ void PhysicalCylinder::removeDaugther(const std::shared_ptr<PhysicalObject>& dau
     daughter_right_ = std::shared_ptr<PhysicalCylinder> { nullptr };
     return;
   }
-  throw std::logic_error("PhysicalCylinder.removeDaugther() says : this is not one of my relatives !!!");
+  //fnoexceptionthrow std::logic_error("PhysicalCylinder.removeDaugther() says : this is not one of my relatives !!!");
 }
 
 void PhysicalCylinder::updateRelative(const std::shared_ptr<PhysicalObject>& old_relative,
@@ -158,13 +158,13 @@ void PhysicalCylinder::updateRelative(const std::shared_ptr<PhysicalObject>& old
     setDaughterRight(std::static_pointer_cast<PhysicalCylinder>(new_relative));
     return;
   }
-  throw std::logic_error("PhysicalCylinder.updateRelative() says : this is not one of my relatives !!!");
+  //fnoexceptionthrow std::logic_error("PhysicalCylinder.updateRelative() says : this is not one of my relatives !!!");
 }
 
 std::array<double, 3> PhysicalCylinder::forceTransmittedFromDaugtherToMother(const std::shared_ptr<PhysicalObject>& m) {
   if (m != mother_) {
-    throw std::logic_error(
-        "PhysicalCylinder.forceTransmittedFromDaugtherToMother() says : this is not one of my relatives !!!");
+    //fnoexceptionthrow std::logic_error(
+//        "PhysicalCylinder.forceTransmittedFromDaugtherToMother() says : this is not one of my relatives !!!");
   }
   // The inner tension is Matrix::added to the external force that was computed earlier.
   // (The reason for dividing by the actualLength is to Matrix::normalize the direction : T = T * axis/ (axis length)
@@ -300,7 +300,7 @@ std::array<std::shared_ptr<PhysicalCylinder>, 2> PhysicalCylinder::bifurcateCyli
     double length, const std::array<double, 3>& direction_1, const std::array<double, 3>& direction_2) {
   // check it is a terminal branch
   if (daughter_left_ != nullptr) {
-    throw std::logic_error("Not a terminal Branch");  //todo should return nullptr
+    //fnoexceptionthrow std::logic_error("Not a terminal Branch");  //todo should return nullptr
   }
   // create the cylinders
   auto new_branch_l = getCopy();
@@ -763,7 +763,7 @@ void PhysicalCylinder::setNeuriteElement(const std::shared_ptr<local_biology::Ne
   if (neurite_element != nullptr) {
     neurite_element_ = neurite_element;
   } else {
-    throw std::logic_error("ERROR  PhysicalCylinder: neuriteElement already exists");
+    //fnoexceptionthrow std::logic_error("ERROR  PhysicalCylinder: neuriteElement already exists");
   };
 }
 
@@ -1004,7 +1004,7 @@ std::shared_ptr<local_biology::NeuriteElement> PhysicalCylinder::insertProximalC
       auto pos = ex->getPositionOnPO();
       // transmit them to proximal cyl
       if (pos[0] < new_cylinder->actual_length_) {
-        excrescences_.remove(ex);
+        STLUtil::vectorRemove(excrescences_, ex);
         new_cylinder->addExcrescence(ex);
         ex->setPo(new_cylinder);
         it--;
