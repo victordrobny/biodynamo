@@ -10,7 +10,7 @@
 
 #include "physics/ecm.h"
 #include "physics/substance.h"
-#include "physics/debug/physical_node_debug.h"
+//#include "physics/debug/physical_node_debug.h"
 
 #include "spatial_organization/space_node.h"
 #include "spatial_organization/edge.h"
@@ -265,11 +265,11 @@ std::array<double, 3> PhysicalNode::soNodePosition() const {
   return so_node_->getPosition();
 }
 
-std::shared_ptr<spatial_organization::SpaceNode<PhysicalNode>> PhysicalNode::getSoNode() const {
+std::shared_ptr<spatial_organization::SpaceNode> PhysicalNode::getSoNode() const {
   return so_node_;
 }
 
-void PhysicalNode::setSoNode(const std::shared_ptr<spatial_organization::SpaceNode<PhysicalNode>>& son) {
+void PhysicalNode::setSoNode(const std::shared_ptr<spatial_organization::SpaceNode>& son) {
   so_node_ = son;
 }
 
@@ -340,7 +340,7 @@ void PhysicalNode::degradate(double currentEcmTime) {  //changed to proteceted
 }
 
 void PhysicalNode::diffuseEdgeAnalytically(
-    const std::shared_ptr<spatial_organization::SpatialOrganizationEdge<PhysicalNode>>& e, double current_ecm_time) {
+    const std::shared_ptr<spatial_organization::SpatialOrganizationEdge>& e, double current_ecm_time) {
   // the two PhysicalNodes
   auto n_a = this->shared_from_this();
   auto n_b = e->getOppositeElement(this->shared_from_this());

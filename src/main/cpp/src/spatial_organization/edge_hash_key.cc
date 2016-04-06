@@ -11,10 +11,10 @@
 namespace cx3d {
 namespace spatial_organization {
 
-template<class T>
-EdgeHashKey<T>::EdgeHashKey(const std::shared_ptr<SpaceNode<T>>& a,
-                            const std::shared_ptr<SpaceNode<T>>& b,
-                            const std::shared_ptr<SpaceNode<T>>& opposite_node)
+
+EdgeHashKey::EdgeHashKey(const std::shared_ptr<SpaceNode>& a,
+                            const std::shared_ptr<SpaceNode>& b,
+                            const std::shared_ptr<SpaceNode>& opposite_node)
     : a_(a),
       b_(b),
       hash_code_(0),
@@ -26,13 +26,13 @@ EdgeHashKey<T>::EdgeHashKey(const std::shared_ptr<SpaceNode<T>>& a,
   hash_code_ = std::max(a_->getId(), b_->getId()) * 11 + std::min(a_->getId(), b_->getId()) * 31;
 }
 
-template<class T>
-EdgeHashKey<T>::EdgeHashKey(const EdgeHashKey<T>& other){
+
+EdgeHashKey::EdgeHashKey(const EdgeHashKey& other){
   hash_code_ = other.hash_code_;
 }
 
-template<class T>
-EdgeHashKey<T>& EdgeHashKey<T>::operator=(const EdgeHashKey<T>& rhs) {
+
+EdgeHashKey& EdgeHashKey::operator=(const EdgeHashKey& rhs) {
   if(this == &rhs){
     return *this;
   }
@@ -44,8 +44,8 @@ EdgeHashKey<T>& EdgeHashKey<T>::operator=(const EdgeHashKey<T>& rhs) {
   return *this;
 }
 
-template<class T>
-std::string EdgeHashKey<T>::toString() const {
+
+std::string EdgeHashKey::toString() const {
   std::ostringstream str_stream;
   str_stream << "(";
   str_stream << a_->toString();
@@ -55,18 +55,18 @@ std::string EdgeHashKey<T>::toString() const {
   return str_stream.str();
 }
 
-template<class T>
-int EdgeHashKey<T>::hashCode() const {
+
+int EdgeHashKey::hashCode() const {
   return hash_code_;
 }
 
-template<class T>
-bool EdgeHashKey<T>::equalTo(const std::shared_ptr<EdgeHashKey<T>>& other) const {
+
+bool EdgeHashKey::equalTo(const std::shared_ptr<EdgeHashKey>& other) const {
   return other.get() == this;
 }
 
-template<class T>
-double EdgeHashKey<T>::getCosine(const std::array<double, 3>& fourth_point) const {
+
+double EdgeHashKey::getCosine(const std::array<double, 3>& fourth_point) const {
   auto difference = Matrix::subtract(fourth_point, a_->getPosition());
   auto cross_product = Matrix::crossProduct(ab_, difference);
   auto normal = Matrix::normalize(cross_product);
@@ -79,19 +79,19 @@ double EdgeHashKey<T>::getCosine(const std::array<double, 3>& fourth_point) cons
   return cosine;
 }
 
-template<class T>
-std::shared_ptr<SpaceNode<T>> EdgeHashKey<T>::getEndpointA() const {
+
+std::shared_ptr<SpaceNode> EdgeHashKey::getEndpointA() const {
   return a_;
 }
 
-template<class T>
-std::shared_ptr<SpaceNode<T>> EdgeHashKey<T>::getEndpointB() const {
+
+std::shared_ptr<SpaceNode> EdgeHashKey::getEndpointB() const {
   return b_;
 }
 
-template<class T>
-std::shared_ptr<SpaceNode<T>> EdgeHashKey<T>::oppositeNode(
-    const std::shared_ptr<SpaceNode<T>>& node) const {
+
+std::shared_ptr<SpaceNode> EdgeHashKey::oppositeNode(
+    const std::shared_ptr<SpaceNode>& node) const {
   if (node == a_) {
     return b_;
   } else if (node == b_) {
@@ -101,20 +101,16 @@ std::shared_ptr<SpaceNode<T>> EdgeHashKey<T>::oppositeNode(
   }
 }
 
-template<class T>
-std::size_t EdgeHashKeyHash<T>::operator()( const EdgeHashKey<T>& element) const {
+
+std::size_t EdgeHashKeyHash::operator()( const EdgeHashKey& element) const {
   return element.hash_code_;
 }
 
-template<class T>
-bool EdgeHashKeyEqual<T>::operator()(const EdgeHashKey<T>& lhs, const EdgeHashKey<T>& rhs) const {
+
+bool EdgeHashKeyEqual::operator()(const EdgeHashKey& lhs, const EdgeHashKey& rhs) const {
   return lhs.hash_code_ == rhs.hash_code_;
 }
 
-
-template class EdgeHashKey<cx3d::physics::PhysicalNode>;
-template struct EdgeHashKeyHash<cx3d::physics::PhysicalNode>;
-template struct EdgeHashKeyEqual<cx3d::physics::PhysicalNode>;
 
 }  // namespace spatial_organization
 }  // namespace cx3d

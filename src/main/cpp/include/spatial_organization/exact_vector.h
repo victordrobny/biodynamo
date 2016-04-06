@@ -45,7 +45,7 @@ class ExactVector : public std::enable_shared_from_this<ExactVector> {
    * <code>
    * template<typename ... T>
    * static std::shared_ptr<ExactVector> create(T&& ... all) {
-   *   return std::shared_ptr<ExactVector>(new ExactVector(std::forward<T>(all)...));
+   *   return std::shared_ptr<ExactVector>(new ExactVector(std::forward(all)...));
    * }
    * </code>
    */

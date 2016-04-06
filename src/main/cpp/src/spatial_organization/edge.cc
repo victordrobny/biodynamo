@@ -12,17 +12,17 @@
 namespace cx3d {
 namespace spatial_organization {
 
-template<class T>
-Edge<T>::Edge(const std::shared_ptr<SpaceNode<T>>& a, const std::shared_ptr<SpaceNode<T>>& b)
+
+Edge::Edge(const std::shared_ptr<SpaceNode>& a, const std::shared_ptr<SpaceNode>& b)
     : a_(a),
       b_(b),
       cross_section_area_(0.0),
       adjacent_tetrahedra_() {
 }
 
-template<class T>
-std::shared_ptr<SpaceNode<T>> Edge<T>::getOpposite(
-    const std::shared_ptr<const SpaceNode<T>>& node) const {
+
+std::shared_ptr<SpaceNode> Edge::getOpposite(
+    const std::shared_ptr<const SpaceNode>& node) const {
   if (node == a_) {
     return b_;
   } else if (node == b_) {
@@ -33,8 +33,8 @@ std::shared_ptr<SpaceNode<T>> Edge<T>::getOpposite(
   }
 }
 
-template<class T>
-std::shared_ptr<T> Edge<T>::getOppositeElement(const std::shared_ptr<T>& element) const {
+
+std::shared_ptr<physics::PhysicalNode> Edge::getOppositeElement(const std::shared_ptr<physics::PhysicalNode>& element) const {
   if (a_.get() != nullptr && b_.get() != nullptr) {
     if (element == a_->getUserObject()) {
       return b_->getUserObject();
@@ -42,26 +42,26 @@ std::shared_ptr<T> Edge<T>::getOppositeElement(const std::shared_ptr<T>& element
       return a_->getUserObject();
     }
   }
-  return std::shared_ptr<T>(nullptr);
+  return std::shared_ptr<physics::PhysicalNode>(nullptr);
 }
 
-template<class T>
-std::shared_ptr<T> Edge<T>::getFirstElement() const {
+
+std::shared_ptr<physics::PhysicalNode> Edge::getFirstElement() const {
   return a_->getUserObject();
 }
 
-template<class T>
-std::shared_ptr<T> Edge<T>::getSecondElement() const {
+
+std::shared_ptr<physics::PhysicalNode> Edge::getSecondElement() const {
   return b_->getUserObject();
 }
 
-template<class T>
-double Edge<T>::getCrossSection() const {
+
+double Edge::getCrossSection() const {
   return cross_section_area_;
 }
 
-template<class T>
-const std::string Edge<T>::toString() const {
+
+const std::string Edge::toString() const {
   std::ostringstream str_stream;
   str_stream << "(";
   str_stream << "Edge";
@@ -76,32 +76,32 @@ const std::string Edge<T>::toString() const {
   return str_stream.str();
 }
 
-template<class T>
-bool Edge<T>::equalTo(const std::shared_ptr<Edge<T>>& other) {
+
+bool Edge::equalTo(const std::shared_ptr<Edge>& other) {
   return other.get() == this;
 }
 
-template<class T>
-bool Edge<T>::equals(const std::shared_ptr<SpaceNode<T>>& a,
-                     const std::shared_ptr<SpaceNode<T>>& b) const {
+
+bool Edge::equals(const std::shared_ptr<SpaceNode>& a,
+                     const std::shared_ptr<SpaceNode>& b) const {
   return ((a_ == a) && (b_ == b)) || ((b_ == a) && (a_ == b));
 }
 
-template<class T>
-void Edge<T>::removeTetrahedron(const std::shared_ptr<Tetrahedron<T>>& tetrahedron) {
+
+void Edge::removeTetrahedron(const std::shared_ptr<Tetrahedron>& tetrahedron) {
   STLUtil::vectorRemove(adjacent_tetrahedra_, tetrahedron);
   if (adjacent_tetrahedra_.empty()) {
     remove();
   }
 }
 
-template<class T>
-void Edge<T>::addTetrahedron(const std::shared_ptr<Tetrahedron<T>>& tetrahedron) {
+
+void Edge::addTetrahedron(const std::shared_ptr<Tetrahedron>& tetrahedron) {
   adjacent_tetrahedra_.push_back(tetrahedron);
 }
 
-template<class T>
-void Edge<T>::remove() {
+
+void Edge::remove() {
   if (a_.get() != nullptr) {
     a_->removeEdge(this->shared_from_this());
   }
@@ -110,17 +110,17 @@ void Edge<T>::remove() {
   }
 }
 
-template<class T>
-std::vector<std::shared_ptr<Tetrahedron<T>> > Edge<T>::getAdjacentTetrahedra() const {
+
+std::vector<std::shared_ptr<Tetrahedron> > Edge::getAdjacentTetrahedra() const {
   return adjacent_tetrahedra_;
 }
 
-template<class T>
-void Edge<T>::changeCrossSectionArea(double change) {
+
+void Edge::changeCrossSectionArea(double change) {
   cross_section_area_ += change;
 }
-template<class T>
-void Edge<T>::initializationHelper() {
+
+void Edge::initializationHelper() {
   if (a_.get() != nullptr) {
     a_->addEdge(this->shared_from_this());
   }
@@ -128,8 +128,6 @@ void Edge<T>::initializationHelper() {
     b_->addEdge(this->shared_from_this());
   }
 }
-
-template class Edge<cx3d::physics::PhysicalNode>;
 
 }  // namespace spatial_organization
 }  // namespace cx3d

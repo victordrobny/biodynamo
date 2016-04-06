@@ -15,17 +15,17 @@
 namespace cx3d {
 namespace spatial_organization {
 
-template<class T> class SpaceNode;
-template<class T> class Tetrahedron;
+ class SpaceNode;
+ class Tetrahedron;
 
 /**
  * This class is used to represent an edge in a triangulation. Each edge has two endpoint and
  * additionally stores links to all tetrahedra adjacent to it.
  *
- * @param <T> The type of the user objects stored in the endpoints of an edge.
+ * @param  The type of the user objects stored in the endpoints of an edge.
  */
-template<class T>
-class Edge : public SpatialOrganizationEdge<T>, public std::enable_shared_from_this<Edge<T>> {
+
+class Edge : public SpatialOrganizationEdge, public std::enable_shared_from_this<Edge> {
  public:
 #ifndef EDGE_NATIVE
   Edge()
@@ -53,16 +53,16 @@ class Edge : public SpatialOrganizationEdge<T>, public std::enable_shared_from_t
    * <code>
    * template<typename ... T>
    * static std::shared_ptr<Edge> create(T&& ... all) {
-   *   return std::shared_ptr<Edge>(new Edge(std::forward<T>(all)...));
+   *   return std::shared_ptr<Edge>(new Edge(std::forward(all)...));
    * }
    * </code>
    */
-  static std::shared_ptr<Edge<T>> create(const std::shared_ptr<SpaceNode<T>>& a,
-                                         const std::shared_ptr<SpaceNode<T>>& b) {
+  static std::shared_ptr<Edge> create(const std::shared_ptr<SpaceNode>& a,
+                                         const std::shared_ptr<SpaceNode>& b) {
 #ifdef EDGE_DEBUG
-    std::shared_ptr<Edge<T>> edge(new EdgeDebug<T>(a, b));
+    std::shared_ptr<Edge> edge(new EdgeDebug(a, b));
 #else
-    std::shared_ptr<Edge<T>> edge(new Edge(a, b));
+    std::shared_ptr<Edge> edge(new Edge(a, b));
 #endif
     edge->initializationHelper();
     return edge;
@@ -75,23 +75,23 @@ class Edge : public SpatialOrganizationEdge<T>, public std::enable_shared_from_t
   /**
    * {@inheritDoc}
    */
-  std::shared_ptr<SpaceNode<T>> getOpposite(const std::shared_ptr<const SpaceNode<T>>& node) const
+  std::shared_ptr<SpaceNode> getOpposite(const std::shared_ptr<const SpaceNode>& node) const
       override;
 
   /**
    * {@inheritDoc}
    */
-  std::shared_ptr<T> getOppositeElement(const std::shared_ptr<T>& first) const override;
+  std::shared_ptr<physics::PhysicalNode> getOppositeElement(const std::shared_ptr<physics::PhysicalNode>& first) const override;
 
   /**
    * {@inheritDoc}
    */
-  std::shared_ptr<T> getFirstElement() const override;
+  std::shared_ptr<physics::PhysicalNode> getFirstElement() const override;
 
   /**
    * {@inheritDoc}
    */
-  std::shared_ptr<T> getSecondElement() const override;
+  std::shared_ptr<physics::PhysicalNode> getSecondElement() const override;
 
   /**
    * {@inheritDoc}
@@ -106,7 +106,7 @@ class Edge : public SpatialOrganizationEdge<T>, public std::enable_shared_from_t
   /**
    * Determines if two instances of this object are equal
    */
-  virtual bool equalTo(const std::shared_ptr<Edge<T>>& other);
+  virtual bool equalTo(const std::shared_ptr<Edge>& other);
 
   /**
    * Tests whether this edge is connecting a pair of points.
@@ -114,21 +114,21 @@ class Edge : public SpatialOrganizationEdge<T>, public std::enable_shared_from_t
    * @param b The second node.
    * @return <code>true</code>, if this edge connects <code>a</code> and <code>b</code>.
    */
-  virtual bool equals(const std::shared_ptr<SpaceNode<T>>& a,
-                      const std::shared_ptr<SpaceNode<T>>& b) const;
+  virtual bool equals(const std::shared_ptr<SpaceNode>& a,
+                      const std::shared_ptr<SpaceNode>& b) const;
   /**
    * Removes a tetrahedron from this edge's list of tetrahedra. If this edge is not incident to
    * any tetrahedra after the removal of the specified tetrahedron, the edge removes itself from
    * the triangulation by calling {@link #remove()}.
    * @param tetrahedron A tetrahedron incident to this edge which should be removed.
    */
-  virtual void removeTetrahedron(const std::shared_ptr<Tetrahedron<T>>& tetrahedron);
+  virtual void removeTetrahedron(const std::shared_ptr<Tetrahedron>& tetrahedron);
 
   /**
    * Adds a tetrahedron to this edge's list of tetrahedra.
    * @param tetrahedron A tetrahedron incident to this edge which should be added.
    */
-  virtual void addTetrahedron(const std::shared_ptr<Tetrahedron<T>>& tetrahedron);
+  virtual void addTetrahedron(const std::shared_ptr<Tetrahedron>& tetrahedron);
 
   /**
    * Removes this edge from the triangulation. To do so, the two endpoints are informed
@@ -140,7 +140,7 @@ class Edge : public SpatialOrganizationEdge<T>, public std::enable_shared_from_t
    * Returns the list of incident tetrahedra.
    * @return The list of incident tetrahedra.
    */
-  virtual std::vector<std::shared_ptr<Tetrahedron<T>> > getAdjacentTetrahedra() const;
+  virtual std::vector<std::shared_ptr<Tetrahedron> > getAdjacentTetrahedra() const;
 
   /**
    * Changes the cross section area of this edge.
@@ -156,7 +156,7 @@ class Edge : public SpatialOrganizationEdge<T>, public std::enable_shared_from_t
    * @param a The first endpoint of the new edge.
    * @param b The second endpoint of the new edge.
    */
-  Edge(const std::shared_ptr<SpaceNode<T>>& a, const std::shared_ptr<SpaceNode<T>>& b);
+  Edge(const std::shared_ptr<SpaceNode>& a, const std::shared_ptr<SpaceNode>& b);
 
  private:
 #ifdef EDGE_NATIVE
@@ -168,12 +168,12 @@ class Edge : public SpatialOrganizationEdge<T>, public std::enable_shared_from_t
   /**
    * The two endpoints of this edge.
    */
-  std::shared_ptr<SpaceNode<T>> a_, b_;
+  std::shared_ptr<SpaceNode> a_, b_;
 
   /**
    * A list of all tetrahedra that are adjacent to this edge.
    */
-  std::vector<std::shared_ptr<Tetrahedron<T>> > adjacent_tetrahedra_;
+  std::vector<std::shared_ptr<Tetrahedron> > adjacent_tetrahedra_;
 
   /**
    * Stores the cross section area associated with this edge.

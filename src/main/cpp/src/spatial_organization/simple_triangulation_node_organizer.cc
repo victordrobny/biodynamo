@@ -11,40 +11,40 @@
 namespace cx3d {
 namespace spatial_organization {
 
-template<class T>
-SimpleTriangulationNodeOrganizer<T>::SimpleTriangulationNodeOrganizer()
-    : tree_head_ { BinaryTreeElement<T>::generateTreeHead() } {
+
+SimpleTriangulationNodeOrganizer::SimpleTriangulationNodeOrganizer()
+    : tree_head_ { BinaryTreeElement::generateTreeHead() } {
 }
 
-template<class T>
-SimpleTriangulationNodeOrganizer<T>::~SimpleTriangulationNodeOrganizer() {
+
+SimpleTriangulationNodeOrganizer::~SimpleTriangulationNodeOrganizer() {
   delete tree_head_;
 }
 
-template<class T>
-std::vector<std::shared_ptr<SpaceNode<T>>>SimpleTriangulationNodeOrganizer<T>::getNodes(const std::shared_ptr<SpaceNode<T>>& reference_point) {
+
+std::vector<std::shared_ptr<SpaceNode>>SimpleTriangulationNodeOrganizer::getNodes(const std::shared_ptr<SpaceNode>& reference_point) {
   return tree_head_->inOrderTraversal();
 }
 
-template<class T>
-void SimpleTriangulationNodeOrganizer<T>::removeNode(
-    const std::shared_ptr<SpaceNode<T>>& node) {
+
+void SimpleTriangulationNodeOrganizer::removeNode(
+    const std::shared_ptr<SpaceNode>& node) {
   tree_head_->remove(node, nullptr);
 }
 
-template<class T>
-void SimpleTriangulationNodeOrganizer<T>::addNode(
-    const std::shared_ptr<SpaceNode<T>>& node) {
+
+void SimpleTriangulationNodeOrganizer::addNode(
+    const std::shared_ptr<SpaceNode>& node) {
   tree_head_->insert(node);
 }
 
-template<class T>
-std::shared_ptr<SpaceNode<T>> SimpleTriangulationNodeOrganizer<T>::getFirstNode() const {
+
+std::shared_ptr<SpaceNode> SimpleTriangulationNodeOrganizer::getFirstNode() const {
   return tree_head_->bigger_->content_;
 }
 
-template<class T>
-std::string SimpleTriangulationNodeOrganizer<T>::toString() const {
+
+std::string SimpleTriangulationNodeOrganizer::toString() const {
   std::stringstream str_stream;
   str_stream << "[";
   str_stream << StringUtil::toStr(tree_head_);
@@ -53,23 +53,19 @@ std::string SimpleTriangulationNodeOrganizer<T>::toString() const {
 }
 
 // TODO move to AbstractTriangulationNodeOrganizer once porting has been finished
-template<typename T>
-void SimpleTriangulationNodeOrganizer<T>::addTriangleNodes(
-    const std::shared_ptr<Triangle3D<T>>& triangle) {
+void SimpleTriangulationNodeOrganizer::addTriangleNodes(
+    const std::shared_ptr<Triangle3D>& triangle) {
   auto nodes = triangle->getNodes();
   addNode(nodes[1]);
   addNode(nodes[2]);
   addNode(nodes[0]);
 }
 
-template<typename T>
-bool SimpleTriangulationNodeOrganizer<T>::equalTo(
-    const std::shared_ptr<SimpleTriangulationNodeOrganizer<T>>& other) {
+bool SimpleTriangulationNodeOrganizer::equalTo(
+    const std::shared_ptr<SimpleTriangulationNodeOrganizer>& other) {
   return this == other.get();
 }
 
-template class SimpleTriangulationNodeOrganizer<cx3d::physics::PhysicalNode> ;
 
 }  // namespace spatial_organization
 }  // namespace cx3d
-

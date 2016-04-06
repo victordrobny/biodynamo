@@ -14,7 +14,7 @@
 #include "physics/physical_sphere.h"
 #include "physics/intracellular_substance.h"
 #include "physics/inter_object_force.h"
-#include "physics/debug/physical_cylinder_debug.h"
+//#include "physics/debug/physical_cylinder_debug.h"
 
 #include "synapse/excrescence.h"
 

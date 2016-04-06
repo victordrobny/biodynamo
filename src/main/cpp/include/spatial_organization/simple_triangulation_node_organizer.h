@@ -6,21 +6,21 @@
 namespace cx3d {
 namespace spatial_organization {
 
-template<class T> class BinaryTreeElement;
+ class BinaryTreeElement;
 
 /**
  * This class is a very simple implementation of {@link AbstractTriangulationNodeOrganizer}.
  * All nodes are stored in a binary tree in order to obtain a good performance when
  * checking whether a certain node is already added to this organizer.
  *
- * @param <T> The type of user objects associated with the nodes in the current triangulation.
+ * @param  The type of user objects associated with the nodes in the current triangulation.
  */
-template<class T>
+
 class SimpleTriangulationNodeOrganizer :
-    public AbstractTriangulationNodeOrganizer<T> {
+    public AbstractTriangulationNodeOrganizer {
  public:
-  static std::shared_ptr<SimpleTriangulationNodeOrganizer<T>> create() {
-    return std::shared_ptr<SimpleTriangulationNodeOrganizer<T>>(
+  static std::shared_ptr<SimpleTriangulationNodeOrganizer> create() {
+    return std::shared_ptr<SimpleTriangulationNodeOrganizer>(
         new SimpleTriangulationNodeOrganizer());
   }
 
@@ -28,27 +28,27 @@ class SimpleTriangulationNodeOrganizer :
 
   virtual ~SimpleTriangulationNodeOrganizer();
 
-  virtual void removeNode(const std::shared_ptr<SpaceNode<T>>& node) override;
+  virtual void removeNode(const std::shared_ptr<SpaceNode>& node) override;
 
-  virtual void addNode(const std::shared_ptr<SpaceNode<T>>& node) override;
+  virtual void addNode(const std::shared_ptr<SpaceNode>& node) override;
 
-  virtual std::shared_ptr<SpaceNode<T>> getFirstNode() const override;
+  virtual std::shared_ptr<SpaceNode> getFirstNode() const override;
 
   virtual std::string toString() const override;
 
   // TODO should be implemented in AbstractTriangulationNodeOrganizer, but SWIG does not generate
   // this function on the java side
-  virtual void addTriangleNodes(const std::shared_ptr<Triangle3D<T>>& triangle) override;
+  virtual void addTriangleNodes(const std::shared_ptr<Triangle3D>& triangle) override;
 
-  std::vector<std::shared_ptr<SpaceNode<T>>>getNodes(const std::shared_ptr<SpaceNode<T>>& reference_point) override;
+  std::vector<std::shared_ptr<SpaceNode>>getNodes(const std::shared_ptr<SpaceNode>& reference_point) override;
 
-  bool equalTo(const std::shared_ptr<SimpleTriangulationNodeOrganizer<T>>& other);
+  bool equalTo(const std::shared_ptr<SimpleTriangulationNodeOrganizer>& other);
 
 private:
-  BinaryTreeElement<T>* tree_head_;
+  BinaryTreeElement* tree_head_;
 
-  SimpleTriangulationNodeOrganizer(const SimpleTriangulationNodeOrganizer<T>&) = delete;
-  SimpleTriangulationNodeOrganizer& operator=(const SimpleTriangulationNodeOrganizer<T>&) = delete;
+  SimpleTriangulationNodeOrganizer(const SimpleTriangulationNodeOrganizer&) = delete;
+  SimpleTriangulationNodeOrganizer& operator=(const SimpleTriangulationNodeOrganizer&) = delete;
 };
 
 }  // namespace spatial_organization

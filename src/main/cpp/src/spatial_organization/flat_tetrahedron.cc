@@ -10,9 +10,9 @@ namespace cx3d {
 namespace spatial_organization {
 
 
-template<class T>
-void FlatTetrahedron<T>::updateCirumSphereAfterNodeMovement(
-    const std::shared_ptr<SpaceNode<T>>& moved_node) {
+
+void FlatTetrahedron::updateCirumSphereAfterNodeMovement(
+    const std::shared_ptr<SpaceNode>& moved_node) {
   for (size_t i = 0; i < 4; i++) {
     if (this->adjacent_nodes_[i] != moved_node) {
       this->adjacent_triangles_[i]->informAboutNodeMovement();
@@ -20,29 +20,29 @@ void FlatTetrahedron<T>::updateCirumSphereAfterNodeMovement(
   }
 }
 
-template<class T>
-void FlatTetrahedron<T>::calculateVolume() {
+
+void FlatTetrahedron::calculateVolume() {
   this->volume_ = 0.0;
 }
 
-template<class T>
-void FlatTetrahedron<T>::updateCrossSectionAreas() {
+
+void FlatTetrahedron::updateCrossSectionAreas() {
   for (size_t i = 0; i < 6; i++) {
     this->changeCrossSection(i, 0.0);
   }
 }
 
-template<class T>
-void FlatTetrahedron<T>::calculateCircumSphere() {
+
+void FlatTetrahedron::calculateCircumSphere() {
 }
 
-template<class T>
-bool FlatTetrahedron<T>::isFlat() const {
+
+bool FlatTetrahedron::isFlat() const {
   return true;
 }
 
-template<class T>
-int FlatTetrahedron<T>::orientation(const std::array<double, 3>& point) {
+
+int FlatTetrahedron::orientation(const std::array<double, 3>& point) {
   this->adjacent_triangles_[0]->updatePlaneEquationIfNecessary();
   int orientation = this->adjacent_triangles_[0]->orientation(point, point);
   if (orientation == 0) {
@@ -63,25 +63,25 @@ int FlatTetrahedron<T>::orientation(const std::array<double, 3>& point) {
   }
 }
 
-template<class T>
-bool FlatTetrahedron<T>::isTrulyInsideSphere(const std::array<double, 3>& point) {
+
+bool FlatTetrahedron::isTrulyInsideSphere(const std::array<double, 3>& point) {
   return orientation(point) > 0;
 }
 
-template<class T>
-bool FlatTetrahedron<T>::isInsideSphere(const std::array<double, 3>& point) {
+
+bool FlatTetrahedron::isInsideSphere(const std::array<double, 3>& point) {
   return orientation(point) >= 0;
 }
 
-template<class T>
-bool FlatTetrahedron<T>::isPointInConvexPosition(const std::array<double, 3>& point,
+
+bool FlatTetrahedron::isPointInConvexPosition(const std::array<double, 3>& point,
                                                  int connecting_triangle_number) const {
   this->adjacent_triangles_[0]->updatePlaneEquationIfNecessary();
   return this->adjacent_triangles_[0]->orientation(point, point) == 0;
 }
 
-template<class T>
-int FlatTetrahedron<T>::isInConvexPosition(const std::array<double, 3>& point,
+
+int FlatTetrahedron::isInConvexPosition(const std::array<double, 3>& point,
                                            int connecting_triangle_number) const {
   this->adjacent_triangles_[0]->updatePlaneEquationIfNecessary();
   if (this->adjacent_triangles_[0]->orientation(point, point) == 0) {
@@ -91,12 +91,11 @@ int FlatTetrahedron<T>::isInConvexPosition(const std::array<double, 3>& point,
   }
 }
 
-template<class T>
-FlatTetrahedron<T>::FlatTetrahedron()
-    : Tetrahedron<T>() {
+
+FlatTetrahedron::FlatTetrahedron()
+    : Tetrahedron() {
 }
 
-template class FlatTetrahedron<cx3d::physics::PhysicalNode>;
 
 }  // namespace spatial_organization
 }  // namespace cx3d

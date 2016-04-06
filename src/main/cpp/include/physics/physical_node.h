@@ -14,8 +14,8 @@
 namespace cx3d {
 
 namespace spatial_organization {
-template<class T> class SpaceNode;
-template<class T> class SpatialOrganizationEdge;
+class SpaceNode;
+class SpatialOrganizationEdge;
 }  // namespace spatial_organization
 
 namespace physics {
@@ -184,10 +184,10 @@ class PhysicalNode : public SimStateSerializable, public std::enable_shared_from
   /**
    * Sets the SpatialOrganizationNode (vertex in the triangulation neighboring system).
    */
-  virtual std::shared_ptr<spatial_organization::SpaceNode<PhysicalNode>> getSoNode() const;  //todo change to SpatialOrganizationNode after porting has been finished
+  virtual std::shared_ptr<spatial_organization::SpaceNode> getSoNode() const;  //todo change to SpatialOrganizationNode after porting has been finished
 
   /** Returns the SpatialOrganizationNode (vertex in the triangulation neighboring system).*/
-  virtual void setSoNode(const std::shared_ptr<spatial_organization::SpaceNode<PhysicalNode>>& son);  //todo change to SpatialOrganizationNode after porting has been finished
+  virtual void setSoNode(const std::shared_ptr<spatial_organization::SpaceNode>& son);  //todo change to SpatialOrganizationNode after porting has been finished
 
   /** if <code>true</code>, the PhysicalNode will be run by the Scheduler.**/
   virtual bool isOnTheSchedulerListForPhysicalNodes() const;
@@ -232,7 +232,7 @@ class PhysicalNode : public SimStateSerializable, public std::enable_shared_from
   /**
    *  My anchor point in the neighboring system
    */
-  std::shared_ptr<spatial_organization::SpaceNode<PhysicalNode>> so_node_;  //todo use interface type
+  std::shared_ptr<spatial_organization::SpaceNode> so_node_;  //todo use interface type
 
  private:
   static std::size_t id_counter_;
@@ -266,7 +266,7 @@ class PhysicalNode : public SimStateSerializable, public std::enable_shared_from
    * dQA/dt = diffCst*(Area/distance)*(QB/VB-QA/VA)
    */
   virtual void diffuseEdgeAnalytically(
-      const std::shared_ptr<spatial_organization::SpatialOrganizationEdge<PhysicalNode>>& e, double current_ecm_time);
+      const std::shared_ptr<spatial_organization::SpatialOrganizationEdge>& e, double current_ecm_time);
 };
 
 }  // namespace physics

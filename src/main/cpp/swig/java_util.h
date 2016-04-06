@@ -11,7 +11,7 @@ namespace cx3d {
 /**
  * Contains functions to access former static methods that are still implemented in Java
  */
-template<class T>
+
 class JavaUtil {
  public:
   virtual ~JavaUtil() {
@@ -27,8 +27,8 @@ class JavaUtil {
   /**
    * redirects call, because static methods cannot be handled by SWIG direcotr
    */
-  virtual std::shared_ptr<spatial_organization::OpenTriangleOrganizer<T>> oto_createSimpleOpenTriangleOrganizer() {
-    return spatial_organization::OpenTriangleOrganizer<T>::createSimpleOpenTriangleOrganizer();
+  virtual std::shared_ptr<spatial_organization::OpenTriangleOrganizer> oto_createSimpleOpenTriangleOrganizer() {
+    return spatial_organization::OpenTriangleOrganizer::createSimpleOpenTriangleOrganizer();
   }
 };
 

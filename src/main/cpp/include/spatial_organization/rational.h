@@ -40,7 +40,7 @@ class Rational : public std::enable_shared_from_this<Rational> {
    *
    * template<typename ... T>
    * static std::shared_ptr<Rational> create(T&& ... all) {
-   *   return std::shared_ptr<Rational>(new Rational(std::forward<T>(all)...));
+   *   return std::shared_ptr<Rational>(new Rational(std::forward(all)...));
    * }
    */
   static std::shared_ptr<Rational> create(int64_t numerator, int64_t denominator) {

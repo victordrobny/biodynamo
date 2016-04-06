@@ -24,10 +24,10 @@ std::array<double, 3> nextPos(const std::array<double, 3>& last) {
 }
 
 int main() {
-  SpaceNode<PhysicalNode>::setJavaUtil(std::shared_ptr<JavaUtil<PhysicalNode>>{new JavaUtil<PhysicalNode>()});
-  std::vector<std::shared_ptr<SpaceNode<PhysicalNode> > > space_nodes;
+  SpaceNode::setJavaUtil(std::shared_ptr<JavaUtil>{new JavaUtil()});
+  std::vector<std::shared_ptr<SpaceNode > > space_nodes;
   std::array<double, 3> pos { 463.7047970232077, 439.8653887819098, 447.1949176631939 };
-  auto initial_sn = SpaceNode<PhysicalNode>::create(pos, std::shared_ptr<PhysicalNode> { nullptr });
+  auto initial_sn = SpaceNode::create(pos, std::shared_ptr<PhysicalNode> { nullptr });
   auto last_pos = pos;
   auto start_ts = std::chrono::high_resolution_clock::now();
   for (auto i = 0; i < 2000; i++) {

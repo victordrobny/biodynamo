@@ -8,10 +8,10 @@
 namespace cx3d {
 namespace spatial_organization {
 
-template<class T> class SpaceNode;
-template<class T> class Tetrahedron;
-template<class T> struct EdgeHashKeyHash;
-template<class T> struct EdgeHashKeyEqual;
+ class SpaceNode;
+ class Tetrahedron;
+ struct EdgeHashKeyHash;
+ struct EdgeHashKeyEqual;
 
 /**
  * Class to provide hash values for edges between two nodes.
@@ -22,13 +22,13 @@ template<class T> struct EdgeHashKeyEqual;
  *
  * This class also provides basic functions for comparisons of two edges.
  *
- * @param <T> The type of user objects associated with nodes in this triangulation.
+ * @param  The type of user objects associated with nodes in this triangulation.
  */
-template<class T>
+
 class EdgeHashKey {
  public:
-  friend struct EdgeHashKeyHash<T>;
-  friend struct EdgeHashKeyEqual<T>;
+  friend struct EdgeHashKeyHash;
+  friend struct EdgeHashKeyEqual;
 #ifndef EDGEHASHKEY_NATIVE
   EdgeHashKey()
       : a_(),
@@ -47,13 +47,13 @@ class EdgeHashKey {
    * @param b The second enpoint of the represented edge.
    * @param opposite_node A node on the non-open side of this edge.
    */
-  EdgeHashKey(const std::shared_ptr<SpaceNode<T>>& a,
-              const std::shared_ptr<SpaceNode<T>>& b,
-              const std::shared_ptr<SpaceNode<T>>& opposite_node);
+  EdgeHashKey(const std::shared_ptr<SpaceNode>& a,
+              const std::shared_ptr<SpaceNode>& b,
+              const std::shared_ptr<SpaceNode>& opposite_node);
 
   EdgeHashKey(const EdgeHashKey& other);
 
-  EdgeHashKey<T>& operator=(const EdgeHashKey<T>& rhs);
+  EdgeHashKey& operator=(const EdgeHashKey& rhs);
 
   virtual ~EdgeHashKey() {
   }
@@ -74,7 +74,7 @@ class EdgeHashKey {
    * @return <code>true</code>, if other has the same endpoints as this edge.
    * <code>false</code> is returned in all other cases.
    */
-  virtual bool equalTo(const std::shared_ptr<EdgeHashKey<T>>& other) const;
+  virtual bool equalTo(const std::shared_ptr<EdgeHashKey>& other) const;
 
   /**
    * computes the cosine between this edge to another point measured at the
@@ -88,20 +88,20 @@ class EdgeHashKey {
   /**
    * @return endpoint A of this edge
    */
-  virtual std::shared_ptr<SpaceNode<T>> getEndpointA() const;
+  virtual std::shared_ptr<SpaceNode> getEndpointA() const;
 
   /**
    * @return endpoint B of this edge
    */
-  virtual std::shared_ptr<SpaceNode<T>> getEndpointB() const;
+  virtual std::shared_ptr<SpaceNode> getEndpointB() const;
 
   /**
    * Returns the opposite node of a given node if the latter is incident to this edge.
    * @param node The given node.
    * @return The incident node opposite to <code>node</code>.
    */
-  virtual std::shared_ptr<SpaceNode<T>> oppositeNode(
-      const std::shared_ptr<SpaceNode<T>>& node) const;
+  virtual std::shared_ptr<SpaceNode> oppositeNode(
+      const std::shared_ptr<SpaceNode>& node) const;
 
  private:
 #ifdef EDGEHASHKEY_NATIVE
@@ -112,7 +112,7 @@ class EdgeHashKey {
   /**
    * The endpoints of the edge for which a hash value should be calculated.
    */
-  std::shared_ptr<SpaceNode<T>> a_, b_;
+  std::shared_ptr<SpaceNode> a_, b_;
 
   /**
    * The vector connecting the positions of <code>a</code> and <code>b</code>.
@@ -131,14 +131,14 @@ class EdgeHashKey {
   int hash_code_;
 };
 
-template<class T>
+
 struct EdgeHashKeyHash {
-  std::size_t operator()(const EdgeHashKey<T>& element) const;
+  std::size_t operator()(const EdgeHashKey& element) const;
 };
 
-template<class T>
+
 struct EdgeHashKeyEqual {
-  bool operator()(const EdgeHashKey<T>& lhs, const EdgeHashKey<T>& rhs) const;
+  bool operator()(const EdgeHashKey& lhs, const EdgeHashKey& rhs) const;
 };
 
 }  // namespace spatial_organization

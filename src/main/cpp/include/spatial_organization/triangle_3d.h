@@ -16,15 +16,15 @@
 namespace cx3d {
 namespace spatial_organization {
 
-template<class T> class Tetrahedron;
-template<class T> class SpaceNode;
+ class Tetrahedron;
+ class SpaceNode;
 
-template<class T>
-class Triangle3D : public Plane3D<T>, public std::enable_shared_from_this<Triangle3D<T>> {
+
+class Triangle3D : public Plane3D, public std::enable_shared_from_this<Triangle3D> {
  public:
 #ifndef TRIANGLE3D_NATIVE
   Triangle3D()
-      : Plane3D<T>(),
+      : Plane3D(),
         adjacent_tetrahedra_(),
         nodes_(),
         circum_center_ { 0.0, 0.0, 0.0 },
@@ -53,20 +53,20 @@ class Triangle3D : public Plane3D<T>, public std::enable_shared_from_this<Triang
    * <code>
    * template<typename ... T>
    * static std::shared_ptr<Triangle3D> create(T&& ... all) {
-   *   return std::shared_ptr<Triangle3D>(new Triangle3D(std::forward<T>(all)...));
+   *   return std::shared_ptr<Triangle3D>(new Triangle3D(std::forward(all)...));
    * }
    * </code>
    */
-  static std::shared_ptr<Triangle3D<T>> create(
-      const std::shared_ptr<SpaceNode<T>>& sn_1,
-      const std::shared_ptr<SpaceNode<T>>& sn_2,
-      const std::shared_ptr<SpaceNode<T>>& sn_3,
-      const std::shared_ptr<Tetrahedron<T>>& tetrahedron_1,
-      const std::shared_ptr<Tetrahedron<T>>& tetrahedron_2) {
+  static std::shared_ptr<Triangle3D> create(
+      const std::shared_ptr<SpaceNode>& sn_1,
+      const std::shared_ptr<SpaceNode>& sn_2,
+      const std::shared_ptr<SpaceNode>& sn_3,
+      const std::shared_ptr<Tetrahedron>& tetrahedron_1,
+      const std::shared_ptr<Tetrahedron>& tetrahedron_2) {
 #ifdef TRIANGLE3D_DEBUG
-    std::shared_ptr<Triangle3D<T>> triangle(new Triangle3DDebug<T>(sn_1, sn_2, sn_3, tetrahedron_1, tetrahedron_2));
+    std::shared_ptr<Triangle3D> triangle(new Triangle3DDebug(sn_1, sn_2, sn_3, tetrahedron_1, tetrahedron_2));
 #else
-    std::shared_ptr<Triangle3D<T>> triangle(
+    std::shared_ptr<Triangle3D> triangle(
         new Triangle3D(sn_1, sn_2, sn_3, tetrahedron_1, tetrahedron_2));
 #endif
     return triangle;
@@ -136,7 +136,7 @@ class Triangle3D : public Plane3D<T>, public std::enable_shared_from_this<Triang
    * @return <code>true</code>, if both triangles are incident to the same
    *         nodes.
    */
-  virtual bool isSimilarTo(const std::shared_ptr<Triangle3D<T>>& other_triangle) const;
+  virtual bool isSimilarTo(const std::shared_ptr<Triangle3D>& other_triangle) const;
 
   /**
    * Returns the distance of the center of a circumsphere touching all points
@@ -236,14 +236,14 @@ class Triangle3D : public Plane3D<T>, public std::enable_shared_from_this<Triang
    * @return The tetrahedron opposite to <code>incidentTetrahedron</code> at this triangle.
    * @//fnoexceptionthrows RuntimeException if <code>incidentTetrahedron</code> is not incident to this triangle.
    */
-  virtual std::shared_ptr<Tetrahedron<T>> getOppositeTetrahedron(
-      const std::shared_ptr<Tetrahedron<T>>& incident_tetrahedron) const;
+  virtual std::shared_ptr<Tetrahedron> getOppositeTetrahedron(
+      const std::shared_ptr<Tetrahedron>& incident_tetrahedron) const;
 
   /**
    * Removes a given tetrahedron from the list of incident tetrahedra.
    * @param tetrahedron A tetrahedron incident to this triangle.
    */
-  virtual void removeTetrahedron(const std::shared_ptr<Tetrahedron<T>>& tetrahedron);
+  virtual void removeTetrahedron(const std::shared_ptr<Tetrahedron>& tetrahedron);
 
   /**
    * Tests whether this triangle has an open side and whether a given coordinate
@@ -317,7 +317,7 @@ class Triangle3D : public Plane3D<T>, public std::enable_shared_from_this<Triang
   /**
    * Determines if two instances of this object are equal
    */
-  virtual bool equalTo(const std::shared_ptr<Triangle3D<T>>& other) {
+  virtual bool equalTo(const std::shared_ptr<Triangle3D>& other) {
     return this == other.get();
   }
 
@@ -333,14 +333,14 @@ class Triangle3D : public Plane3D<T>, public std::enable_shared_from_this<Triang
    * @return A reference to the array storing the three endpoints of this
    * tetrahedron.
    */
-  virtual std::array<std::shared_ptr<SpaceNode<T> >, 3> getNodes() const;
+  virtual std::array<std::shared_ptr<SpaceNode >, 3> getNodes() const;
 
   /**
    * Adds an incident tetrahedron to this triangle.
    *
    * @param tetrahedron A new tetrahedron which is incident to this triangle.
    */
-  virtual void addTetrahedron(const std::shared_ptr<Tetrahedron<T>>& tetrahedron);
+  virtual void addTetrahedron(const std::shared_ptr<Tetrahedron>& tetrahedron);
 
   /**
    * Returns whether this triangle has already been tested if it is locally Delaunay.
@@ -359,7 +359,7 @@ class Triangle3D : public Plane3D<T>, public std::enable_shared_from_this<Triang
    * @param tetrahedron a tetrahedron that might be incident to this triangle.
    * @return <code>true</code>, iff the tetrahedron is incident to this triangle.
    */
-  virtual bool isAdjacentTo(const std::shared_ptr<Tetrahedron<T>>& tetrahedron) const;
+  virtual bool isAdjacentTo(const std::shared_ptr<Tetrahedron>& tetrahedron) const;
 
   /**
    * Returns whether this triangle is incident to a given node.
@@ -367,7 +367,7 @@ class Triangle3D : public Plane3D<T>, public std::enable_shared_from_this<Triang
    * @param node A node that might be incident to this triangle.
    * @return <code>true</code>, iff the node is incident to this triangle.
    */
-  virtual bool isAdjacentTo(const std::shared_ptr<SpaceNode<T>>& node) const;
+  virtual bool isAdjacentTo(const std::shared_ptr<SpaceNode>& node) const;
 
   /**
    * Tests if this triangle is not incident to any tetrahedron.
@@ -396,10 +396,10 @@ class Triangle3D : public Plane3D<T>, public std::enable_shared_from_this<Triang
    * @param tetrahedron_2
    *            The second incident tetrahedron.
    */
-  Triangle3D(const std::shared_ptr<SpaceNode<T>>& sn_1, const std::shared_ptr<SpaceNode<T>>& sn_2,
-             const std::shared_ptr<SpaceNode<T>>& sn_3,
-             const std::shared_ptr<Tetrahedron<T>>& tetrahedron_1,
-             const std::shared_ptr<Tetrahedron<T>>& tetrahedron_2);
+  Triangle3D(const std::shared_ptr<SpaceNode>& sn_1, const std::shared_ptr<SpaceNode>& sn_2,
+             const std::shared_ptr<SpaceNode>& sn_3,
+             const std::shared_ptr<Tetrahedron>& tetrahedron_1,
+             const std::shared_ptr<Tetrahedron>& tetrahedron_2);
 
   /**
    * Computes the normal vector for the plane equation of this triangle. The
@@ -427,12 +427,12 @@ class Triangle3D : public Plane3D<T>, public std::enable_shared_from_this<Triang
   /**
    * The two tetrahedra that are incident to this triangle.
    */
-  std::array<std::shared_ptr<Tetrahedron<T>>, 2> adjacent_tetrahedra_;
+  std::array<std::shared_ptr<Tetrahedron>, 2> adjacent_tetrahedra_;
 
   /**
    * The three nodes that are incident to this triangle.
    */
-  std::array<std::shared_ptr<SpaceNode<T> >, 3> nodes_;
+  std::array<std::shared_ptr<SpaceNode >, 3> nodes_;
 
   /**
    * The coordinate of this triangle's circumcenter.

@@ -19,29 +19,29 @@
 namespace cx3d {
 namespace spatial_organization {
 
-template<class T>
-std::shared_ptr<Tetrahedron<T> > Tetrahedron<T>::createInitialTetrahedron(
-    const std::shared_ptr<SpaceNode<T> >& a, const std::shared_ptr<SpaceNode<T> >& b,
-    const std::shared_ptr<SpaceNode<T> >& c, const std::shared_ptr<SpaceNode<T> >& d,
-    const std::shared_ptr<OpenTriangleOrganizer<T>>& simple_oto) {
 
-  std::shared_ptr<Tetrahedron<T>> null_tetrahedron(nullptr);
-  auto triangle_a = Triangle3D<T>::create(b, c, d, null_tetrahedron, null_tetrahedron);
-  auto triangle_b = Triangle3D<T>::create(a, c, d, null_tetrahedron, null_tetrahedron);
-  auto triangle_c = Triangle3D<T>::create(a, b, d, null_tetrahedron, null_tetrahedron);
-  auto triangle_d = Triangle3D<T>::create(a, b, c, null_tetrahedron, null_tetrahedron);
-  auto ret = Tetrahedron<T>::create(triangle_a, triangle_b, triangle_c, triangle_d, a, b, c, d);
+std::shared_ptr<Tetrahedron > Tetrahedron::createInitialTetrahedron(
+    const std::shared_ptr<SpaceNode >& a, const std::shared_ptr<SpaceNode >& b,
+    const std::shared_ptr<SpaceNode >& c, const std::shared_ptr<SpaceNode >& d,
+    const std::shared_ptr<OpenTriangleOrganizer>& simple_oto) {
 
-  std::shared_ptr<SpaceNode<T>> null_spacenode(nullptr);
-  Tetrahedron<T>::create(triangle_a, null_spacenode, simple_oto);
-  Tetrahedron<T>::create(triangle_b, null_spacenode, simple_oto);
-  Tetrahedron<T>::create(triangle_c, null_spacenode, simple_oto);
-  Tetrahedron<T>::create(triangle_d, null_spacenode, simple_oto);
+  std::shared_ptr<Tetrahedron> null_tetrahedron(nullptr);
+  auto triangle_a = Triangle3D::create(b, c, d, null_tetrahedron, null_tetrahedron);
+  auto triangle_b = Triangle3D::create(a, c, d, null_tetrahedron, null_tetrahedron);
+  auto triangle_c = Triangle3D::create(a, b, d, null_tetrahedron, null_tetrahedron);
+  auto triangle_d = Triangle3D::create(a, b, c, null_tetrahedron, null_tetrahedron);
+  auto ret = Tetrahedron::create(triangle_a, triangle_b, triangle_c, triangle_d, a, b, c, d);
+
+  std::shared_ptr<SpaceNode> null_spacenode(nullptr);
+  Tetrahedron::create(triangle_a, null_spacenode, simple_oto);
+  Tetrahedron::create(triangle_b, null_spacenode, simple_oto);
+  Tetrahedron::create(triangle_c, null_spacenode, simple_oto);
+  Tetrahedron::create(triangle_d, null_spacenode, simple_oto);
   return ret;
 }
 
-template<class T>
-void Tetrahedron<T>::calculateCircumSphere() {
+
+void Tetrahedron::calculateCircumSphere() {
   if (!isInfinite()) {
     circum_center_ = {0.0, 0.0, 0.0};
     circum_center_is_null_ = true;
@@ -50,9 +50,9 @@ void Tetrahedron<T>::calculateCircumSphere() {
   }
 }
 
-template<class T>
-void Tetrahedron<T>::updateCirumSphereAfterNodeMovement(
-    const std::shared_ptr<SpaceNode<T> >& moved_node) {
+
+void Tetrahedron::updateCirumSphereAfterNodeMovement(
+    const std::shared_ptr<SpaceNode >& moved_node) {
   int node_number = getNodeNumber(moved_node);
   if (!isInfinite()) {
     circum_center_ = {0.0, 0.0, 0.0};
@@ -66,8 +66,8 @@ void Tetrahedron<T>::updateCirumSphereAfterNodeMovement(
   }
 }
 
-template<class T>
-int Tetrahedron<T>::orientation(const std::array<double, 3>& point) {
+
+int Tetrahedron::orientation(const std::array<double, 3>& point) {
   if (!isInfinite()) {
     auto dummy = Matrix::subtract(circum_center_, point);
     double dum = Matrix::dot(dummy, dummy);
@@ -105,18 +105,18 @@ int Tetrahedron<T>::orientation(const std::array<double, 3>& point) {
   }
 }
 
-template<class T>
-bool Tetrahedron<T>::isTrulyInsideSphere(const std::array<double, 3>& point) {
+
+bool Tetrahedron::isTrulyInsideSphere(const std::array<double, 3>& point) {
   return orientation(point) > 0;
 }
 
-template<class T>
-bool Tetrahedron<T>::isInsideSphere(const std::array<double, 3>& point) {
+
+bool Tetrahedron::isInsideSphere(const std::array<double, 3>& point) {
   return orientation(point) >= 0;
 }
 
-template<class T>
-std::string Tetrahedron<T>::toString() const {
+
+std::string Tetrahedron::toString() const {
   std::ostringstream str_stream;
   str_stream << "(";
 //  for (size_t i = 0; i < adjacent_nodes_.size(); i++) {
@@ -133,24 +133,24 @@ std::string Tetrahedron<T>::toString() const {
   return str_stream.str();
 }
 
-template<class T>
-bool Tetrahedron<T>::equalTo(const std::shared_ptr<Tetrahedron<T>>& other) {
+
+bool Tetrahedron::equalTo(const std::shared_ptr<Tetrahedron>& other) {
   return other.get() == this;
 }
 
-template<class T>
-std::array<std::shared_ptr<Triangle3D<T> >, 4> Tetrahedron<T>::getAdjacentTriangles() const {
+
+std::array<std::shared_ptr<Triangle3D >, 4> Tetrahedron::getAdjacentTriangles() const {
   return adjacent_triangles_;
 }
 
-template<class T>
-bool Tetrahedron<T>::isAdjacentTo(const std::shared_ptr<SpaceNode<T> >& node) const {
+
+bool Tetrahedron::isAdjacentTo(const std::shared_ptr<SpaceNode >& node) const {
   return (adjacent_nodes_[0] == node) || (adjacent_nodes_[1] == node)
       || (adjacent_nodes_[2] == node) || (adjacent_nodes_[3] == node);
 }
 
-template<class T>
-std::shared_ptr<Tetrahedron<T> > Tetrahedron<T>::walkToPoint(
+
+std::shared_ptr<Tetrahedron > Tetrahedron::walkToPoint(
     const std::array<double, 3>& coordinate, const std::array<int, 4>& triangle_order) {
   if (!isInfinite()) {
     for (size_t i = 0; i < triangle_order.size(); i++) {
@@ -179,19 +179,19 @@ std::shared_ptr<Tetrahedron<T> > Tetrahedron<T>::walkToPoint(
   return this->shared_from_this();
 }
 
-template<class T>
-int Tetrahedron<T>::getEdgeNumber(int node_number_1, int node_number_2) {
+
+int Tetrahedron::getEdgeNumber(int node_number_1, int node_number_2) {
   int subtract = ((node_number_1 == 0) ? 1 : ((node_number_2 == 0) ? 1 : 0));
   return node_number_1 + node_number_2 - subtract;
 }
 
-template<class T>
-std::vector<std::shared_ptr<Tetrahedron<T> > > Tetrahedron<T>::remove2FlatTetrahedra(
-    const std::shared_ptr<Tetrahedron<T> >& tetrahedron_a,
-    const std::shared_ptr<Tetrahedron<T> >& tetrahedron_b) {
+
+std::vector<std::shared_ptr<Tetrahedron > > Tetrahedron::remove2FlatTetrahedra(
+    const std::shared_ptr<Tetrahedron >& tetrahedron_a,
+    const std::shared_ptr<Tetrahedron >& tetrahedron_b) {
   auto triangle_list_a = tetrahedron_a->getAdjacentTriangles();
   auto triangle_list_b = tetrahedron_b->getAdjacentTriangles();
-  std::vector<std::shared_ptr<Tetrahedron<T>> > adjacent_tetrahedra;
+  std::vector<std::shared_ptr<Tetrahedron> > adjacent_tetrahedra;
   std::array<double, 3> outer_triangles_a = { -1.0, -1.0, -1.0 };
   std::array<double, 3> outer_triangles_b = { -1.0, -1.0, -1.0 };
   int outer_triangle_count = 0;
@@ -212,7 +212,7 @@ std::vector<std::shared_ptr<Tetrahedron<T> > > Tetrahedron<T>::remove2FlatTetrah
   tetrahedron_a->remove();
   tetrahedron_b->remove();
   for (int i = 0; i < outer_triangle_count; i++) {
-    std::shared_ptr<Tetrahedron<T>> null_tetrahedron(nullptr);
+    std::shared_ptr<Tetrahedron> null_tetrahedron(nullptr);
     auto a = triangle_list_a[outer_triangles_a[i]]->getOppositeTetrahedron(null_tetrahedron);
     // if list does not contain element
     if (std::find(adjacent_tetrahedra.begin(), adjacent_tetrahedra.end(), a)
@@ -231,10 +231,10 @@ std::vector<std::shared_ptr<Tetrahedron<T> > > Tetrahedron<T>::remove2FlatTetrah
   return adjacent_tetrahedra;
 }
 
-template<class T>
-std::array<std::shared_ptr<Tetrahedron<T> >, 3> Tetrahedron<T>::flip2to3(
-    const std::shared_ptr<Tetrahedron<T> >& tetrahedron_a,
-    const std::shared_ptr<Tetrahedron<T> >& tetrahedron_b) {
+
+std::array<std::shared_ptr<Tetrahedron >, 3> Tetrahedron::flip2to3(
+    const std::shared_ptr<Tetrahedron >& tetrahedron_a,
+    const std::shared_ptr<Tetrahedron >& tetrahedron_b) {
   int connecting_triangle_number = tetrahedron_a->getConnectingTriangleNumber(tetrahedron_b);
   auto connecting_triangle = tetrahedron_a->getAdjacentTriangles()[connecting_triangle_number];
   auto lower_node = tetrahedron_b->getOppositeNode(connecting_triangle);
@@ -248,16 +248,16 @@ std::array<std::shared_ptr<Tetrahedron<T> >, 3> Tetrahedron<T>::flip2to3(
     auto upper_triangles = tetrahedron_a->getTouchingTriangles(connecting_triangle);
     auto lower_triangles = tetrahedron_b->getTouchingTriangles(connecting_triangle);
     auto upper_node = tetrahedron_a->getAdjacentNodes()[connecting_triangle_number];
-    std::array<std::shared_ptr<Triangle3D<T>>, 3> new_triangles;
+    std::array<std::shared_ptr<Triangle3D>, 3> new_triangles;
     auto connecting_triangle_nodes = connecting_triangle->getNodes();
-    std::shared_ptr<Tetrahedron<T>> null_tetrahedron;
+    std::shared_ptr<Tetrahedron> null_tetrahedron;
     for (size_t i = 0; i < 3; i++) {
-      new_triangles[i] = Triangle3D<T>::create(upper_node, lower_node, connecting_triangle_nodes[i],
+      new_triangles[i] = Triangle3D::create(upper_node, lower_node, connecting_triangle_nodes[i],
                                                null_tetrahedron, null_tetrahedron);
     }
     tetrahedron_a->remove();
     tetrahedron_b->remove();
-    std::array<std::shared_ptr<Tetrahedron<T>>, 3> ret;
+    std::array<std::shared_ptr<Tetrahedron>, 3> ret;
     for (size_t i = 0; i < 3; i++) {
       // make sure a node at position 0 is always inserted at position
       // 0, if it is part of the connecting triangle:
@@ -269,12 +269,12 @@ std::array<std::shared_ptr<Tetrahedron<T> >, 3> Tetrahedron<T>::flip2to3(
       }
       auto position = lower_node->getPosition();
       if (check_for_flat_tetrahedra && upper_triangles[i]->orientation(position, position) == 0) {
-        ret[i] = FlatTetrahedron<T>::create(new_triangles[b], upper_triangles[i],
+        ret[i] = FlatTetrahedron::create(new_triangles[b], upper_triangles[i],
                                             lower_triangles[i], new_triangles[a],
                                             connecting_triangle_nodes[a], lower_node, upper_node,
                                             connecting_triangle_nodes[b]);
       } else {
-        ret[i] = Tetrahedron<T>::create(new_triangles[b], upper_triangles[i], lower_triangles[i],
+        ret[i] = Tetrahedron::create(new_triangles[b], upper_triangles[i], lower_triangles[i],
                                         new_triangles[a], connecting_triangle_nodes[a], lower_node,
                                         upper_node, connecting_triangle_nodes[b]);
       }
@@ -282,20 +282,20 @@ std::array<std::shared_ptr<Tetrahedron<T> >, 3> Tetrahedron<T>::flip2to3(
     return ret;
   }
   // todo find better way to return null array
-  std::array<std::shared_ptr<Tetrahedron<T>>, 3> ret;
-  std::shared_ptr<Tetrahedron<T>> null_element(nullptr);
+  std::array<std::shared_ptr<Tetrahedron>, 3> ret;
+  std::shared_ptr<Tetrahedron> null_element(nullptr);
   for (size_t i = 0; i < ret.size(); i++) {
     ret[i] = null_element;
   }
   return ret;
 }
 
-template<class T>
-std::array<std::shared_ptr<Tetrahedron<T> >, 2> Tetrahedron<T>::flip3to2(
-    const std::shared_ptr<Tetrahedron<T> >& tetrahedron_a,
-    const std::shared_ptr<Tetrahedron<T> >& tetrahedron_b,
-    const std::shared_ptr<Tetrahedron<T> >& tetrahedron_c) {
-  std::array<std::shared_ptr<SpaceNode<T>>, 3> newTriangleNodes;
+
+std::array<std::shared_ptr<Tetrahedron >, 2> Tetrahedron::flip3to2(
+    const std::shared_ptr<Tetrahedron >& tetrahedron_a,
+    const std::shared_ptr<Tetrahedron >& tetrahedron_b,
+    const std::shared_ptr<Tetrahedron >& tetrahedron_c) {
+  std::array<std::shared_ptr<SpaceNode>, 3> newTriangleNodes;
 
   int num_a = tetrahedron_a->getConnectingTriangleNumber(tetrahedron_b);
   int num_b = tetrahedron_b->getConnectingTriangleNumber(tetrahedron_c);
@@ -308,11 +308,11 @@ std::array<std::shared_ptr<Tetrahedron<T> >, 2> Tetrahedron<T>::flip3to2(
   auto upperNode = tetrahedron_a->getFirstOtherNode(newTriangleNodes[0], newTriangleNodes[1]);
   auto lowerNode = tetrahedron_a->getSecondOtherNode(newTriangleNodes[0], newTriangleNodes[1]);
 
-  std::shared_ptr<Tetrahedron<T>> null_tetrahdron(nullptr);
-  auto newTriangle = Triangle3D<T>::create(newTriangleNodes[0], newTriangleNodes[1],
+  std::shared_ptr<Tetrahedron> null_tetrahdron(nullptr);
+  auto newTriangle = Triangle3D::create(newTriangleNodes[0], newTriangleNodes[1],
                                            newTriangleNodes[2], null_tetrahdron, null_tetrahdron);
 
-  std::array<std::shared_ptr<Tetrahedron<T>>, 2> ret;
+  std::array<std::shared_ptr<Tetrahedron>, 2> ret;
 
   auto tetraAOppTriangleLow = tetrahedron_a->getOppositeTriangle(lowerNode);
   auto tetraBOppTriangleLow = tetrahedron_b->getOppositeTriangle(lowerNode);
@@ -328,44 +328,44 @@ std::array<std::shared_ptr<Tetrahedron<T> >, 2> Tetrahedron<T>::flip3to2(
   tetrahedron_c->remove();
 
   if (!flat) {
-    ret[0] = Tetrahedron<T>::create(newTriangle, tetraAOppTriangleLow, tetraBOppTriangleLow,
+    ret[0] = Tetrahedron::create(newTriangle, tetraAOppTriangleLow, tetraBOppTriangleLow,
                                     tetraCOppTriangleLow, upperNode, newTriangleNodes[2],
                                     newTriangleNodes[0], newTriangleNodes[1]);
-    ret[1] = Tetrahedron<T>::create(newTriangle, tetraAOppTriangleUp, tetraBOppTriangleUp,
+    ret[1] = Tetrahedron::create(newTriangle, tetraAOppTriangleUp, tetraBOppTriangleUp,
                                     tetraCOppTriangleUp, lowerNode, newTriangleNodes[2],
                                     newTriangleNodes[0], newTriangleNodes[1]);
   } else {
-    ret[0] = FlatTetrahedron<T>::create(newTriangle, tetraAOppTriangleLow, tetraBOppTriangleLow,
+    ret[0] = FlatTetrahedron::create(newTriangle, tetraAOppTriangleLow, tetraBOppTriangleLow,
                                         tetraCOppTriangleLow, upperNode, newTriangleNodes[2],
                                         newTriangleNodes[0], newTriangleNodes[1]);
-    ret[1] = FlatTetrahedron<T>::create(newTriangle, tetraAOppTriangleUp, tetraBOppTriangleUp,
+    ret[1] = FlatTetrahedron::create(newTriangle, tetraAOppTriangleUp, tetraBOppTriangleUp,
                                         tetraCOppTriangleUp, lowerNode, newTriangleNodes[2],
                                         newTriangleNodes[0], newTriangleNodes[1]);
   }
   return ret;
 }
 
-template<class T>
-std::array<std::shared_ptr<T>, 4> Tetrahedron<T>::getVerticeContents() const {
-  std::array<std::shared_ptr<T>, 4> ret;
+
+std::array<std::shared_ptr<physics::PhysicalNode>, 4> Tetrahedron::getVerticeContents() const {
+  std::array<std::shared_ptr<physics::PhysicalNode>, 4> ret;
   for (size_t i = 0; i < 4; i++) {
     if (adjacent_nodes_[i] != nullptr) {
       ret[i] = adjacent_nodes_[i]->getUserObject();
     } else {
-      std::shared_ptr<T> null_T(nullptr);
+      std::shared_ptr<physics::PhysicalNode> null_T(nullptr);
       ret[i] = null_T; // todo - should be return null!
     }
   }
   return ret;
 }
 
-template<class T>
-bool Tetrahedron<T>::isInfinite() const {
+
+bool Tetrahedron::isInfinite() const {
   return adjacent_nodes_[0] == nullptr;
 }
 
-template<class T>
-void Tetrahedron<T>::changeCrossSection(int number, double new_value) {
+
+void Tetrahedron::changeCrossSection(int number, double new_value) {
   double change = new_value - cross_section_areas_[number];
   if (change != 0) {
     adjacent_edges_[number]->changeCrossSectionArea(change);
@@ -373,8 +373,8 @@ void Tetrahedron<T>::changeCrossSection(int number, double new_value) {
   cross_section_areas_[number] = new_value;
 }
 
-template<class T>
-void Tetrahedron<T>::updateCrossSectionAreas() {
+
+void Tetrahedron::updateCrossSectionAreas() {
   if (isInfinite()) {
     for (int i = 0; i < 6; i++) {
       changeCrossSection(i, 0.0);
@@ -423,13 +423,13 @@ void Tetrahedron<T>::updateCrossSectionAreas() {
   }
 }
 
-template<class T>
-void Tetrahedron<T>::calculateVolume() {
+
+void Tetrahedron::calculateVolume() {
   changeVolume(std::abs(Matrix::det(getPlaneNormals()) / 6.0));
 }
 
-template<class T>
-int Tetrahedron<T>::orientationExact(const std::array<double, 3>& position) const {
+
+int Tetrahedron::orientationExact(const std::array<double, 3>& position) const {
   if (isInfinite()) {
     return 1;
   } else {
@@ -449,7 +449,7 @@ int Tetrahedron<T>::orientationExact(const std::array<double, 3>& position) cons
     for (size_t j = 0; j < offsets.size(); j++) {
       offsets[j] = points[0]->add(points[j + 1])->dotProduct(normals[j])->multiplyBy(half);
     }
-    auto circum_center = Triangle3D<T>::calculate3PlaneXPoint(normals, offsets, det);
+    auto circum_center = Triangle3D::calculate3PlaneXPoint(normals, offsets, det);
     auto dummy = circum_center->subtract(points[0]);
     auto squared_radius = dummy->dotProduct(dummy);
     dummy = circum_center->subtract(ExactVector::create(position));
@@ -458,9 +458,9 @@ int Tetrahedron<T>::orientationExact(const std::array<double, 3>& position) cons
   }
 }
 
-template<class T>
-void Tetrahedron<T>::replaceTriangle(const std::shared_ptr<Triangle3D<T> >& old_triangle,
-                                     const std::shared_ptr<Triangle3D<T> >& new_triangle) {
+
+void Tetrahedron::replaceTriangle(const std::shared_ptr<Triangle3D >& old_triangle,
+                                     const std::shared_ptr<Triangle3D >& new_triangle) {
   new_triangle->addTetrahedron(this->shared_from_this());
   auto other_tetrahedron = new_triangle->getOppositeTetrahedron(this->shared_from_this());
   int triangle_number = getTriangleNumber(old_triangle);
@@ -485,8 +485,8 @@ void Tetrahedron<T>::replaceTriangle(const std::shared_ptr<Triangle3D<T> >& old_
   new_triangle->wasCheckedAlready(-1);
 }
 
-template<class T>
-int Tetrahedron<T>::getNodeNumber(const std::shared_ptr<SpaceNode<T> >& node) const {
+
+int Tetrahedron::getNodeNumber(const std::shared_ptr<SpaceNode >& node) const {
   for (size_t i = 0; i < adjacent_nodes_.size(); i++) {
     if (adjacent_nodes_[i] == node) {
       return i;
@@ -497,8 +497,8 @@ int Tetrahedron<T>::getNodeNumber(const std::shared_ptr<SpaceNode<T> >& node) co
 //      "The node " + node->toString() + " is not adjacent to " + toString() + "!");
 }
 
-template<class T>
-int Tetrahedron<T>::getTriangleNumber(const std::shared_ptr<Triangle3D<T> >& triangle) const {
+
+int Tetrahedron::getTriangleNumber(const std::shared_ptr<Triangle3D >& triangle) const {
   for (size_t i = 0; i < adjacent_triangles_.size(); i++) {
     if (adjacent_triangles_[i] == triangle) {
       return i;
@@ -508,26 +508,26 @@ int Tetrahedron<T>::getTriangleNumber(const std::shared_ptr<Triangle3D<T> >& tri
 //      "The triangle " + triangle->toString() + " is not adjacent to " + toString() + "!");
 }
 
-template<class T>
-std::shared_ptr<Edge<T> > Tetrahedron<T>::getEdge(int node_number_1, int node_number_2) const {
+
+std::shared_ptr<Edge > Tetrahedron::getEdge(int node_number_1, int node_number_2) const {
   return adjacent_edges_[getEdgeNumber(node_number_1, node_number_2)];
 }
 
-template<class T>
-std::shared_ptr<Edge<T> > Tetrahedron<T>::getEdge(const std::shared_ptr<SpaceNode<T> >& a,
-                                                  const std::shared_ptr<SpaceNode<T> >& b) const {
+
+std::shared_ptr<Edge > Tetrahedron::getEdge(const std::shared_ptr<SpaceNode >& a,
+                                                  const std::shared_ptr<SpaceNode >& b) const {
   return adjacent_edges_[getEdgeNumber(a, b)];
 }
 
-template<class T>
-int Tetrahedron<T>::getEdgeNumber(const std::shared_ptr<SpaceNode<T> >& a,
-                                  const std::shared_ptr<SpaceNode<T> >& b) const {
+
+int Tetrahedron::getEdgeNumber(const std::shared_ptr<SpaceNode >& a,
+                                  const std::shared_ptr<SpaceNode >& b) const {
   return getEdgeNumber(getNodeNumber(a), getNodeNumber(b));
 }
 
-template<class T>
-std::shared_ptr<Triangle3D<T> > Tetrahedron<T>::getOppositeTriangle(
-    const std::shared_ptr<SpaceNode<T> >& node) const {
+
+std::shared_ptr<Triangle3D > Tetrahedron::getOppositeTriangle(
+    const std::shared_ptr<SpaceNode >& node) const {
   for (size_t i = 0; i < 4; i++) {
     if (adjacent_nodes_[i] == node)
       return adjacent_triangles_[i];
@@ -536,9 +536,9 @@ std::shared_ptr<Triangle3D<T> > Tetrahedron<T>::getOppositeTriangle(
 //      "The SpaceNode " + node->toString() + " is not adjacent to the Tetrahedron " + toString());
 }
 
-template<class T>
-std::shared_ptr<SpaceNode<T> > Tetrahedron<T>::getOppositeNode(
-    const std::shared_ptr<Triangle3D<T>>& triangle) const {
+
+std::shared_ptr<SpaceNode > Tetrahedron::getOppositeNode(
+    const std::shared_ptr<Triangle3D>& triangle) const {
   for (size_t i = 0; i < 4; i++) {
     if (adjacent_triangles_[i] == triangle) {
       return adjacent_nodes_[i];
@@ -548,9 +548,9 @@ std::shared_ptr<SpaceNode<T> > Tetrahedron<T>::getOppositeNode(
 //      "The Triangle " + triangle->toString() + " is not adjacent to the Tetrahedron " + toString());
 }
 
-template<class T>
-std::shared_ptr<Triangle3D<T> > Tetrahedron<T>::getConnectingTriangle(
-    const std::shared_ptr<Tetrahedron<T> >& tetrahedron) const {
+
+std::shared_ptr<Triangle3D > Tetrahedron::getConnectingTriangle(
+    const std::shared_ptr<Tetrahedron >& tetrahedron) const {
   for (size_t i = 0; i < 4; i++) {
     if (adjacent_triangles_[i]->isAdjacentTo(tetrahedron))
       return adjacent_triangles_[i];
@@ -559,9 +559,9 @@ std::shared_ptr<Triangle3D<T> > Tetrahedron<T>::getConnectingTriangle(
 //      "The Tetrahedron " + tetrahedron->toString() + " is not adjacent to " + toString() + "!");
 }
 
-template<class T>
-int Tetrahedron<T>::getConnectingTriangleNumber(
-    const std::shared_ptr<Tetrahedron<T> >& tetrahedron) const {
+
+int Tetrahedron::getConnectingTriangleNumber(
+    const std::shared_ptr<Tetrahedron >& tetrahedron) const {
   for (size_t i = 0; i < 4; i++) {
     if (adjacent_triangles_[i]->isAdjacentTo(tetrahedron))
       return i;
@@ -570,10 +570,10 @@ int Tetrahedron<T>::getConnectingTriangleNumber(
 //      "The Tetrahedron " + tetrahedron->toString() + " is not adjacent to " + toString() + "!");
 }
 
-template<class T>
-std::array<std::shared_ptr<Triangle3D<T> >, 3> Tetrahedron<T>::getTouchingTriangles(
-    const std::shared_ptr<Triangle3D<T> >& base) const {
-  std::array<std::shared_ptr<Triangle3D<T> >, 3> ret;
+
+std::array<std::shared_ptr<Triangle3D >, 3> Tetrahedron::getTouchingTriangles(
+    const std::shared_ptr<Triangle3D >& base) const {
+  std::array<std::shared_ptr<Triangle3D >, 3> ret;
   auto triangle_nodes = base->getNodes();
   for (size_t i = 0; i < 3; i++) {
     ret[i] = getOppositeTriangle(triangle_nodes[i]);
@@ -581,8 +581,8 @@ std::array<std::shared_ptr<Triangle3D<T> >, 3> Tetrahedron<T>::getTouchingTriang
   return ret;
 }
 
-template<class T>
-void Tetrahedron<T>::remove() {
+
+void Tetrahedron::remove() {
   valid_ = false;
   for (size_t i = 0; i < 4; i++) {
     if (adjacent_nodes_[i] != nullptr) {
@@ -603,8 +603,8 @@ void Tetrahedron<T>::remove() {
   }
 }
 
-template<class T>
-bool Tetrahedron<T>::isPointInConvexPosition(const std::array<double, 3>& point,
+
+bool Tetrahedron::isPointInConvexPosition(const std::array<double, 3>& point,
                                              int connecting_triangle_number) const {
   if (!isInfinite()) {
     for (size_t i = 0; i < 4; i++) {
@@ -620,8 +620,8 @@ bool Tetrahedron<T>::isPointInConvexPosition(const std::array<double, 3>& point,
   }
 }
 
-template<class T>
-int Tetrahedron<T>::isInConvexPosition(const std::array<double, 3>& point,
+
+int Tetrahedron::isInConvexPosition(const std::array<double, 3>& point,
                                        int connecting_triangle_number) const {
   if (!isInfinite()) {
     int result = 1;
@@ -643,21 +643,21 @@ int Tetrahedron<T>::isInConvexPosition(const std::array<double, 3>& point,
   }
 }
 
-template<class T>
-std::array<std::shared_ptr<SpaceNode<T> >, 4> Tetrahedron<T>::getAdjacentNodes() const {
+
+std::array<std::shared_ptr<SpaceNode >, 4> Tetrahedron::getAdjacentNodes() const {
   return adjacent_nodes_;
 }
 
-template<class T>
-std::shared_ptr<Tetrahedron<T> > Tetrahedron<T>::getAdjacentTetrahedron(int number) {
+
+std::shared_ptr<Tetrahedron > Tetrahedron::getAdjacentTetrahedron(int number) {
   if (adjacent_triangles_[number] != nullptr) {
     return adjacent_triangles_[number]->getOppositeTetrahedron(this->shared_from_this());
   }
-  return std::shared_ptr<Tetrahedron<T> >(nullptr);
+  return std::shared_ptr<Tetrahedron >(nullptr);
 }
 
-template<class T>
-void Tetrahedron<T>::testPosition(const std::array<double, 3>& position) const{
+
+void Tetrahedron::testPosition(const std::array<double, 3>& position) const{
     //fnoexceptionthrow(std::exception) {
   for (auto node : adjacent_nodes_) {
     if (node != nullptr) {
@@ -671,23 +671,23 @@ void Tetrahedron<T>::testPosition(const std::array<double, 3>& position) const{
   }
 }
 
-template<class T>
-bool Tetrahedron<T>::isValid() const {
+
+bool Tetrahedron::isValid() const {
   return valid_;
 }
 
-template<class T>
-bool Tetrahedron<T>::isNeighbor(const std::shared_ptr<Tetrahedron<T> >& other_tetrahedron) const {
+
+bool Tetrahedron::isNeighbor(const std::shared_ptr<Tetrahedron >& other_tetrahedron) const {
   return (adjacent_triangles_[0]->isAdjacentTo(other_tetrahedron))
       || (adjacent_triangles_[1]->isAdjacentTo(other_tetrahedron))
       || (adjacent_triangles_[2]->isAdjacentTo(other_tetrahedron))
       || (adjacent_triangles_[3]->isAdjacentTo(other_tetrahedron));
 }
 
-template<class T>
-void Tetrahedron<T>::registerEdges() {
+
+void Tetrahedron::registerEdges() {
   if (!isInfinite()) {
-    auto tetrahedron = std::shared_ptr<Tetrahedron<T>>(nullptr);
+    auto tetrahedron = std::shared_ptr<Tetrahedron>(nullptr);
     for (size_t i = 0; i < 4; i++) {
       tetrahedron = adjacent_triangles_[i]->getOppositeTetrahedron(this->shared_from_this());
       if ((tetrahedron != nullptr) && (!tetrahedron->isInfinite())) {
@@ -760,8 +760,8 @@ void Tetrahedron<T>::registerEdges() {
   }
 }
 
-template<class T>
-void Tetrahedron<T>::changeVolume(double new_volume) {
+
+void Tetrahedron::changeVolume(double new_volume) {
   double change_per_node = (new_volume - volume_) / 4.0;
   if (change_per_node != 0.0) {
     for (auto node : getAdjacentNodes()) {
@@ -771,8 +771,8 @@ void Tetrahedron<T>::changeVolume(double new_volume) {
   volume_ = new_volume;
 }
 
-template<class T>
-std::array<std::array<double, 3>, 3> Tetrahedron<T>::getPlaneNormals() const {
+
+std::array<std::array<double, 3>, 3> Tetrahedron::getPlaneNormals() const {
   if (!isInfinite()) {
     auto subtrahend = adjacent_nodes_[0]->getPosition();
     std::array<std::array<double, 3>, 3> ret;
@@ -784,8 +784,8 @@ std::array<std::array<double, 3>, 3> Tetrahedron<T>::getPlaneNormals() const {
 //  //fnoexceptionthrow std::range_error("returning null array not supported");
 }
 
-template<class T>
-double Tetrahedron<T>::maxAbs(const std::array<std::array<double, 3>, 3>& values) const {
+
+double Tetrahedron::maxAbs(const std::array<std::array<double, 3>, 3>& values) const {
   double ret = 0.0;
   for (int i = 0; i < values.size(); i++) {
     for (int j = 0; j < values[i].size(); j++) {
@@ -797,8 +797,8 @@ double Tetrahedron<T>::maxAbs(const std::array<std::array<double, 3>, 3>& values
   return ret;
 }
 
-template<class T>
-double Tetrahedron<T>::maxAbs(const std::array<double, 3>& values_1,
+
+double Tetrahedron::maxAbs(const std::array<double, 3>& values_1,
                               const std::array<double, 3>& values_2,
                               const std::array<double, 3>& values_3,
                               const std::array<double, 3>& values_4) const {
@@ -823,31 +823,31 @@ double Tetrahedron<T>::maxAbs(const std::array<double, 3>& values_1,
   return ret;
 }
 
-template<class T>
-double Tetrahedron<T>::multError2(double a, double a_err_2, double b, double b_err_2) const {
+
+double Tetrahedron::multError2(double a, double a_err_2, double b, double b_err_2) const {
   return std::max(a_err_2 * b * b + b_err_2 * a * a, 0.00000000001 * a * b * a * b);
 }
 
-template<class T>
-double Tetrahedron<T>::multError2(double a, double a_err_2, double b, double b_err_2, double c,
+
+double Tetrahedron::multError2(double a, double a_err_2, double b, double b_err_2, double c,
                                   double c_err_2) const {
   return std::max(a_err_2 * b * b * c * c + b_err_2 * a * a * c * c + c_err_2 * a * a * b * b,
                   0.00000000001 * a * a * b * b * c * c);
 }
 
-template<class T>
-double Tetrahedron<T>::addError2(double a_err_2, double b_err_2, double result) const {
+
+double Tetrahedron::addError2(double a_err_2, double b_err_2, double result) const {
   return std::max(b_err_2 + a_err_2, 0.00000000001 * result * result);
 }
 
-template<class T>
-double Tetrahedron<T>::addError2(double a_err_2, double b_err_2, double c_err_2,
+
+double Tetrahedron::addError2(double a_err_2, double b_err_2, double c_err_2,
                                  double result) const {
   return std::max(b_err_2 + a_err_2 + c_err_2, 0.00000000001 * result * result);
 }
 
-template<class T>
-void Tetrahedron<T>::computeCircumsphereCenterAndVolume() {
+
+void Tetrahedron::computeCircumsphereCenterAndVolume() {
   auto normals = getPlaneNormals();
   changeVolume(std::abs(Matrix::det(normals)) / 6.0);
 
@@ -899,7 +899,7 @@ void Tetrahedron<T>::computeCircumsphereCenterAndVolume() {
   auto scalar_mult_2 = Matrix::scalarMult(offsets[2], cross_01);
   auto add = Matrix::add(scalar_mult_0, Matrix::add(scalar_mult_1, scalar_mult_2));
 
-  circum_center_ = Triangle3D<T>::calculate3PlaneXPoint(normals, offsets, det);
+  circum_center_ = Triangle3D::calculate3PlaneXPoint(normals, offsets, det);
   circum_center_is_null_ = false;
 
   if (det != 0) {
@@ -911,38 +911,38 @@ void Tetrahedron<T>::computeCircumsphereCenterAndVolume() {
   updateCrossSectionAreas();
 }
 
-template<class T>
-void Tetrahedron<T>::computeRadius() {
+
+void Tetrahedron::computeRadius() {
   auto dummy = Matrix::subtract(circum_center_, adjacent_nodes_[0]->getPosition());
   squared_radius_ = Matrix::dot(dummy, dummy);
 }
 
-template<class T>
-std::shared_ptr<SpaceNode<T> > Tetrahedron<T>::getFirstOtherNode(
-    const std::shared_ptr<SpaceNode<T> >& node_a,
-    const std::shared_ptr<SpaceNode<T> >& node_b) const {
+
+std::shared_ptr<SpaceNode > Tetrahedron::getFirstOtherNode(
+    const std::shared_ptr<SpaceNode >& node_a,
+    const std::shared_ptr<SpaceNode >& node_b) const {
   for (auto node : adjacent_nodes_) {
     if (node != node_a && node != node_b) {
       return node;
     }
   }
-  return std::shared_ptr<SpaceNode<T> >(nullptr);
+  return std::shared_ptr<SpaceNode >(nullptr);
 }
 
-template<class T>
-std::shared_ptr<SpaceNode<T> > Tetrahedron<T>::getSecondOtherNode(
-    const std::shared_ptr<SpaceNode<T> >& node_a,
-    const std::shared_ptr<SpaceNode<T> >& node_b) const {
+
+std::shared_ptr<SpaceNode > Tetrahedron::getSecondOtherNode(
+    const std::shared_ptr<SpaceNode >& node_a,
+    const std::shared_ptr<SpaceNode >& node_b) const {
   for (size_t i = adjacent_nodes_.size() - 1; i >= 0; i--) {
     if (adjacent_nodes_[i] != node_a && adjacent_nodes_[i] != node_b) {
       return adjacent_nodes_[i];
     }
   }
-  return std::shared_ptr<SpaceNode<T> >(nullptr);
+  return std::shared_ptr<SpaceNode >(nullptr);
 }
 
-template<class T>
-Tetrahedron<T>::Tetrahedron()
+
+Tetrahedron::Tetrahedron()
     : adjacent_nodes_(),
       adjacent_edges_(),
       adjacent_triangles_(),
@@ -955,10 +955,10 @@ Tetrahedron<T>::Tetrahedron()
       valid_(true) {
 }
 
-template<class T>
-void Tetrahedron<T>::initializationHelper(const std::shared_ptr<Triangle3D<T>>& one_triangle,
-                                          const std::shared_ptr<SpaceNode<T>>& fourth_point,
-                                          const std::shared_ptr<OpenTriangleOrganizer<T>>& oto) {
+
+void Tetrahedron::initializationHelper(const std::shared_ptr<Triangle3D>& one_triangle,
+                                          const std::shared_ptr<SpaceNode>& fourth_point,
+                                          const std::shared_ptr<OpenTriangleOrganizer>& oto) {
   auto triangle = one_triangle;
   auto point = fourth_point;
   if (triangle->isInfinite()) {
@@ -966,7 +966,7 @@ void Tetrahedron<T>::initializationHelper(const std::shared_ptr<Triangle3D<T>>& 
     auto space_node_a = (nodes[0] == nullptr) ? nodes[1] : nodes[0];
     auto space_node_b = (nodes[2] == nullptr) ? nodes[1] : nodes[2];
     triangle = oto->getTriangleWithoutRemoving(space_node_a, space_node_b, point);
-    point = std::shared_ptr<SpaceNode<T>>(nullptr);
+    point = std::shared_ptr<SpaceNode>(nullptr);
   }
   adjacent_nodes_[0] = point;
   if (point != nullptr) {
@@ -993,15 +993,15 @@ void Tetrahedron<T>::initializationHelper(const std::shared_ptr<Triangle3D<T>>& 
   calculateCircumSphere();
 }
 
-template<class T>
-void Tetrahedron<T>::initializationHelper(const std::shared_ptr<Triangle3D<T>>& triangle_a,
-                                          const std::shared_ptr<Triangle3D<T>>& triangle_b,
-                                          const std::shared_ptr<Triangle3D<T>>& triangle_c,
-                                          const std::shared_ptr<Triangle3D<T>>& triangle_d,
-                                          const std::shared_ptr<SpaceNode<T>>& node_a,
-                                          const std::shared_ptr<SpaceNode<T>>& node_b,
-                                          const std::shared_ptr<SpaceNode<T>>& node_c,
-                                          const std::shared_ptr<SpaceNode<T>>& node_d) {
+
+void Tetrahedron::initializationHelper(const std::shared_ptr<Triangle3D>& triangle_a,
+                                          const std::shared_ptr<Triangle3D>& triangle_b,
+                                          const std::shared_ptr<Triangle3D>& triangle_c,
+                                          const std::shared_ptr<Triangle3D>& triangle_d,
+                                          const std::shared_ptr<SpaceNode>& node_a,
+                                          const std::shared_ptr<SpaceNode>& node_b,
+                                          const std::shared_ptr<SpaceNode>& node_c,
+                                          const std::shared_ptr<SpaceNode>& node_d) {
   adjacent_triangles_[0] = triangle_a;
   adjacent_triangles_[1] = triangle_b;
   adjacent_triangles_[2] = triangle_c;
@@ -1023,7 +1023,6 @@ void Tetrahedron<T>::initializationHelper(const std::shared_ptr<Triangle3D<T>>& 
   calculateCircumSphere();
 }
 
-template class Tetrahedron<cx3d::physics::PhysicalNode>;
 
 }  // namespace spatial_organization
 }  // namespace cx3d

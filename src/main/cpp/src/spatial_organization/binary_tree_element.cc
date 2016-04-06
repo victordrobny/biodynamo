@@ -12,13 +12,13 @@
 namespace cx3d {
 namespace spatial_organization {
 
-template<class T>
-BinaryTreeElement<T>* BinaryTreeElement<T>::generateTreeHead() {
-  return new TreeHead<T>();
+
+BinaryTreeElement* BinaryTreeElement::generateTreeHead() {
+  return new TreeHead();
 }
 
-template<class T>
-BinaryTreeElement<T>::BinaryTreeElement(std::shared_ptr<SpaceNode<T>> content)
+
+BinaryTreeElement::BinaryTreeElement(std::shared_ptr<SpaceNode> content)
     : content_ { content },
       bigger_ { nullptr },
       smaller_ { nullptr } {
@@ -29,34 +29,34 @@ BinaryTreeElement<T>::BinaryTreeElement(std::shared_ptr<SpaceNode<T>> content)
   }
 }
 
-template<class T>
-BinaryTreeElement<T>::~BinaryTreeElement() {
+
+BinaryTreeElement::~BinaryTreeElement() {
   delete smaller_;
   delete bigger_;
 }
 
-template<class T>
-bool BinaryTreeElement<T>::contains(
-    const std::shared_ptr<SpaceNode<T>>& content) const {
+
+bool BinaryTreeElement::contains(
+    const std::shared_ptr<SpaceNode>& content) const {
   return contains(getHash(content), content);
 }
 
-template<class T>
-void BinaryTreeElement<T>::insert(
-    const std::shared_ptr<SpaceNode<T>>& content) {
+
+void BinaryTreeElement::insert(
+    const std::shared_ptr<SpaceNode>& content) {
   if (content.get() != nullptr) {
-    insert(new BinaryTreeElement<T>(content));
+    insert(new BinaryTreeElement(content));
   }
 }
 
-template<class T>
-void BinaryTreeElement<T>::remove(const std::shared_ptr<SpaceNode<T>>& content,
+
+void BinaryTreeElement::remove(const std::shared_ptr<SpaceNode>& content,
                                   BinaryTreeElement* parent) {
   remove(getHash(content), content, parent);
 }
 
-template<class T>
-std::string BinaryTreeElement<T>::toString() const {
+
+std::string BinaryTreeElement::toString() const {
   stringstream str_stream;
   str_stream << StringUtil::toStr(smaller_);
   str_stream << ", ";
@@ -66,21 +66,21 @@ std::string BinaryTreeElement<T>::toString() const {
   return str_stream.str();
 }
 
-template<class T>
-int BinaryTreeElement<T>::getHash(std::shared_ptr<SpaceNode<T>> content) const {
+
+int BinaryTreeElement::getHash(std::shared_ptr<SpaceNode> content) const {
   uint64_t id = content_->getId();
   uint64_t c = 7481;
   return (id * c) % 74317;
 }
 
-template<class T>
-bool BinaryTreeElement<T>::contains(
-    int id, const std::shared_ptr<SpaceNode<T>>& content) const {
+
+bool BinaryTreeElement::contains(
+    int id, const std::shared_ptr<SpaceNode>& content) const {
   return contains(getHash(content), content);
 }
 
-template<class T>
-void BinaryTreeElement<T>::insert(BinaryTreeElement* element) {
+
+void BinaryTreeElement::insert(BinaryTreeElement* element) {
   if (content_id_ == element->content_id_
       && content_.get() == element->content_.get()) {
     return;
@@ -99,9 +99,9 @@ void BinaryTreeElement<T>::insert(BinaryTreeElement* element) {
   }
 }
 
-template<class T>
-void BinaryTreeElement<T>::remove(int id,
-                                  const std::shared_ptr<SpaceNode<T>>& content,
+
+void BinaryTreeElement::remove(int id,
+                                  const std::shared_ptr<SpaceNode>& content,
                                   BinaryTreeElement* parent) {
   if ((content_id_ == id) && (content_.get() == content.get())) {
     if ((smaller_ == nullptr) && (bigger_ == nullptr)) {
@@ -128,8 +128,8 @@ void BinaryTreeElement<T>::remove(int id,
   }
 }
 
-template<class T>
-void BinaryTreeElement<T>::changeLink(BinaryTreeElement* old_el,
+
+void BinaryTreeElement::changeLink(BinaryTreeElement* old_el,
                                       BinaryTreeElement* new_el) {
   if (smaller_ == old_el) {
     smaller_ = new_el;
@@ -138,11 +138,11 @@ void BinaryTreeElement<T>::changeLink(BinaryTreeElement* old_el,
   }
 }
 
-template<class T>
-std::vector<std::shared_ptr<SpaceNode<T>>>BinaryTreeElement<T>::inOrderTraversal() const {
-  std::vector<std::shared_ptr<SpaceNode<T>>> traversal;
-  std::stack<const BinaryTreeElement<T>*> stack;
-  const BinaryTreeElement<T>* dummy = this;
+
+std::vector<std::shared_ptr<SpaceNode>>BinaryTreeElement::inOrderTraversal() const {
+  std::vector<std::shared_ptr<SpaceNode>> traversal;
+  std::stack<const BinaryTreeElement*> stack;
+  const BinaryTreeElement* dummy = this;
   while(dummy != nullptr) {
     stack.push(dummy);
     dummy = dummy->smaller_;
@@ -164,45 +164,44 @@ std::vector<std::shared_ptr<SpaceNode<T>>>BinaryTreeElement<T>::inOrderTraversal
 //-------------------------------------------------------------------------------------------------
 // TreeHead
 
-template<class T>
-TreeHead<T>::TreeHead()
-    : BinaryTreeElement<T>(std::shared_ptr<SpaceNode<T>>(nullptr)) {
+
+TreeHead::TreeHead()
+    : BinaryTreeElement(std::shared_ptr<SpaceNode>(nullptr)) {
 
 }
 
-template<class T>
-bool TreeHead<T>::contains(const std::shared_ptr<SpaceNode<T>>& content) const {
+
+bool TreeHead::contains(const std::shared_ptr<SpaceNode>& content) const {
   return
-      BinaryTreeElement<T>::bigger_ != nullptr ?
-          BinaryTreeElement<T>::bigger_->contains(content) : false;
+      BinaryTreeElement::bigger_ != nullptr ?
+          BinaryTreeElement::bigger_->contains(content) : false;
 }
 
-template<class T>
-void TreeHead<T>::insert(const std::shared_ptr<SpaceNode<T>>& content) {
-  if (BinaryTreeElement<T>::bigger_ != nullptr) {
-    BinaryTreeElement<T>::bigger_->insert(content);
+
+void TreeHead::insert(const std::shared_ptr<SpaceNode>& content) {
+  if (BinaryTreeElement::bigger_ != nullptr) {
+    BinaryTreeElement::bigger_->insert(content);
   } else {
-    BinaryTreeElement<T>::bigger_ = new BinaryTreeElement<T>(content);
+    BinaryTreeElement::bigger_ = new BinaryTreeElement(content);
   }
 }
 
-template<class T>
-void TreeHead<T>::remove(const std::shared_ptr<SpaceNode<T>>& content,
-                         BinaryTreeElement<T>* parent) {
-  if (BinaryTreeElement<T>::bigger_ != nullptr) {
-    BinaryTreeElement<T>::bigger_->remove(content, this);
+
+void TreeHead::remove(const std::shared_ptr<SpaceNode>& content,
+                         BinaryTreeElement* parent) {
+  if (BinaryTreeElement::bigger_ != nullptr) {
+    BinaryTreeElement::bigger_->remove(content, this);
   }
 }
 
-template<class T>
-std::vector<std::shared_ptr<SpaceNode<T>>>TreeHead<T>::inOrderTraversal() const {
-  if(BinaryTreeElement<T>::bigger_ != nullptr) {
-    return BinaryTreeElement<T>::bigger_->inOrderTraversal();
+
+std::vector<std::shared_ptr<SpaceNode>>TreeHead::inOrderTraversal() const {
+  if(BinaryTreeElement::bigger_ != nullptr) {
+    return BinaryTreeElement::bigger_->inOrderTraversal();
   }
-  return std::vector<std::shared_ptr<SpaceNode<T>>>();
+  return std::vector<std::shared_ptr<SpaceNode>>();
 }
 
-template class BinaryTreeElement<cx3d::physics::PhysicalNode>;
 
 }  // namespace spatial_organization
 }  // namespace cx3d

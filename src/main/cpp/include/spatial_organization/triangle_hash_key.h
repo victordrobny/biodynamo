@@ -8,10 +8,10 @@
 namespace cx3d {
 namespace spatial_organization {
 
-template<class T> class SpaceNode;
-template<class T> class Tetrahedron;
-template<class T> struct TriangleHashKeyHash;
-template<class T> struct TriangleHashKeyEqual;
+ class SpaceNode;
+ class Tetrahedron;
+ struct TriangleHashKeyHash;
+ struct TriangleHashKeyEqual;
 
 /**
  * Class to provide hash values for triangles.
@@ -19,13 +19,13 @@ template<class T> struct TriangleHashKeyEqual;
  * The calculated hash values do not depend on the order of nodes. Therefore, triangles can
  * be reliably found back even when they were initialized with the same endpoints in a different order.
  *
- * @param <T> The type of user objects associated with nodes in the triangulation.
+ * @param  The type of user objects associated with nodes in the triangulation.
  */
-template<class T>
+
 class TriangleHashKey {
  public:
-  friend struct TriangleHashKeyHash<T>;
-  friend struct TriangleHashKeyEqual<T>;
+  friend struct TriangleHashKeyHash;
+  friend struct TriangleHashKeyEqual;
 #ifndef TRIANGLEHASHKEY_NATIVE
   TriangleHashKey()
       : a_(),
@@ -41,8 +41,8 @@ class TriangleHashKey {
    * @param b The second node.
    * @param c The third node.
    */
-  TriangleHashKey(const std::shared_ptr<SpaceNode<T>>& a, const std::shared_ptr<SpaceNode<T>>& b,
-                  const std::shared_ptr<SpaceNode<T>>& c);
+  TriangleHashKey(const std::shared_ptr<SpaceNode>& a, const std::shared_ptr<SpaceNode>& b,
+                  const std::shared_ptr<SpaceNode>& c);
 
   TriangleHashKey(const TriangleHashKey& other);
 
@@ -60,7 +60,7 @@ class TriangleHashKey {
    * @return <code>true</code>, iff <code>other</code> refers to the same three points as this
    * <code>TriangleHashKey</code>.
    */
-  bool equalTo(const std::shared_ptr<TriangleHashKey<T>>& other) const;
+  bool equalTo(const std::shared_ptr<TriangleHashKey>& other) const;
 
  private:
 #ifdef TRIANGLEHASHKEY_NATIVE
@@ -71,7 +71,7 @@ class TriangleHashKey {
   /**
    * The points of the triangle for which a hash value should be calculated.
    */
-  std::shared_ptr<SpaceNode<T>> a_, b_, c_;
+  std::shared_ptr<SpaceNode> a_, b_, c_;
 
   /**
    * The hash value associated with this edge.
@@ -87,14 +87,14 @@ class TriangleHashKey {
   void createHashCode(int a_id, int b_id, int c_id);
 };
 
-template<class T>
+
 struct TriangleHashKeyHash {
-  std::size_t operator()(const TriangleHashKey<T>& key) const;
+  std::size_t operator()(const TriangleHashKey& key) const;
 };
 
-template<class T>
+
 struct TriangleHashKeyEqual {
-  bool operator()(const TriangleHashKey<T>& lhs, const TriangleHashKey<T>& rhs) const;
+  bool operator()(const TriangleHashKey& lhs, const TriangleHashKey& rhs) const;
 };
 
 

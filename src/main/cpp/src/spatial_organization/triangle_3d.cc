@@ -17,8 +17,8 @@ namespace spatial_organization {
 
 using std::shared_ptr;
 
-template<class T>
-std::array<double, 3> Triangle3D<T>::calculate3PlaneXPoint(
+
+std::array<double, 3> Triangle3D::calculate3PlaneXPoint(
     const std::array<std::array<double, 3>, 3>& normals, const std::array<double, 3>& offsets,
     double normal_det) {
   std::array<double, 3> result;
@@ -38,14 +38,14 @@ std::array<double, 3> Triangle3D<T>::calculate3PlaneXPoint(
   return result;
 }
 
-template<class T>
-std::array<double, 3> Triangle3D<T>::calculate3PlaneXPoint(
+
+std::array<double, 3> Triangle3D::calculate3PlaneXPoint(
     const std::array<std::array<double, 3>, 3>& normals, const std::array<double, 3>& offsets) {
   return calculate3PlaneXPoint(normals, offsets, Matrix::det(normals));
 }
 
-template<class T>
-std::shared_ptr<ExactVector> Triangle3D<T>::calculate3PlaneXPoint(
+
+std::shared_ptr<ExactVector> Triangle3D::calculate3PlaneXPoint(
     const std::array<std::shared_ptr<ExactVector>, 3>& normals,
     const std::array<std::shared_ptr<Rational>, 3>& offsets,
     const std::shared_ptr<Rational>& normal_det) {
@@ -71,13 +71,13 @@ std::shared_ptr<ExactVector> Triangle3D<T>::calculate3PlaneXPoint(
   }
 }
 
-template<class T>
-Triangle3D<T>::Triangle3D(const std::shared_ptr<SpaceNode<T>>& sn_1,
-                          const std::shared_ptr<SpaceNode<T>>& sn_2,
-                          const std::shared_ptr<SpaceNode<T>>& sn_3,
-                          const std::shared_ptr<Tetrahedron<T>>& tetrahedron_1,
-                          const std::shared_ptr<Tetrahedron<T>>& tetrahedron_2)
-    : Plane3D<T>(),
+
+Triangle3D::Triangle3D(const std::shared_ptr<SpaceNode>& sn_1,
+                          const std::shared_ptr<SpaceNode>& sn_2,
+                          const std::shared_ptr<SpaceNode>& sn_3,
+                          const std::shared_ptr<Tetrahedron>& tetrahedron_1,
+                          const std::shared_ptr<Tetrahedron>& tetrahedron_2)
+    : Plane3D(),
       adjacent_tetrahedra_({ tetrahedron_1, tetrahedron_2 }),
       nodes_({ sn_1, sn_2, sn_3 }),
       circum_center_ { 0.0, 0.0, 0.0 },
@@ -88,23 +88,23 @@ Triangle3D<T>::Triangle3D(const std::shared_ptr<SpaceNode<T>>& sn_1,
 
   if (sn_2.get() == nullptr) {
     nodes_[1] = sn_1;
-    nodes_[0] = std::shared_ptr<SpaceNode<T>>(nullptr);
+    nodes_[0] = std::shared_ptr<SpaceNode>(nullptr);
   }
   if (sn_3.get() == nullptr) {
     nodes_[2] = sn_1;
-    nodes_[0] = std::shared_ptr<SpaceNode<T>>(nullptr);
+    nodes_[0] = std::shared_ptr<SpaceNode>(nullptr);
   }
 }
 
-template<class T>
-bool Triangle3D<T>::isSimilarTo(const std::shared_ptr<Triangle3D<T>>& other_triangle) const {
+
+bool Triangle3D::isSimilarTo(const std::shared_ptr<Triangle3D>& other_triangle) const {
   auto other_nodes = other_triangle->getNodes();
   return isAdjacentTo(other_nodes[0]) && isAdjacentTo(other_nodes[1])
       && isAdjacentTo(other_nodes[2]);
 }
 
-template<class T>
-double Triangle3D<T>::getSDDistance(const std::array<double, 3>& fourth_point) const {
+
+double Triangle3D::getSDDistance(const std::array<double, 3>& fourth_point) const {
   if (!isInfinite() && onUpperSide(fourth_point)) {
     double sd_distance = calculateSDDistance(fourth_point);
     if (sd_distance != std::numeric_limits<double>::max()) {
@@ -117,8 +117,8 @@ double Triangle3D<T>::getSDDistance(const std::array<double, 3>& fourth_point) c
   }
 }
 
-template<class T>
-std::shared_ptr<Rational> Triangle3D<T>::getSDDistanceExact(
+
+std::shared_ptr<Rational> Triangle3D::getSDDistanceExact(
     const std::array<double, 3>& fourth_point) const {
   if (!isInfinite() && onUpperSide(fourth_point)) {
     std::array<std::shared_ptr<ExactVector>, 4> points;
@@ -143,8 +143,8 @@ std::shared_ptr<Rational> Triangle3D<T>::getSDDistanceExact(
   }
 }
 
-template<class T>
-std::array<double, 3> Triangle3D<T>::calculateCircumSphereCenter(
+
+std::array<double, 3> Triangle3D::calculateCircumSphereCenter(
     const std::array<double, 3>& fourth_point) const {
   if (!isInfinite()) {
     double sd = calculateSDDistance(fourth_point);
@@ -153,8 +153,8 @@ std::array<double, 3> Triangle3D<T>::calculateCircumSphereCenter(
   //fnoexceptionthrow std::logic_error("could not calculate circum sphere, because triangle is infinite");
 }
 
-template<class T>
-std::array<double, 3> Triangle3D<T>::calculateCircumSphereCenterIfEasy(
+
+std::array<double, 3> Triangle3D::calculateCircumSphereCenterIfEasy(
     const std::array<double, 3>& fourth_point) const {
   if (circum_center_updated_) {
     return calculateCircumSphereCenter(fourth_point);
@@ -162,15 +162,15 @@ std::array<double, 3> Triangle3D<T>::calculateCircumSphereCenterIfEasy(
   //fnoexceptionthrow std::logic_error("could not calculate circum sphere, because triangle is infinite");
 }
 
-template<class T>
-void Triangle3D<T>::informAboutNodeMovement() {
+
+void Triangle3D::informAboutNodeMovement() {
   circum_center_updated_ = false;
   plane_updated_ = false;
   this->normal_vector_updated_ = false;
 }
 
-template<class T>
-void Triangle3D<T>::updatePlaneEquationIfNecessary() {
+
+void Triangle3D::updatePlaneEquationIfNecessary() {
   if (!plane_updated_ && !isInfinite()) {
     auto node_0_position = nodes_[0]->getPosition();
     auto diff_1 = Matrix::subtract(nodes_[1]->getPosition(), node_0_position);
@@ -180,14 +180,14 @@ void Triangle3D<T>::updatePlaneEquationIfNecessary() {
   }
 }
 
-template<class T>
-void Triangle3D<T>::update() {
+
+void Triangle3D::update() {
   updateCircumCenterIfNecessary();
   updatePlaneEquationIfNecessary();
 }
 
-template<class T>
-int Triangle3D<T>::orientationExact(const std::array<double, 3>& point_1,
+
+int Triangle3D::orientationExact(const std::array<double, 3>& point_1,
                                     const std::array<double, 3>& point_2) const {
   auto points = getExactPositionVectors();
   auto normal_vector = points[1]->subtract(points[0])->crossProduct(points[2]->subtract(points[0]));
@@ -196,8 +196,8 @@ int Triangle3D<T>::orientationExact(const std::array<double, 3>& point_1,
       * normal_vector->dotProduct(ExactVector::create(point_2))->compareTo(offset);
 }
 
-template<class T>
-int Triangle3D<T>::circleOrientation(const std::array<double, 3>& point) {
+
+int Triangle3D::circleOrientation(const std::array<double, 3>& point) {
   updateCircumCenterIfNecessary();
   auto dummy = Matrix::subtract(point, circum_center_);
   double squared_distance = Matrix::dot(dummy, dummy);
@@ -219,9 +219,9 @@ int Triangle3D<T>::circleOrientation(const std::array<double, 3>& point) {
   }
 }
 
-template<class T>
-std::shared_ptr<Tetrahedron<T>> Triangle3D<T>::getOppositeTetrahedron(
-    const std::shared_ptr<Tetrahedron<T>>& incident_tetrahedron) const {
+
+std::shared_ptr<Tetrahedron> Triangle3D::getOppositeTetrahedron(
+    const std::shared_ptr<Tetrahedron>& incident_tetrahedron) const {
   if (adjacent_tetrahedra_[0] == incident_tetrahedron) {
     return adjacent_tetrahedra_[1];
   } else if (adjacent_tetrahedra_[1] == incident_tetrahedron) {
@@ -231,17 +231,17 @@ std::shared_ptr<Tetrahedron<T>> Triangle3D<T>::getOppositeTetrahedron(
   }
 }
 
-template<class T>
-void Triangle3D<T>::removeTetrahedron(const std::shared_ptr<Tetrahedron<T>>& tetrahedron) {
+
+void Triangle3D::removeTetrahedron(const std::shared_ptr<Tetrahedron>& tetrahedron) {
   if (adjacent_tetrahedra_[0] == tetrahedron) {
-    adjacent_tetrahedra_[0] = std::shared_ptr<Tetrahedron<T>>(nullptr);
+    adjacent_tetrahedra_[0] = std::shared_ptr<Tetrahedron>(nullptr);
   } else {
-    adjacent_tetrahedra_[1] = std::shared_ptr<Tetrahedron<T>>(nullptr);
+    adjacent_tetrahedra_[1] = std::shared_ptr<Tetrahedron>(nullptr);
   }
 }
 
-template<class T>
-bool Triangle3D<T>::isOpenToSide(const std::array<double, 3>& point) {
+
+bool Triangle3D::isOpenToSide(const std::array<double, 3>& point) {
   if (adjacent_tetrahedra_[0].get() == nullptr) {
     if (adjacent_tetrahedra_[1].get() == nullptr) {
       return true;
@@ -265,8 +265,8 @@ bool Triangle3D<T>::isOpenToSide(const std::array<double, 3>& point) {
   }
 }
 
-template<class T>
-void Triangle3D<T>::orientToSide(const std::array<double, 3>& position) {
+
+void Triangle3D::orientToSide(const std::array<double, 3>& position) {
   if (!isInfinite()) {
     updatePlaneEquationIfNecessary();
     double dot = Matrix::dot(position, this->normal_vector_);
@@ -289,8 +289,8 @@ void Triangle3D<T>::orientToSide(const std::array<double, 3>& position) {
   }
 }
 
-template<class T>
-void Triangle3D<T>::orientToOpenSide() {
+
+void Triangle3D::orientToOpenSide() {
   if (!isInfinite()) {
     if (adjacent_tetrahedra_[0].get() == nullptr) {
       if (adjacent_tetrahedra_[1].get() == nullptr) {
@@ -313,8 +313,8 @@ void Triangle3D<T>::orientToOpenSide() {
   }
 }
 
-template<class T>
-int Triangle3D<T>::orientationToUpperSide(const std::array<double, 3>& point) const {
+
+int Triangle3D::orientationToUpperSide(const std::array<double, 3>& point) const {
   double dot = Matrix::dot(point, this->normal_vector_);
   if (dot > this->offset_ + this->tolerance_) {
     return upper_side_positive_ ? 1 : -1;
@@ -333,18 +333,18 @@ int Triangle3D<T>::orientationToUpperSide(const std::array<double, 3>& point) co
   }
 }
 
-template<class T>
-bool Triangle3D<T>::onUpperSide(const std::array<double, 3>& point) const {
+
+bool Triangle3D::onUpperSide(const std::array<double, 3>& point) const {
   return orientationToUpperSide(point) >= 0;
 }
 
-template<class T>
-bool Triangle3D<T>::trulyOnUpperSide(const std::array<double, 3>& point) const {
+
+bool Triangle3D::trulyOnUpperSide(const std::array<double, 3>& point) const {
   return orientationToUpperSide(point) > 0;
 }
 
-template<class T>
-double Triangle3D<T>::getTypicalSDDistance() const {
+
+double Triangle3D::getTypicalSDDistance() const {
   if (isInfinite()) {
     return std::numeric_limits<double>::max();
   } else {
@@ -353,8 +353,8 @@ double Triangle3D<T>::getTypicalSDDistance() const {
   }
 }
 
-template<class T>
-std::string Triangle3D<T>::toString() const {
+
+std::string Triangle3D::toString() const {
   return "T3D";
 //  return "{(" + StringUtil::toStr(nodes_[0]) + "," + StringUtil::toStr(nodes_[1]) + ","
 //      + StringUtil::toStr(nodes_[2]) + "), " + "(" + StringUtil::toStr(adjacent_tetrahedra_[0])
@@ -366,18 +366,18 @@ std::string Triangle3D<T>::toString() const {
 //      + StringUtil::toStr(this->normal_vector_updated_) + "}";
 }
 
-template<class T>
-bool Triangle3D<T>::isInfinite() const {
+
+bool Triangle3D::isInfinite() const {
   return nodes_[0].get() == nullptr;
 }
 
-template<class T>
-std::array<std::shared_ptr<SpaceNode<T> >, 3> Triangle3D<T>::getNodes() const {
+
+std::array<std::shared_ptr<SpaceNode >, 3> Triangle3D::getNodes() const {
   return nodes_;
 }
 
-template<class T>
-void Triangle3D<T>::addTetrahedron(const std::shared_ptr<Tetrahedron<T>>& tetrahedron) {
+
+void Triangle3D::addTetrahedron(const std::shared_ptr<Tetrahedron>& tetrahedron) {
   if (adjacent_tetrahedra_[0].get() == nullptr) {
     adjacent_tetrahedra_[0] = tetrahedron;
   } else {
@@ -386,8 +386,8 @@ void Triangle3D<T>::addTetrahedron(const std::shared_ptr<Tetrahedron<T>>& tetrah
   connection_checked_ = -1;
 }
 
-template<class T>
-bool Triangle3D<T>::wasCheckedAlready(int checking_index) {
+
+bool Triangle3D::wasCheckedAlready(int checking_index) {
   if (checking_index == connection_checked_) {
     return true;
   } else {
@@ -396,40 +396,40 @@ bool Triangle3D<T>::wasCheckedAlready(int checking_index) {
   }
 }
 
-template<class T>
-bool Triangle3D<T>::isAdjacentTo(const std::shared_ptr<Tetrahedron<T>>& tetrahedron) const {
+
+bool Triangle3D::isAdjacentTo(const std::shared_ptr<Tetrahedron>& tetrahedron) const {
   return (adjacent_tetrahedra_[0] == tetrahedron) || (adjacent_tetrahedra_[1] == tetrahedron);
 }
 
-template<class T>
-bool Triangle3D<T>::isAdjacentTo(const std::shared_ptr<SpaceNode<T>>& node) const {
+
+bool Triangle3D::isAdjacentTo(const std::shared_ptr<SpaceNode>& node) const {
   return (nodes_[0] == node) || (nodes_[1] == node) || (nodes_[2] == node);
 }
 
-template<class T>
-bool Triangle3D<T>::isCompletelyOpen() const {
+
+bool Triangle3D::isCompletelyOpen() const {
   return (adjacent_tetrahedra_[0].get() == nullptr) && (adjacent_tetrahedra_[1].get() == nullptr);
 }
 
-template<class T>
-bool Triangle3D<T>::isClosed() const {
+
+bool Triangle3D::isClosed() const {
   return (adjacent_tetrahedra_[0].get() != nullptr) && (adjacent_tetrahedra_[1].get() != nullptr);
 }
 
-template<class T>
-std::shared_ptr<ExactVector> Triangle3D<T>::getExactNormalVector() const {
+
+std::shared_ptr<ExactVector> Triangle3D::getExactNormalVector() const {
   return calculateExactNormalVector(getExactPositionVectors());
 }
 
-template<class T>
-void Triangle3D<T>::updateNormalVector(const std::array<double, 3>& new_normal_vector) {
+
+void Triangle3D::updateNormalVector(const std::array<double, 3>& new_normal_vector) {
   this->normal_vector_ = new_normal_vector;
   this->offset_ = Matrix::dot(this->normal_vector_, nodes_[0]->getPosition());
   this->normal_vector_updated_ = true;
 }
 
-template<class T>
-std::shared_ptr<ExactVector> Triangle3D<T>::calculateCircumCenterExact(
+
+std::shared_ptr<ExactVector> Triangle3D::calculateCircumCenterExact(
     const std::array<std::shared_ptr<ExactVector>, 3>& points,
     const std::shared_ptr<ExactVector>& normal_vector) {
   auto a = points[0];
@@ -442,8 +442,8 @@ std::shared_ptr<ExactVector> Triangle3D<T>::calculateCircumCenterExact(
   return calculate3PlaneXPoint(n, rationals, ExactVector::det(n));
 }
 
-template<class T>
-double Triangle3D<T>::calculateSDDistance(const std::array<double, 3>& fourth_point) const {
+
+double Triangle3D::calculateSDDistance(const std::array<double, 3>& fourth_point) const {
   if (!isInfinite()) {
     // calc that distance within 6 subtractions, 3 additions, 1 division
     // and 9 multiplications. Beat that!
@@ -477,8 +477,8 @@ double Triangle3D<T>::calculateSDDistance(const std::array<double, 3>& fourth_po
   return std::numeric_limits<double>::max();
 }
 
-template<class T>
-std::shared_ptr<Rational> Triangle3D<T>::calculateSDDistanceExact(
+
+std::shared_ptr<Rational> Triangle3D::calculateSDDistanceExact(
     const std::array<std::shared_ptr<ExactVector>, 4>& points,
     const std::shared_ptr<ExactVector>& normal_vector) const {
   if (!isInfinite()) {
@@ -499,8 +499,8 @@ std::shared_ptr<Rational> Triangle3D<T>::calculateSDDistanceExact(
   return Rational::create(std::numeric_limits<int64_t>::max());
 }
 
-template<class T>
-void Triangle3D<T>::updateCircumCenterIfNecessary() {
+
+void Triangle3D::updateCircumCenterIfNecessary() {
   if (!circum_center_updated_ && !isInfinite()) {
     circum_center_updated_ = true;
     auto a = nodes_[0]->getPosition();
@@ -523,8 +523,8 @@ void Triangle3D<T>::updateCircumCenterIfNecessary() {
   }
 }
 
-template<class T>
-std::array<std::shared_ptr<ExactVector>, 3> Triangle3D<T>::getExactPositionVectors() const {
+
+std::array<std::shared_ptr<ExactVector>, 3> Triangle3D::getExactPositionVectors() const {
   std::array<std::shared_ptr<ExactVector>, 3> result;
   for (std::size_t i = 0; i < 3; i++) {
     result[i] = ExactVector::create(nodes_[i]->getPosition());
@@ -532,14 +532,13 @@ std::array<std::shared_ptr<ExactVector>, 3> Triangle3D<T>::getExactPositionVecto
   return result;
 }
 
-template<class T>
-std::shared_ptr<ExactVector> Triangle3D<T>::calculateExactNormalVector(
+
+std::shared_ptr<ExactVector> Triangle3D::calculateExactNormalVector(
     const std::array<std::shared_ptr<ExactVector>, 3>& points) const {
   return points[1]->subtract(points[0])->crossProduct(points[2]->subtract(points[0]));
 }
 
 // define templates that should be compiled
-template class Triangle3D<cx3d::physics::PhysicalNode>;
 
 }  // namespace spatial_organization
 }  // namespace cx3d

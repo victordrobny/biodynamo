@@ -10,24 +10,24 @@
 namespace cx3d {
 namespace spatial_organization {
 
-template<class T>
-Plane3D<T>::Plane3D()
+
+Plane3D::Plane3D()
     : normal_vector_ { 0.0, 0.0, 0.0 },
       offset_(0.0),
       tolerance_(0.0),
       normal_vector_updated_(false) {
 }
 
-template<class T>
-Plane3D<T>::Plane3D(const std::array<double, 3>& normal_vector, double offset)
+
+Plane3D::Plane3D(const std::array<double, 3>& normal_vector, double offset)
     : normal_vector_(normal_vector),
       offset_(offset),
       tolerance_(Matrix::dot(normal_vector_, normal_vector_) * 0.000000001),
       normal_vector_updated_(false) {
 }
 
-template<class T>
-Plane3D<T>::Plane3D(const std::array<double, 3>& direction_vector_1,
+
+Plane3D::Plane3D(const std::array<double, 3>& direction_vector_1,
                     const std::array<double, 3>& direction_vector_2,
                     const std::array<double, 3>& position_vector, bool normalize)
     : normal_vector_({ 0.0, 0.0, 0.0 }),
@@ -37,8 +37,8 @@ Plane3D<T>::Plane3D(const std::array<double, 3>& direction_vector_1,
   initPlane(direction_vector_1, direction_vector_2, position_vector, normalize);
 }
 
-template<class T>
-Plane3D<T>::Plane3D(const std::array<double, 3>& direction_vector_1,
+
+Plane3D::Plane3D(const std::array<double, 3>& direction_vector_1,
                     const std::array<double, 3>& direction_vector_2,
                     const std::array<double, 3>& position_vector)
     : normal_vector_({ 0.0, 0.0, 0.0 }),
@@ -48,9 +48,9 @@ Plane3D<T>::Plane3D(const std::array<double, 3>& direction_vector_1,
   initPlane(direction_vector_1, direction_vector_2, position_vector, Plane3D::normalize_);
 }
 
-template<class T>
-Plane3D<T>::Plane3D(const std::array<std::shared_ptr<SpaceNode<T> >, 4>& nodes,
-                    const std::shared_ptr<SpaceNode<T> >& non_used_node, bool normalize)
+
+Plane3D::Plane3D(const std::array<std::shared_ptr<SpaceNode >, 4>& nodes,
+                    const std::shared_ptr<SpaceNode >& non_used_node, bool normalize)
     : normal_vector_({ 0.0, 0.0, 0.0 }),
       offset_(0.0),
       tolerance_(0.0),
@@ -73,20 +73,20 @@ Plane3D<T>::Plane3D(const std::array<std::shared_ptr<SpaceNode<T> >, 4>& nodes,
   defineUpperSide(non_used_node->getPosition());
 }
 
-template<class T>
-Plane3D<T>::Plane3D(const std::array<std::shared_ptr<SpaceNode<T> >, 4>& nodes,
-                    const std::shared_ptr<SpaceNode<T>>& non_used_node)
+
+Plane3D::Plane3D(const std::array<std::shared_ptr<SpaceNode >, 4>& nodes,
+                    const std::shared_ptr<SpaceNode>& non_used_node)
     : Plane3D(nodes, non_used_node, Plane3D::normalize_) {
 }
 
-template<class T>
-Plane3D<T>::Plane3D(const std::shared_ptr<Tetrahedron<T>>& tetrahedron,
-                    const std::shared_ptr<SpaceNode<T>>& non_used_node)
+
+Plane3D::Plane3D(const std::shared_ptr<Tetrahedron>& tetrahedron,
+                    const std::shared_ptr<SpaceNode>& non_used_node)
     : Plane3D(tetrahedron->getAdjacentNodes(), non_used_node) {
 }
 
-template<class T>
-void Plane3D<T>::initPlane(const std::array<double, 3>& direction_vector_1,
+
+void Plane3D::initPlane(const std::array<double, 3>& direction_vector_1,
                            const std::array<double, 3>& direction_vector_2,
                            const std::array<double, 3>& position_vector, bool normalize) {
   if (!normal_vector_updated_) {
@@ -107,23 +107,23 @@ void Plane3D<T>::initPlane(const std::array<double, 3>& direction_vector_1,
   offset_ = Matrix::dot(normal_vector_, position_vector);
 }
 
-template<class T>
-void Plane3D<T>::changeUpperSide() {
+
+void Plane3D::changeUpperSide() {
   offset_ = -offset_;
   normal_vector_[0] = -normal_vector_[0];
   normal_vector_[1] = -normal_vector_[1];
   normal_vector_[2] = -normal_vector_[2];
 }
 
-template<class T>
-void Plane3D<T>::defineUpperSide(const std::array<double, 3>& point) {
+
+void Plane3D::defineUpperSide(const std::array<double, 3>& point) {
   if (Matrix::dot(point, normal_vector_) + tolerance_ < offset_) {
     changeUpperSide();
   }
 }
 
-template<class T>
-int Plane3D<T>::orientation(const std::array<double, 3>& point_1,
+
+int Plane3D::orientation(const std::array<double, 3>& point_1,
                             const std::array<double, 3>& point_2) const {
   double dot_1 = Matrix::dot(point_1, normal_vector_);
   double dot_2 = Matrix::dot(point_2, normal_vector_);
@@ -148,31 +148,31 @@ int Plane3D<T>::orientation(const std::array<double, 3>& point_1,
   }
 }
 
-template<class T>
-bool Plane3D<T>::trulyOnSameSide(const std::array<double, 3>& point_1,
+
+bool Plane3D::trulyOnSameSide(const std::array<double, 3>& point_1,
                                  const std::array<double, 3>& point_2) {
   return orientation(point_1, point_2) > 0;
 }
 
-template<class T>
-bool Plane3D<T>::trulyOnDifferentSides(const std::array<double, 3>& point_1,
+
+bool Plane3D::trulyOnDifferentSides(const std::array<double, 3>& point_1,
                                        const std::array<double, 3>& point_2) {
   return orientation(point_1, point_2) < 0;
 }
 
-template<class T>
-bool Plane3D<T>::onSameSide(const std::array<double, 3>& point_1,
+
+bool Plane3D::onSameSide(const std::array<double, 3>& point_1,
                             const std::array<double, 3>& point_2) const {
   return orientation(point_1, point_2) >= 0;
 }
 
-template<class T>
-std::array<double, 3> Plane3D<T>::getNormalVector() {
+
+std::array<double, 3> Plane3D::getNormalVector() {
   return normal_vector_;
 }
 
-template<class T>
-int Plane3D<T>::orientationExact(const std::array<double, 3>& point_1,
+
+int Plane3D::orientationExact(const std::array<double, 3>& point_1,
                                  const std::array<double, 3>& point_2) const {
   auto exact_normal_vector = ExactVector::create(normal_vector_);
   auto offset = Rational::create(offset_);
@@ -181,8 +181,6 @@ int Plane3D<T>::orientationExact(const std::array<double, 3>& point_1,
   return dot_1->compareTo(offset) * dot_2->compareTo(offset);
 }
 
-// define templates that should be compiled
-template class Plane3D<cx3d::physics::PhysicalNode>;
 
 }  // namespace spatial_organization
 }  // namespace cx3d

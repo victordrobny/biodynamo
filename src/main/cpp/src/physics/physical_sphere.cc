@@ -13,7 +13,7 @@
 #include "physics/physical_bond.h"
 #include "physics/inter_object_force.h"
 #include "physics/intracellular_substance.h"
-#include "physics/debug/physical_sphere_debug.h"
+//#include "physics/debug/physical_sphere_debug.h"
 
 #include "spatial_organization/space_node.h"
 

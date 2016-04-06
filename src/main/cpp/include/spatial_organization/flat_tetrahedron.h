@@ -14,9 +14,9 @@
 namespace cx3d {
 namespace spatial_organization {
 
-template<class T> class SpaceNode;
-template<class T> class Triangle3D;
-template<class T> class OpenTriangleOrganizer;
+ class SpaceNode;
+ class Triangle3D;
+ class OpenTriangleOrganizer;
 
 /**
  * During the flip algorithm, it can happen that tetrahedra with no volume are created.
@@ -24,10 +24,10 @@ template<class T> class OpenTriangleOrganizer;
  * tetrahedra. This class extends the class {@link Tetrahedron} in such a way, that these
  * problems are handled.
  *
- * @param <T> The type of user objects associated with nodes in this triangulation.
+ * @param  The type of user objects associated with nodes in this triangulation.
  */
-template<class T>
-class FlatTetrahedron : public Tetrahedron<T> {  //, public std::enable_shared_from_this<FlatTetrahedron<T>> {
+
+class FlatTetrahedron : public Tetrahedron {  //, public std::enable_shared_from_this<FlatTetrahedron> {
  public:
   /**
    * Creates a new FlatTetrahedron object and returns it within a <code>std::shared_ptr</code>
@@ -47,7 +47,7 @@ class FlatTetrahedron : public Tetrahedron<T> {  //, public std::enable_shared_f
    * <code>
    * template<typename ... T>
    * static std::shared_ptr<FlatTetrahedron> create(T&& ... all) {
-   *   return std::shared_ptr<FlatTetrahedron>(new FlatTetrahedron(std::forward<T>(all)...));
+   *   return std::shared_ptr<FlatTetrahedron>(new FlatTetrahedron(std::forward(all)...));
    * }
    * </code>
    *
@@ -63,20 +63,20 @@ class FlatTetrahedron : public Tetrahedron<T> {  //, public std::enable_shared_f
    *            newly created triangles.
    */
 
-  static std::shared_ptr<Tetrahedron<T>> create(
-      const std::shared_ptr<Triangle3D<T>>& one_triangle,
-      const std::shared_ptr<SpaceNode<T>>& fourth_point,
-      const std::shared_ptr<OpenTriangleOrganizer<T>>& oto) {
+  static std::shared_ptr<Tetrahedron> create(
+      const std::shared_ptr<Triangle3D>& one_triangle,
+      const std::shared_ptr<SpaceNode>& fourth_point,
+      const std::shared_ptr<OpenTriangleOrganizer>& oto) {
 #ifdef TETRAHEDRON_DEBUG
-    FlatTetrahedron<T>* tetrahedron = new FlatTetrahedronDebug<T>();
+    FlatTetrahedron* tetrahedron = new FlatTetrahedronDebug();
 #else
-    FlatTetrahedron<T>* tetrahedron = new FlatTetrahedron<T>();
+    FlatTetrahedron* tetrahedron = new FlatTetrahedron();
 #endif
     tetrahedron->initializationHelper(one_triangle, fourth_point, oto);
 #ifdef TETRAHEDRON_DEBUG
     logConstrFromStatic("Tetrahedron", tetrahedron, one_triangle, fourth_point, oto);
 #endif
-    std::shared_ptr<Tetrahedron<T>> ret(tetrahedron);
+    std::shared_ptr<Tetrahedron> ret(tetrahedron);
     return ret;
   }
 
@@ -100,18 +100,18 @@ class FlatTetrahedron : public Tetrahedron<T> {  //, public std::enable_shared_f
    * @param node_d
    *            The first point, must lie opposite to triangleD.
    */
-  static std::shared_ptr<Tetrahedron<T>> create(const std::shared_ptr<Triangle3D<T>>& triangle_a,
-                                                const std::shared_ptr<Triangle3D<T>>& triangle_b,
-                                                const std::shared_ptr<Triangle3D<T>>& triangle_c,
-                                                const std::shared_ptr<Triangle3D<T>>& triangle_d,
-                                                const std::shared_ptr<SpaceNode<T>>& node_a,
-                                                const std::shared_ptr<SpaceNode<T>>& node_b,
-                                                const std::shared_ptr<SpaceNode<T>>& node_c,
-                                                const std::shared_ptr<SpaceNode<T>>& node_d) {
+  static std::shared_ptr<Tetrahedron> create(const std::shared_ptr<Triangle3D>& triangle_a,
+                                                const std::shared_ptr<Triangle3D>& triangle_b,
+                                                const std::shared_ptr<Triangle3D>& triangle_c,
+                                                const std::shared_ptr<Triangle3D>& triangle_d,
+                                                const std::shared_ptr<SpaceNode>& node_a,
+                                                const std::shared_ptr<SpaceNode>& node_b,
+                                                const std::shared_ptr<SpaceNode>& node_c,
+                                                const std::shared_ptr<SpaceNode>& node_d) {
 #ifdef TETRAHEDRON_DEBUG
-    FlatTetrahedron<T>* tetrahedron = new FlatTetrahedronDebug<T>();
+    FlatTetrahedron* tetrahedron = new FlatTetrahedronDebug();
 #else
-    FlatTetrahedron<T>* tetrahedron = new FlatTetrahedron<T>();
+    FlatTetrahedron* tetrahedron = new FlatTetrahedron();
 #endif
     tetrahedron->initializationHelper(triangle_a, triangle_b, triangle_c, triangle_d, node_a,
                                       node_b, node_c, node_d);
@@ -119,7 +119,7 @@ class FlatTetrahedron : public Tetrahedron<T> {  //, public std::enable_shared_f
     logConstrFromStatic("FlatTetrahedron", tetrahedron, triangle_a, triangle_b, triangle_c, triangle_d, node_a, node_b,
         node_c, node_d);
 #endif
-    std::shared_ptr<Tetrahedron<T>> ret(tetrahedron);
+    std::shared_ptr<Tetrahedron> ret(tetrahedron);
     return ret;
   }
 
@@ -132,7 +132,7 @@ class FlatTetrahedron : public Tetrahedron<T> {  //, public std::enable_shared_f
    * informed about the movement of <code>movedNode</code>.
    * @param moved_node The node that was moved.
    */
-  void updateCirumSphereAfterNodeMovement(const std::shared_ptr<SpaceNode<T>>& moved_node) override;
+  void updateCirumSphereAfterNodeMovement(const std::shared_ptr<SpaceNode>& moved_node) override;
 
   /**
    * Calculates the volume of this flat tetrahedron. Since the volume of a flat tetrahedron is
