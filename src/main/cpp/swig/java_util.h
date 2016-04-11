@@ -27,7 +27,7 @@ class JavaUtil {
   /**
    * redirects call, because static methods cannot be handled by SWIG direcotr
    */
-  virtual std::shared_ptr<spatial_organization::OpenTriangleOrganizer> oto_createSimpleOpenTriangleOrganizer() {
+  virtual spatial_organization::OpenTriangleOrganizer* oto_createSimpleOpenTriangleOrganizer() {
     return spatial_organization::OpenTriangleOrganizer::createSimpleOpenTriangleOrganizer();
   }
 };

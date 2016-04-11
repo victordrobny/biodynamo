@@ -9,16 +9,16 @@ namespace cx3d {
 namespace spatial_organization {
 
 
-TriangleHashKey::TriangleHashKey(const std::shared_ptr<SpaceNode>& a,
-                                    const std::shared_ptr<SpaceNode>& b,
-                                    const std::shared_ptr<SpaceNode>& c)
+TriangleHashKey::TriangleHashKey(SpaceNode* a,
+                                    SpaceNode* b,
+                                    SpaceNode* c)
     : a_(a),
       b_(b),
       c_(c),
       hash_code_(0) {
-  int a_id = a_.get() != nullptr ? a_->getId() : -1;
-  int b_id = b_.get() != nullptr ? b_->getId() : -1;
-  int c_id = c_.get() != nullptr ? c_->getId() : -1;
+  int a_id = a_ != nullptr ? a_->getId() : -1;
+  int b_id = b_ != nullptr ? b_->getId() : -1;
+  int c_id = c_ != nullptr ? c_->getId() : -1;
   createHashCode(a_id, b_id, c_id);
 }
 
@@ -36,7 +36,7 @@ int TriangleHashKey::hashCode() const {
 }
 
 
-bool TriangleHashKey::equalTo(const std::shared_ptr<TriangleHashKey>& other) const {
+bool TriangleHashKey::equalTo(const TriangleHashKey* other) const {
   return (a_ == other->a_
       && ((b_ == other->b_ && c_ == other->c_) || (b_ == other->c_ && c_ == other->b_)))
       || (a_ == other->b_

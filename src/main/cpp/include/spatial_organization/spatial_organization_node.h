@@ -29,28 +29,28 @@ class SpatialOrganizationNode {
   }
 
   virtual void addSpatialOrganizationNodeMovementListener(
-      const std::shared_ptr<SpatialOrganizationNodeMovementListener>& listener) = 0;
+      SpatialOrganizationNodeMovementListener* listener) = 0;
 
   /**
    * Returns a list that allows to iterate over all edges
    * incident to this node.
    */
-  virtual std::vector<std::shared_ptr<Edge> > getEdges() const = 0;  //TODO change to SpatialOrganizationEdge once porting has been finished
+  virtual std::vector<Edge* > getEdges() const = 0;  //TODO change to SpatialOrganizationEdge once porting has been finished
 
-  virtual std::vector<std::shared_ptr<cx3d::physics::PhysicalNode>> getNeighbors() const = 0;
+  virtual std::vector<cx3d::physics::PhysicalNode*> getNeighbors() const = 0;
 
   // todo change to interface type
-  virtual std::shared_ptr<SpaceNode> getNewInstance(
+  virtual SpaceNode* getNewInstance(
       const std::array<double, 3>& position,
-      const std::shared_ptr<physics::PhysicalNode>& user_object) = 0;
+      physics::PhysicalNode* user_object) = 0;
 
-  virtual std::vector<std::shared_ptr<cx3d::physics::PhysicalNode>> getPermanentListOfNeighbors() const = 0;
+  virtual std::vector<cx3d::physics::PhysicalNode*> getPermanentListOfNeighbors() const = 0;
 
   virtual std::array<double, 3> getPosition() const = 0;
 
-  virtual std::shared_ptr<physics::PhysicalNode> getUserObject() const = 0;
+  virtual physics::PhysicalNode* getUserObject() const = 0;
 
-  virtual std::array<std::shared_ptr<cx3d::physics::PhysicalNode>, 4> getVerticesOfTheTetrahedronContaining(
+  virtual std::array<cx3d::physics::PhysicalNode*, 4> getVerticesOfTheTetrahedronContaining(
       const std::array<double, 3>& position, std::array<int, 1>& returned_null) const = 0;
 
   virtual double getVolume() const = 0;

@@ -25,15 +25,15 @@ class AbstractTriangulationNodeOrganizer {
   virtual ~AbstractTriangulationNodeOrganizer() {
   }
 
-  virtual std::vector<std::shared_ptr<SpaceNode> > getNodes(const std::shared_ptr<SpaceNode>& reference_point) = 0;
+  virtual std::vector<SpaceNode* > getNodes(const SpaceNode* reference_point) = 0;
 
-  virtual void addTriangleNodes(const std::shared_ptr<Triangle3D>& triangle) = 0;
+  virtual void addTriangleNodes(const Triangle3D* triangle) = 0;
 
-  virtual void removeNode(const std::shared_ptr<SpaceNode>& node) = 0;
+  virtual void removeNode(const SpaceNode* node) = 0;
 
-  virtual void addNode(const std::shared_ptr<SpaceNode>& node) = 0;
+  virtual void addNode(SpaceNode* node) = 0;
 
-  virtual std::shared_ptr<SpaceNode> getFirstNode() const = 0;
+  virtual SpaceNode* getFirstNode() const = 0;
 
   virtual std::string toString() const = 0;
 

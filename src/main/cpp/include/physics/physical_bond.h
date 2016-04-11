@@ -12,7 +12,7 @@ namespace physics {
 class PhysicalObject;
 class PhysicalCylinder;
 
-class PhysicalBond : public SimStateSerializable, public std::enable_shared_from_this<PhysicalBond> {
+class PhysicalBond : public SimStateSerializable {
  public:
   static std::shared_ptr<PhysicalBond> create();
 
@@ -169,7 +169,7 @@ class PhysicalBond : public SimStateSerializable, public std::enable_shared_from
 
   void dolocking(const std::shared_ptr<PhysicalObject>& a, const std::shared_ptr<PhysicalObject>& b);
 
-  // necessary because initialization code uses this->shared_from_this() - cannot be in constructor
+  // necessary because initialization code uses this - cannot be in constructor
   void init(const std::shared_ptr<PhysicalObject>& a, const std::shared_ptr<PhysicalObject>& b);
 
   void init(const std::shared_ptr<PhysicalObject>& a, const std::array<double, 2>& position_on_a,

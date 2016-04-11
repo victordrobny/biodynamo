@@ -45,10 +45,10 @@ std::array<double, 3> Triangle3D::calculate3PlaneXPoint(
 }
 
 
-std::shared_ptr<ExactVector> Triangle3D::calculate3PlaneXPoint(
-    const std::array<std::shared_ptr<ExactVector>, 3>& normals,
-    const std::array<std::shared_ptr<Rational>, 3>& offsets,
-    const std::shared_ptr<Rational>& normal_det) {
+ExactVector* Triangle3D::calculate3PlaneXPoint(
+    const std::array<ExactVector*, 3>& normals,
+    const std::array<Rational*, 3>& offsets,
+    const Rational* normal_det) {
   if (!normal_det->isZero()) {
     auto ret = normals[1]->crossProduct(normals[2])->multiplyBy(offsets[0])->increaseBy(
         normals[2]->crossProduct(normals[0])->multiplyBy(offsets[1])->increaseBy(
@@ -59,7 +59,7 @@ std::shared_ptr<ExactVector> Triangle3D::calculate3PlaneXPoint(
     return ret;
   } else {
     double max_value = std::numeric_limits<double>::max();
-    std::array<std::shared_ptr<Rational>, 3> rationals;
+    std::array<Rational*, 3> rationals;
     for (int i = 0; i < 3; i++) {
       rationals[i] = Rational::create(max_value, 1);
     }
@@ -72,11 +72,11 @@ std::shared_ptr<ExactVector> Triangle3D::calculate3PlaneXPoint(
 }
 
 
-Triangle3D::Triangle3D(const std::shared_ptr<SpaceNode>& sn_1,
-                          const std::shared_ptr<SpaceNode>& sn_2,
-                          const std::shared_ptr<SpaceNode>& sn_3,
-                          const std::shared_ptr<Tetrahedron>& tetrahedron_1,
-                          const std::shared_ptr<Tetrahedron>& tetrahedron_2)
+Triangle3D::Triangle3D( SpaceNode* sn_1,
+                           SpaceNode* sn_2,
+                           SpaceNode* sn_3,
+                           Tetrahedron* tetrahedron_1,
+                           Tetrahedron* tetrahedron_2)
     : Plane3D(),
       adjacent_tetrahedra_({ tetrahedron_1, tetrahedron_2 }),
       nodes_({ sn_1, sn_2, sn_3 }),
@@ -86,18 +86,18 @@ Triangle3D::Triangle3D(const std::shared_ptr<SpaceNode>& sn_1,
       upper_side_positive_(true),
       connection_checked_(-1) {
 
-  if (sn_2.get() == nullptr) {
+  if (sn_2 == nullptr) {
     nodes_[1] = sn_1;
-    nodes_[0] = std::shared_ptr<SpaceNode>(nullptr);
+    nodes_[0] = nullptr;
   }
-  if (sn_3.get() == nullptr) {
+  if (sn_3 == nullptr) {
     nodes_[2] = sn_1;
-    nodes_[0] = std::shared_ptr<SpaceNode>(nullptr);
+    nodes_[0] = nullptr;
   }
 }
 
 
-bool Triangle3D::isSimilarTo(const std::shared_ptr<Triangle3D>& other_triangle) const {
+bool Triangle3D::isSimilarTo(const Triangle3D* other_triangle) const {
   auto other_nodes = other_triangle->getNodes();
   return isAdjacentTo(other_nodes[0]) && isAdjacentTo(other_nodes[1])
       && isAdjacentTo(other_nodes[2]);
@@ -118,11 +118,11 @@ double Triangle3D::getSDDistance(const std::array<double, 3>& fourth_point) cons
 }
 
 
-std::shared_ptr<Rational> Triangle3D::getSDDistanceExact(
+Rational* Triangle3D::getSDDistanceExact(
     const std::array<double, 3>& fourth_point) const {
   if (!isInfinite() && onUpperSide(fourth_point)) {
-    std::array<std::shared_ptr<ExactVector>, 4> points;
-    std::array<std::shared_ptr<ExactVector>, 3> points_3;
+    std::array<ExactVector*, 4> points;
+    std::array<ExactVector*, 3> points_3;
     for (int i = 0; i < 3; i++) {
       points[i] = ExactVector::create(nodes_[i]->getPosition());
       points_3[i] = points[i];
@@ -220,8 +220,8 @@ int Triangle3D::circleOrientation(const std::array<double, 3>& point) {
 }
 
 
-std::shared_ptr<Tetrahedron> Triangle3D::getOppositeTetrahedron(
-    const std::shared_ptr<Tetrahedron>& incident_tetrahedron) const {
+Tetrahedron* Triangle3D::getOppositeTetrahedron(
+    const Tetrahedron* incident_tetrahedron) const {
   if (adjacent_tetrahedra_[0] == incident_tetrahedron) {
     return adjacent_tetrahedra_[1];
   } else if (adjacent_tetrahedra_[1] == incident_tetrahedron) {
@@ -232,33 +232,33 @@ std::shared_ptr<Tetrahedron> Triangle3D::getOppositeTetrahedron(
 }
 
 
-void Triangle3D::removeTetrahedron(const std::shared_ptr<Tetrahedron>& tetrahedron) {
+void Triangle3D::removeTetrahedron(const Tetrahedron* tetrahedron) {
   if (adjacent_tetrahedra_[0] == tetrahedron) {
-    adjacent_tetrahedra_[0] = std::shared_ptr<Tetrahedron>(nullptr);
+    adjacent_tetrahedra_[0] = nullptr;
   } else {
-    adjacent_tetrahedra_[1] = std::shared_ptr<Tetrahedron>(nullptr);
+    adjacent_tetrahedra_[1] = nullptr;
   }
 }
 
 
 bool Triangle3D::isOpenToSide(const std::array<double, 3>& point) {
-  if (adjacent_tetrahedra_[0].get() == nullptr) {
-    if (adjacent_tetrahedra_[1].get() == nullptr) {
+  if (adjacent_tetrahedra_[0] == nullptr) {
+    if (adjacent_tetrahedra_[1] == nullptr) {
       return true;
     } else {
       if (adjacent_tetrahedra_[1]->isInfinite()) {
         return true;
       }
-      auto position = adjacent_tetrahedra_[1]->getOppositeNode(this->shared_from_this())
+      auto position = adjacent_tetrahedra_[1]->getOppositeNode(this)
           ->getPosition();
       return !(this->onSameSide(position, point));
     }
-  } else if (adjacent_tetrahedra_[1].get() == nullptr) {
+  } else if (adjacent_tetrahedra_[1] == nullptr) {
     if (adjacent_tetrahedra_[0]->isInfinite()) {
       return true;
     }
     auto position =
-        adjacent_tetrahedra_[0]->getOppositeNode(this->shared_from_this())->getPosition();
+        adjacent_tetrahedra_[0]->getOppositeNode(this)->getPosition();
     return !(this->onSameSide(position, point));
   } else {
     return false;
@@ -292,19 +292,19 @@ void Triangle3D::orientToSide(const std::array<double, 3>& position) {
 
 void Triangle3D::orientToOpenSide() {
   if (!isInfinite()) {
-    if (adjacent_tetrahedra_[0].get() == nullptr) {
-      if (adjacent_tetrahedra_[1].get() == nullptr) {
+    if (adjacent_tetrahedra_[0] == nullptr) {
+      if (adjacent_tetrahedra_[1] == nullptr) {
         //fnoexceptionthrow std::logic_error("The triangle has two open sides!");
       }
       if (!adjacent_tetrahedra_[1]->isInfinite()) {
         orientToSide(
-            adjacent_tetrahedra_[1]->getOppositeNode(this->shared_from_this())->getPosition());
+            adjacent_tetrahedra_[1]->getOppositeNode(this)->getPosition());
         upper_side_positive_ ^= true;
       }
-    } else if (adjacent_tetrahedra_[1].get() == nullptr) {
+    } else if (adjacent_tetrahedra_[1] == nullptr) {
       if (!adjacent_tetrahedra_[0]->isInfinite()) {
         orientToSide(
-            adjacent_tetrahedra_[0]->getOppositeNode(this->shared_from_this())->getPosition());
+            adjacent_tetrahedra_[0]->getOppositeNode(this)->getPosition());
         upper_side_positive_ ^= true;
       }
     } else {
@@ -368,17 +368,17 @@ std::string Triangle3D::toString() const {
 
 
 bool Triangle3D::isInfinite() const {
-  return nodes_[0].get() == nullptr;
+  return nodes_[0] == nullptr;
 }
 
 
-std::array<std::shared_ptr<SpaceNode >, 3> Triangle3D::getNodes() const {
+std::array<SpaceNode*, 3> Triangle3D::getNodes() const {
   return nodes_;
 }
 
 
-void Triangle3D::addTetrahedron(const std::shared_ptr<Tetrahedron>& tetrahedron) {
-  if (adjacent_tetrahedra_[0].get() == nullptr) {
+void Triangle3D::addTetrahedron(Tetrahedron* tetrahedron) {
+  if (adjacent_tetrahedra_[0] == nullptr) {
     adjacent_tetrahedra_[0] = tetrahedron;
   } else {
     adjacent_tetrahedra_[1] = tetrahedron;
@@ -397,27 +397,27 @@ bool Triangle3D::wasCheckedAlready(int checking_index) {
 }
 
 
-bool Triangle3D::isAdjacentTo(const std::shared_ptr<Tetrahedron>& tetrahedron) const {
+bool Triangle3D::isAdjacentTo(const Tetrahedron* tetrahedron) const {
   return (adjacent_tetrahedra_[0] == tetrahedron) || (adjacent_tetrahedra_[1] == tetrahedron);
 }
 
 
-bool Triangle3D::isAdjacentTo(const std::shared_ptr<SpaceNode>& node) const {
+bool Triangle3D::isAdjacentTo(const SpaceNode* node) const {
   return (nodes_[0] == node) || (nodes_[1] == node) || (nodes_[2] == node);
 }
 
 
 bool Triangle3D::isCompletelyOpen() const {
-  return (adjacent_tetrahedra_[0].get() == nullptr) && (adjacent_tetrahedra_[1].get() == nullptr);
+  return (adjacent_tetrahedra_[0] == nullptr) && (adjacent_tetrahedra_[1] == nullptr);
 }
 
 
 bool Triangle3D::isClosed() const {
-  return (adjacent_tetrahedra_[0].get() != nullptr) && (adjacent_tetrahedra_[1].get() != nullptr);
+  return (adjacent_tetrahedra_[0] != nullptr) && (adjacent_tetrahedra_[1] != nullptr);
 }
 
 
-std::shared_ptr<ExactVector> Triangle3D::getExactNormalVector() const {
+ExactVector* Triangle3D::getExactNormalVector() const {
   return calculateExactNormalVector(getExactPositionVectors());
 }
 
@@ -429,14 +429,14 @@ void Triangle3D::updateNormalVector(const std::array<double, 3>& new_normal_vect
 }
 
 
-std::shared_ptr<ExactVector> Triangle3D::calculateCircumCenterExact(
-    const std::array<std::shared_ptr<ExactVector>, 3>& points,
-    const std::shared_ptr<ExactVector>& normal_vector) {
+ExactVector* Triangle3D::calculateCircumCenterExact(
+    std::array<ExactVector*, 3>& points,
+    ExactVector* normal_vector) {
   auto a = points[0];
   // Start by calculating the normal vectors:
-  std::array<std::shared_ptr<ExactVector>, 3> n = { points[1]->subtract(a), points[2]->subtract(a),
+  std::array<ExactVector*, 3> n = { points[1]->subtract(a), points[2]->subtract(a),
       normal_vector };
-  std::array<std::shared_ptr<Rational>, 3> rationals = { points[1]->add(a)->dotProduct(n[0])
+  std::array<Rational*, 3> rationals = { points[1]->add(a)->dotProduct(n[0])
       ->divideBy(Rational::create(2, 1)), points[2]->add(a)->dotProduct(n[1])->divideBy(
       Rational::create(2, 1)), a->dotProduct(n[2]) };
   return calculate3PlaneXPoint(n, rationals, ExactVector::det(n));
@@ -478,16 +478,16 @@ double Triangle3D::calculateSDDistance(const std::array<double, 3>& fourth_point
 }
 
 
-std::shared_ptr<Rational> Triangle3D::calculateSDDistanceExact(
-    const std::array<std::shared_ptr<ExactVector>, 4>& points,
-    const std::shared_ptr<ExactVector>& normal_vector) const {
+Rational* Triangle3D::calculateSDDistanceExact(
+    const std::array<ExactVector*, 4>& points,
+    ExactVector* normal_vector) const {
   if (!isInfinite()) {
     // calc that distance within 6 subtractions, 3 additions, 1 division
     // and 9 multiplications. Beat that!
     auto ad = points[0]->subtract(points[3]);
     auto denominator = ad->dotProduct(normal_vector);
     if (!denominator->isZero()) {
-      std::array<std::shared_ptr<ExactVector>, 3> points_3;
+      std::array<ExactVector*, 3> points_3;
       for (std::size_t i = 0; i < 3; i++) {
         points_3[i] = points[i];
       }
@@ -524,8 +524,8 @@ void Triangle3D::updateCircumCenterIfNecessary() {
 }
 
 
-std::array<std::shared_ptr<ExactVector>, 3> Triangle3D::getExactPositionVectors() const {
-  std::array<std::shared_ptr<ExactVector>, 3> result;
+std::array<ExactVector*, 3> Triangle3D::getExactPositionVectors() const {
+  std::array<ExactVector*, 3> result;
   for (std::size_t i = 0; i < 3; i++) {
     result[i] = ExactVector::create(nodes_[i]->getPosition());
   }
@@ -533,8 +533,8 @@ std::array<std::shared_ptr<ExactVector>, 3> Triangle3D::getExactPositionVectors(
 }
 
 
-std::shared_ptr<ExactVector> Triangle3D::calculateExactNormalVector(
-    const std::array<std::shared_ptr<ExactVector>, 3>& points) const {
+ExactVector* Triangle3D::calculateExactNormalVector(
+    const std::array<ExactVector*, 3>& points) const {
   return points[1]->subtract(points[0])->crossProduct(points[2]->subtract(points[0]));
 }
 

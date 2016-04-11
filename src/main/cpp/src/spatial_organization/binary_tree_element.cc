@@ -18,11 +18,11 @@ BinaryTreeElement* BinaryTreeElement::generateTreeHead() {
 }
 
 
-BinaryTreeElement::BinaryTreeElement(std::shared_ptr<SpaceNode> content)
+BinaryTreeElement::BinaryTreeElement(SpaceNode* content)
     : content_ { content },
       bigger_ { nullptr },
       smaller_ { nullptr } {
-  if (content_.get() != nullptr) {
+  if (content_ != nullptr) {
     content_id_ = getHash(content);
   } else {
     content_id_ = -1;
@@ -37,20 +37,20 @@ BinaryTreeElement::~BinaryTreeElement() {
 
 
 bool BinaryTreeElement::contains(
-    const std::shared_ptr<SpaceNode>& content) const {
+    const SpaceNode* content) const {
   return contains(getHash(content), content);
 }
 
 
 void BinaryTreeElement::insert(
-    const std::shared_ptr<SpaceNode>& content) {
-  if (content.get() != nullptr) {
+    SpaceNode* content) {
+  if (content != nullptr) {
     insert(new BinaryTreeElement(content));
   }
 }
 
 
-void BinaryTreeElement::remove(const std::shared_ptr<SpaceNode>& content,
+void BinaryTreeElement::remove(const SpaceNode* content,
                                   BinaryTreeElement* parent) {
   remove(getHash(content), content, parent);
 }
@@ -67,7 +67,7 @@ std::string BinaryTreeElement::toString() const {
 }
 
 
-int BinaryTreeElement::getHash(std::shared_ptr<SpaceNode> content) const {
+int BinaryTreeElement::getHash(const SpaceNode* content) const {
   uint64_t id = content_->getId();
   uint64_t c = 7481;
   return (id * c) % 74317;
@@ -75,14 +75,14 @@ int BinaryTreeElement::getHash(std::shared_ptr<SpaceNode> content) const {
 
 
 bool BinaryTreeElement::contains(
-    int id, const std::shared_ptr<SpaceNode>& content) const {
+    int id, const SpaceNode* content) const {
   return contains(getHash(content), content);
 }
 
 
 void BinaryTreeElement::insert(BinaryTreeElement* element) {
   if (content_id_ == element->content_id_
-      && content_.get() == element->content_.get()) {
+      && content_ == element->content_) {
     return;
   } else if ((content_id_ >= element->content_id_)) {
     if ((smaller_ != nullptr)) {
@@ -101,9 +101,9 @@ void BinaryTreeElement::insert(BinaryTreeElement* element) {
 
 
 void BinaryTreeElement::remove(int id,
-                                  const std::shared_ptr<SpaceNode>& content,
+                                  const SpaceNode* content,
                                   BinaryTreeElement* parent) {
-  if ((content_id_ == id) && (content_.get() == content.get())) {
+  if ((content_id_ == id) && (content_ == content)) {
     if ((smaller_ == nullptr) && (bigger_ == nullptr)) {
       parent->changeLink(this, nullptr);
       //use of randomization in the next if showed no influence on the simulation outcome
@@ -139,8 +139,8 @@ void BinaryTreeElement::changeLink(BinaryTreeElement* old_el,
 }
 
 
-std::vector<std::shared_ptr<SpaceNode>>BinaryTreeElement::inOrderTraversal() const {
-  std::vector<std::shared_ptr<SpaceNode>> traversal;
+std::vector<SpaceNode*>BinaryTreeElement::inOrderTraversal() const {
+  std::vector<SpaceNode*> traversal;
   std::stack<const BinaryTreeElement*> stack;
   const BinaryTreeElement* dummy = this;
   while(dummy != nullptr) {
@@ -166,19 +166,19 @@ std::vector<std::shared_ptr<SpaceNode>>BinaryTreeElement::inOrderTraversal() con
 
 
 TreeHead::TreeHead()
-    : BinaryTreeElement(std::shared_ptr<SpaceNode>(nullptr)) {
+    : BinaryTreeElement(nullptr) {
 
 }
 
 
-bool TreeHead::contains(const std::shared_ptr<SpaceNode>& content) const {
+bool TreeHead::contains(const SpaceNode* content) const {
   return
       BinaryTreeElement::bigger_ != nullptr ?
           BinaryTreeElement::bigger_->contains(content) : false;
 }
 
 
-void TreeHead::insert(const std::shared_ptr<SpaceNode>& content) {
+void TreeHead::insert(SpaceNode* content) {
   if (BinaryTreeElement::bigger_ != nullptr) {
     BinaryTreeElement::bigger_->insert(content);
   } else {
@@ -187,7 +187,7 @@ void TreeHead::insert(const std::shared_ptr<SpaceNode>& content) {
 }
 
 
-void TreeHead::remove(const std::shared_ptr<SpaceNode>& content,
+void TreeHead::remove(const SpaceNode* content,
                          BinaryTreeElement* parent) {
   if (BinaryTreeElement::bigger_ != nullptr) {
     BinaryTreeElement::bigger_->remove(content, this);
@@ -195,11 +195,11 @@ void TreeHead::remove(const std::shared_ptr<SpaceNode>& content,
 }
 
 
-std::vector<std::shared_ptr<SpaceNode>>TreeHead::inOrderTraversal() const {
+std::vector<SpaceNode*>TreeHead::inOrderTraversal() const {
   if(BinaryTreeElement::bigger_ != nullptr) {
     return BinaryTreeElement::bigger_->inOrderTraversal();
   }
-  return std::vector<std::shared_ptr<SpaceNode>>();
+  return std::vector<SpaceNode*>();
 }
 
 

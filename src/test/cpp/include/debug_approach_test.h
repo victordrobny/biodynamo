@@ -89,4 +89,3 @@ class ClassToBeDebuggedDebug : public ClassToBeDebugged {
 }  // namespace cx3d
 
 #endif  // DEBUG_APPROACH_TEST_H_
-

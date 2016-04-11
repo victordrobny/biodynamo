@@ -214,7 +214,7 @@ std::shared_ptr<PhysicalCylinder> PhysicalSphere::addNewPhysicalCylinder(double 
   cyl->setColor(color_);
   // family relations
   daughters_.push_back(cyl);
-  cyl->setMother(std::static_pointer_cast<PhysicalSphere>(this->shared_from_this()));
+  cyl->setMother(std::static_pointer_cast<PhysicalSphere>(this));
   daughters_coord_[cyl] = {x_coord, y_coord, z_coord};
 
   // SpaceNode
@@ -305,25 +305,25 @@ std::shared_ptr<PhysicalSphere> PhysicalSphere::divide(double vr, double phi, do
 
 bool PhysicalSphere::isInContactWithSphere(const std::shared_ptr<PhysicalSphere>& s) {
   auto force = inter_object_force_->forceOnASphereFromASphere(
-      std::static_pointer_cast<PhysicalSphere>(this->shared_from_this()), s);
+      std::static_pointer_cast<PhysicalSphere>(this), s);
   return Matrix::norm(force) > 1E-15;
 }
 
 bool PhysicalSphere::isInContactWithCylinder(const std::shared_ptr<PhysicalCylinder>& c) {
   auto force = inter_object_force_->forceOnACylinderFromASphere(
-      c, std::static_pointer_cast<PhysicalSphere>(this->shared_from_this()));
+      c, std::static_pointer_cast<PhysicalSphere>(this));
   return Matrix::norm(force) > 1E-15;
 }
 
 std::array<double, 4> PhysicalSphere::getForceOn(const std::shared_ptr<PhysicalCylinder>& c) {
 // get force on a Cylinder from a sphere
   return inter_object_force_->forceOnACylinderFromASphere(
-      c, std::static_pointer_cast<PhysicalSphere>(this->shared_from_this()));
+      c, std::static_pointer_cast<PhysicalSphere>(this));
 }
 
 std::array<double, 3> PhysicalSphere::getForceOn(const std::shared_ptr<PhysicalSphere>& s) {
   return inter_object_force_->forceOnASphereFromASphere(
-      s, std::static_pointer_cast<PhysicalSphere>(this->shared_from_this()));
+      s, std::static_pointer_cast<PhysicalSphere>(this));
 }
 
 void PhysicalSphere::runPhysics() {
@@ -375,7 +375,7 @@ void PhysicalSphere::runPhysics() {
   // 2) Spring force from my neurites (translation and rotation)--------------------------
   for (auto c : daughters_) {
     auto force_from_daughter = c->forceTransmittedFromDaugtherToMother(
-        std::static_pointer_cast<PhysicalSphere>(this->shared_from_this()));
+        std::static_pointer_cast<PhysicalSphere>(this));
     // for mass translation
     translation_force_on_point_mass[0] += force_from_daughter[0];
     translation_force_on_point_mass[1] += force_from_daughter[1];
@@ -399,12 +399,12 @@ void PhysicalSphere::runPhysics() {
       }
       // if we have a PhysicalBond with him, we also don't take it into account
       for (auto pb : physical_bonds_) {
-        if (pb->getOppositePhysicalObject(std::static_pointer_cast<PhysicalSphere>(this->shared_from_this()))
+        if (pb->getOppositePhysicalObject(std::static_pointer_cast<PhysicalSphere>(this))
             == neighbor) {
           continue;
         }
       }
-      auto force_from_this_neighbor = n->getForceOn(std::static_pointer_cast<PhysicalSphere>(this->shared_from_this()));
+      auto force_from_this_neighbor = n->getForceOn(std::static_pointer_cast<PhysicalSphere>(this));
       translation_force_on_point_mass[0] += force_from_this_neighbor[0];
       translation_force_on_point_mass[1] += force_from_this_neighbor[1];
       translation_force_on_point_mass[2] += force_from_this_neighbor[2];
@@ -414,7 +414,7 @@ void PhysicalSphere::runPhysics() {
   // 4) PhysicalBonds--------------------------------------------------------------------
   for (auto pb : physical_bonds_) {
     auto force_from_this_physical_bond = pb->getForceOn(
-        std::static_pointer_cast<PhysicalSphere>(this->shared_from_this()));
+        std::static_pointer_cast<PhysicalSphere>(this));
     // for mass translation only (no rotation)
     translation_force_on_point_mass[0] += force_from_this_physical_bond[0];
     translation_force_on_point_mass[1] += force_from_this_physical_bond[1];
@@ -504,7 +504,7 @@ void PhysicalSphere::runPhysics() {
     }
     // physical objects at the other side of a PhysicalBond:
     for (auto pb : physical_bonds_) {
-      pb->getOppositePhysicalObject(std::static_pointer_cast<PhysicalSphere>(this->shared_from_this()))
+      pb->getOppositePhysicalObject(std::static_pointer_cast<PhysicalSphere>(this))
           ->setOnTheSchedulerListForPhysicalObjects(true);
     }
   }
@@ -544,11 +544,11 @@ void PhysicalSphere::runIntracellularDiffusion() {
     // To be sure that we diffuse all the chemicals,
     // the direction (i.e.who calls diffuseWithThisstd::shared_ptr<PhysicalObject>() )
     // is chosen randomly.
-    auto po1 = std::static_pointer_cast<PhysicalObject>(this->shared_from_this());
+    auto po1 = std::static_pointer_cast<PhysicalObject>(this);
     std::shared_ptr<PhysicalObject> po2 = cyl;
     if (ecm_->getRandomDouble1() < 0.5) {
       po1 = cyl;
-      po2 = std::static_pointer_cast<PhysicalSphere>(this->shared_from_this());
+      po2 = std::static_pointer_cast<PhysicalSphere>(this);
     }
     // now we call the diffusion function in the super class
     po1->diffuseWithThisPhysicalObjects(po2, cyl->getActualLength());
@@ -706,7 +706,7 @@ void PhysicalSphere::scheduleMeAndAllMyFriends() {
   }
   // physical objects at the other side of a PhysicalBond:
   for (auto pb : physical_bonds_) {
-    pb->getOppositePhysicalObject(std::static_pointer_cast<PhysicalSphere>(this->shared_from_this()))
+    pb->getOppositePhysicalObject(std::static_pointer_cast<PhysicalSphere>(this))
         ->setOnTheSchedulerListForPhysicalObjects(true);
   }
 }

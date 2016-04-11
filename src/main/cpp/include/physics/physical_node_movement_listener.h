@@ -54,10 +54,10 @@ class PhysicalNodeMovementListener : public spatial_organization::SpatialOrganiz
    * (Implementation note : the neighbors after the movement are only known after
    * the move, i.e. when the second method is called).
    */
-  virtual void nodeAboutToMove(const std::shared_ptr<SpaceNode>& node,
+  virtual void nodeAboutToMove(const SpaceNode* node,
                                const std::array<double, 3>& planned_movement) override;
 
-  virtual void nodeMoved(const std::shared_ptr<SpaceNode >& node) override;
+  virtual void nodeMoved(const SpaceNode* node) override;
 
   /**
    * MASS CONSERVATION WHEN A POINT IS REMOVED :
@@ -67,9 +67,9 @@ class PhysicalNodeMovementListener : public spatial_organization::SpatialOrganiz
    * is then bigger). The concentration in the ex-neighbors is multiplied
    * by the ratio of the two sums.
    */
-  virtual void nodeAboutToBeRemoved(const std::shared_ptr<SpaceNode >& node) override;
+  virtual void nodeAboutToBeRemoved(const SpaceNode* node) override;
 
-  virtual void nodeRemoved(const std::shared_ptr<SpaceNode >& node) override;
+  virtual void nodeRemoved(const SpaceNode* node) override;
 
   /**
    * MASS CONSERVATION WHEN A NEW POINT IS ADDED :
@@ -82,10 +82,10 @@ class PhysicalNodeMovementListener : public spatial_organization::SpatialOrganiz
    *  by the ratio of the two sums.
    */
   virtual void nodeAboutToBeAdded(
-      const std::shared_ptr<SpaceNode>& node, const std::array<double, 3>& planned_position,
-      const std::array<std::shared_ptr<PhysicalNode>, 4>& vertices_of_the_tetrahedron_containing_the_position) override;
+      const SpaceNode* node, const std::array<double, 3>& planned_position,
+      const std::array<PhysicalNode*, 4>& vertices_of_the_tetrahedron_containing_the_position) override;
 
-  virtual void nodeAdded(const std::shared_ptr<SpaceNode >& node) override;
+  virtual void nodeAdded(const SpaceNode* node) override;
 
   /**
    * Returns a String representation of this PhysicalNodeMovementListener
@@ -119,7 +119,7 @@ class PhysicalNodeMovementListener : public spatial_organization::SpatialOrganiz
   /**
    * all the neighbors of the PhysicalNode.
    */
-  std::vector<std::shared_ptr<PhysicalNode>> neighbors_before_;
+  std::vector<PhysicalNode*> neighbors_before_;
 };
 
 }  // namespace physics

@@ -9,7 +9,7 @@ using std::array;
 using std::shared_ptr;
 using cx3d::spatial_organization::ExactVector;
 
-shared_ptr<Rational> ExactVector::det(const std::array<shared_ptr<ExactVector>, 3>& c) {
+Rational* ExactVector::det(const std::array<ExactVector*, 3>& c) {
   return c[0]->elements_[0]->multiply(c[1]->elements_[1])->multiply(c[2]->elements_[2])->add(
       c[0]->elements_[1]->multiply(c[1]->elements_[2])->multiply(c[2]->elements_[0]))->add(
       c[0]->elements_[2]->multiply(c[1]->elements_[0])->multiply(c[2]->elements_[1]))->subtract(
@@ -18,19 +18,19 @@ shared_ptr<Rational> ExactVector::det(const std::array<shared_ptr<ExactVector>, 
       c[0]->elements_[2]->multiply(c[1]->elements_[1])->multiply(c[2]->elements_[0]));
 }
 
-ExactVector::ExactVector(const array<shared_ptr<Rational>, 3>& values)
+ExactVector::ExactVector(const array<Rational*, 3>& values)
     : elements_(values) {
 }
 
 ExactVector::ExactVector(const array<double, 3>& values)
     : elements_(
-        array<shared_ptr<Rational>, 3>({ Rational::create(values[0]), Rational::create(values[1]),
+        array<Rational*, 3>({ Rational::create(values[0]), Rational::create(values[1]),
             Rational::create(values[2]) })) {
 }
 
 #ifndef EXACTVECTOR_NATIVE
 ExactVector::ExactVector() : elements_(
-      array<shared_ptr<Rational>, 3>({ Rational::create(0.0), Rational::create(0.0),
+      array<Rational*, 3>({ Rational::create(0.0), Rational::create(0.0),
           Rational::create(0.0) })) {
 }
 #endif
@@ -38,7 +38,7 @@ ExactVector::ExactVector() : elements_(
 ExactVector::~ExactVector() {
 }
 
-shared_ptr<Rational> ExactVector::squaredLength() const {
+Rational* ExactVector::squaredLength() const {
   auto rational = Rational::create(0L, 1L);
   for (auto element : elements_) {
     rational->add(element->multiply(element));
@@ -46,8 +46,8 @@ shared_ptr<Rational> ExactVector::squaredLength() const {
   return rational;
 }
 
-shared_ptr<ExactVector> ExactVector::add(const shared_ptr<ExactVector>& other) const {
-  array<shared_ptr<Rational>, 3> vector;
+ExactVector* ExactVector::add(const ExactVector* other) const {
+  array<Rational*, 3> vector;
   vector[0] = elements_[0]->add(other->elements_[0]);
   vector[1] = elements_[1]->add(other->elements_[1]);
   vector[2] = elements_[2]->add(other->elements_[2]);
@@ -55,15 +55,15 @@ shared_ptr<ExactVector> ExactVector::add(const shared_ptr<ExactVector>& other) c
   return ExactVector::create(vector);
 }
 
-shared_ptr<ExactVector> ExactVector::increaseBy(const shared_ptr<ExactVector>& other) {
+ExactVector* ExactVector::increaseBy(const ExactVector* other) {
   for (int i = 0; i < 3; i++) {
     elements_[i]->increaseBy(other->elements_[i]);
   }
-  return shared_from_this();
+  return this;
 }
 
-shared_ptr<ExactVector> ExactVector::subtract(const shared_ptr<ExactVector>& other) {
-  array<shared_ptr<Rational>, 3> vector;
+ExactVector* ExactVector::subtract(const ExactVector* other) {
+  array<Rational*, 3> vector;
   vector[0] = elements_[0]->subtract(other->elements_[0]);
   vector[1] = elements_[1]->subtract(other->elements_[1]);
   vector[2] = elements_[2]->subtract(other->elements_[2]);
@@ -71,15 +71,15 @@ shared_ptr<ExactVector> ExactVector::subtract(const shared_ptr<ExactVector>& oth
   return ExactVector::create(vector);
 }
 
-shared_ptr<ExactVector> ExactVector::decreaseBy(const shared_ptr<ExactVector>& other) {
+ExactVector* ExactVector::decreaseBy(const ExactVector* other) {
   for (int i = 0; i < 3; i++) {
     elements_[i]->decreaseBy(other->elements_[i]);
   }
-  return shared_from_this();
+  return this;
 }
 
-shared_ptr<ExactVector> ExactVector::multiply(const shared_ptr<Rational>& factor) {
-  array<shared_ptr<Rational>, 3> vector;
+ExactVector* ExactVector::multiply(const Rational* factor) {
+  array<Rational*, 3> vector;
   vector[0] = elements_[0]->multiply(factor);
   vector[1] = elements_[1]->multiply(factor);
   vector[2] = elements_[2]->multiply(factor);
@@ -87,15 +87,15 @@ shared_ptr<ExactVector> ExactVector::multiply(const shared_ptr<Rational>& factor
   return ExactVector::create(vector);
 }
 
-shared_ptr<ExactVector> ExactVector::multiplyBy(const shared_ptr<Rational>& factor) {
+ExactVector* ExactVector::multiplyBy(const Rational* factor) {
   for (auto element : elements_) {
     element->multiplyBy(factor);
   }
-  return shared_from_this();
+  return this;
 }
 
-shared_ptr<ExactVector> ExactVector::divide(const shared_ptr<Rational>& factor) {
-  array<shared_ptr<Rational>, 3> vector;
+ExactVector* ExactVector::divide(const Rational* factor) {
+  array<Rational*, 3> vector;
   vector[0] = elements_[0]->divide(factor);
   vector[1] = elements_[1]->divide(factor);
   vector[2] = elements_[2]->divide(factor);
@@ -103,14 +103,14 @@ shared_ptr<ExactVector> ExactVector::divide(const shared_ptr<Rational>& factor) 
   return ExactVector::create(vector);
 }
 
-shared_ptr<ExactVector> ExactVector::divideBy(const shared_ptr<Rational>& factor) {
+ExactVector* ExactVector::divideBy(const Rational* factor) {
   for (auto element : elements_) {
     element->divideBy(factor);
   }
-  return shared_from_this();
+  return this;
 }
 
-shared_ptr<Rational> ExactVector::dotProduct(const shared_ptr<ExactVector>& other) {
+Rational* ExactVector::dotProduct(const ExactVector* other) {
   auto rational = Rational::create(0L, 1L);
   for (int i = 0; i < 3; i++) {
     rational = rational->add(other->elements_[i]->multiply(elements_[i]));
@@ -118,15 +118,15 @@ shared_ptr<Rational> ExactVector::dotProduct(const shared_ptr<ExactVector>& othe
   return rational;
 }
 
-shared_ptr<ExactVector> ExactVector::negate() {
+ExactVector* ExactVector::negate() {
   for (auto element : elements_) {
     element->negate();
   }
-  return shared_from_this();
+  return this;
 }
 
-shared_ptr<ExactVector> ExactVector::crossProduct(const shared_ptr<ExactVector>& other) {
-  array<shared_ptr<Rational>, 3> vector;
+ExactVector* ExactVector::crossProduct(const ExactVector* other) {
+  array<Rational*, 3> vector;
   for (int i = 0; i < 3; i++) {
     vector[i] = elements_[((i + 1) % 3)]->multiply(other->elements_[((i + 2) % 3)])->subtract(
         elements_[((i + 2) % 3)]->multiply(other->elements_[((i + 1) % 3)]));
@@ -146,7 +146,7 @@ std::string ExactVector::toString() {
   return ret.str();
 }
 
-bool ExactVector::equalTo(const shared_ptr<ExactVector>& other) {
+bool ExactVector::equalTo(const ExactVector* other) {
   for (size_t i = 0; i < elements_.size(); i++) {
     if (elements_[i]->compareTo(other->elements_[i]) != 0) {
       return false;

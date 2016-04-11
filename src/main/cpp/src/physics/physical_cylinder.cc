@@ -224,7 +224,7 @@ void PhysicalCylinder::movePointMass(double speed, const std::array<double, 3>& 
       * normalized_dir[2] };
   mass_location_ = Matrix::add(displacement, mass_location_);
   // here I have to define the actual length ..........
-  auto relative_ml = mother_->originOf(std::static_pointer_cast<PhysicalObject>(this->shared_from_this()));  // mass_location_ of the mother
+  auto relative_ml = mother_->originOf(std::static_pointer_cast<PhysicalObject>(this));  // mass_location_ of the mother
   spring_axis_[0] = mass_location_[0] - relative_ml[0];
   spring_axis_[1] = mass_location_[1] - relative_ml[1];
   spring_axis_[2] = mass_location_[2] - relative_ml[2];
@@ -261,7 +261,7 @@ bool PhysicalCylinder::retractCylinder(double speed) {
     actual_length_ = new_actual_length;
     resting_length_ = spring_constant_ * actual_length_ / (tension_ + spring_constant_);  //cf removeproximalCylinder()
     spring_axis_ = {factor*spring_axis_[0], factor*spring_axis_[1], factor*spring_axis_[2]};
-    mass_location_ = Matrix::add(mother_->originOf(std::static_pointer_cast<PhysicalObject>(this->shared_from_this())),
+    mass_location_ = Matrix::add(mother_->originOf(std::static_pointer_cast<PhysicalObject>(this)),
                                  spring_axis_);
     updateVolume();  // and update concentration of internal stuff.
     updateSpatialOrganizationNodePosition();
@@ -277,9 +277,9 @@ bool PhysicalCylinder::retractCylinder(double speed) {
     return retractCylinder(speed / Param::kSimulationTimeStep);
     // if mother is cylinder with other daughter or is not a cylinder : disappear.
   } else {
-    mother_->removeDaugther(std::static_pointer_cast<PhysicalObject>(this->shared_from_this()));
+    mother_->removeDaugther(std::static_pointer_cast<PhysicalObject>(this));
     still_existing_ = false;
-    ecm_->removePhysicalCylinder(std::static_pointer_cast<PhysicalCylinder>(this->shared_from_this()));  // this method removes the SONode
+    ecm_->removePhysicalCylinder(std::static_pointer_cast<PhysicalCylinder>(this));  // this method removes the SONode
     // and the associated neuriteElement also disappears :
     neurite_element_->removeYourself();
     // intracellularSubstances quantities
@@ -307,9 +307,9 @@ std::array<std::shared_ptr<PhysicalCylinder>, 2> PhysicalCylinder::bifurcateCyli
   auto new_branch_r = getCopy();
   // set family relations
   daughter_left_ = new_branch_l;
-  new_branch_l->setMother(std::static_pointer_cast<PhysicalObject>(this->shared_from_this()));
+  new_branch_l->setMother(std::static_pointer_cast<PhysicalObject>(this));
   daughter_right_ = new_branch_r;
-  new_branch_r->setMother(std::static_pointer_cast<PhysicalObject>(this->shared_from_this()));
+  new_branch_r->setMother(std::static_pointer_cast<PhysicalObject>(this));
 
   // check that the directions are not pointing backwards
   auto dir_1 = direction_1;  // todo avoid cpy
@@ -428,14 +428,14 @@ void PhysicalCylinder::runPhysics() {
   // 2) Force transmitted by daugthers (if they exist) ----------------------------------
   if (daughter_left_ != nullptr) {
     auto force_from_daughter = daughter_left_->forceTransmittedFromDaugtherToMother(
-        std::static_pointer_cast<PhysicalObject>(this->shared_from_this()));
+        std::static_pointer_cast<PhysicalObject>(this));
     force_on_my_point_mass[0] += force_from_daughter[0];
     force_on_my_point_mass[1] += force_from_daughter[1];
     force_on_my_point_mass[2] += force_from_daughter[2];
   }
   if (daughter_right_ != nullptr) {
     auto force_from_daughter = daughter_right_->forceTransmittedFromDaugtherToMother(
-        std::static_pointer_cast<PhysicalObject>(this->shared_from_this()));
+        std::static_pointer_cast<PhysicalObject>(this));
     force_on_my_point_mass[0] += force_from_daughter[0];
     force_on_my_point_mass[1] += force_from_daughter[1];
     force_on_my_point_mass[2] += force_from_daughter[2];
@@ -459,13 +459,13 @@ void PhysicalCylinder::runPhysics() {
       }
       // if we have a PhysicalBond with him, we also don't take it into account
       for (auto pb : physical_bonds_) {
-        if (pb->getOppositePhysicalObject(std::static_pointer_cast<PhysicalObject>(this->shared_from_this()))
+        if (pb->getOppositePhysicalObject(std::static_pointer_cast<PhysicalObject>(this))
             == neighbor) {
           continue;
         }
       }
 
-      auto force_from_neighbor = n->getForceOn(std::static_pointer_cast<PhysicalCylinder>(this->shared_from_this()));
+      auto force_from_neighbor = n->getForceOn(std::static_pointer_cast<PhysicalCylinder>(this));
 
       // 1) "artificial force" to maintain the sphere in the ecm simulation boundaries--------
       if (ecm_->getArtificialWallForCylinders()) {
@@ -521,7 +521,7 @@ void PhysicalCylinder::runPhysics() {
   }
   // 4) PhysicalBond -----------------------------------------------------------
   for (auto pb : physical_bonds_) {
-    auto force_physical_bond = pb->getForceOn(std::static_pointer_cast<PhysicalObject>(this->shared_from_this()));
+    auto force_physical_bond = pb->getForceOn(std::static_pointer_cast<PhysicalObject>(this));
 
     if (std::abs(force_physical_bond[3]) < 1E-10) {
       // (if all the force is transmitted to the (distal end) point mass : )
@@ -592,7 +592,7 @@ void PhysicalCylinder::runPhysics() {
 
 std::array<double, 3> PhysicalCylinder::getForceOn(const std::shared_ptr<PhysicalSphere>& s) {
   return inter_object_force_->forceOnASphereFromACylinder(
-      s, std::static_pointer_cast<PhysicalCylinder>(this->shared_from_this()));
+      s, std::static_pointer_cast<PhysicalCylinder>(this));
 }
 
 std::array<double, 4> PhysicalCylinder::getForceOn(const std::shared_ptr<PhysicalCylinder>& c) {
@@ -602,19 +602,19 @@ std::array<double, 4> PhysicalCylinder::getForceOn(const std::shared_ptr<Physica
     return {0.0, 0.0, 0.0, 0.0};
   }
   return inter_object_force_->forceOnACylinderFromACylinder(
-      c, std::static_pointer_cast<PhysicalCylinder>(this->shared_from_this()));
+      c, std::static_pointer_cast<PhysicalCylinder>(this));
 
 }
 
 bool PhysicalCylinder::isInContactWithSphere(const std::shared_ptr<PhysicalSphere>& s) {
   auto force = inter_object_force_->forceOnACylinderFromASphere(
-      std::static_pointer_cast<PhysicalCylinder>(this->shared_from_this()), s);
+      std::static_pointer_cast<PhysicalCylinder>(this), s);
   return Matrix::norm(force) > 1E-15;
 }
 
 bool PhysicalCylinder::isInContactWithCylinder(const std::shared_ptr<PhysicalCylinder>& c) {
   auto force = inter_object_force_->forceOnACylinderFromACylinder(
-      std::static_pointer_cast<PhysicalCylinder>(this->shared_from_this()), c);
+      std::static_pointer_cast<PhysicalCylinder>(this), c);
   return Matrix::norm(force) > 1E-15;
 }
 
@@ -651,21 +651,21 @@ void PhysicalCylinder::runIntracellularDiffusion() {
   auto daughter_left = daughter_left_;
 
   if (daughter_right != nullptr) {
-    auto po_1 = std::static_pointer_cast<PhysicalObject>(this->shared_from_this());
+    auto po_1 = std::static_pointer_cast<PhysicalObject>(this);
     std::shared_ptr<PhysicalObject> po_2 = daughter_right;
     if (ecm_->getRandomDouble1() < 0.5) {
       po_1 = daughter_right;
-      po_2 = std::static_pointer_cast<PhysicalObject>(this->shared_from_this());
+      po_2 = std::static_pointer_cast<PhysicalObject>(this);
     }
     po_1->diffuseWithThisPhysicalObjects(po_2, daughter_right->getActualLength());
   }
 
   if (daughter_left != nullptr) {
-    auto po_1 = std::static_pointer_cast<PhysicalObject>(this->shared_from_this());
+    auto po_1 = std::static_pointer_cast<PhysicalObject>(this);
     std::shared_ptr<PhysicalObject> po_2 = daughter_left;
     if (ecm_->getRandomDouble1() < 0.5) {
       po_1 = daughter_left;
-      po_2 = std::static_pointer_cast<PhysicalObject>(this->shared_from_this());
+      po_2 = std::static_pointer_cast<PhysicalObject>(this);
     }
     po_1->diffuseWithThisPhysicalObjects(po_2, daughter_left->getActualLength());
   }
@@ -916,7 +916,7 @@ void PhysicalCylinder::updateSpatialOrganizationNodePosition() {
 }
 
 void PhysicalCylinder::updateDependentPhysicalVariables() {
-  auto relative_ml = mother_->originOf(std::static_pointer_cast<PhysicalObject>(this->shared_from_this()));  // mass_location_ of the mother
+  auto relative_ml = mother_->originOf(std::static_pointer_cast<PhysicalObject>(this));  // mass_location_ of the mother
   spring_axis_[0] = mass_location_[0] - relative_ml[0];
   spring_axis_[1] = mass_location_[1] - relative_ml[1];
   spring_axis_[2] = mass_location_[2] - relative_ml[2];
@@ -956,10 +956,10 @@ std::shared_ptr<local_biology::NeuriteElement> PhysicalCylinder::insertProximalC
   ne->setPhysical(new_cylinder);
   new_cylinder->mass_location_ = new_mass_location;
   // familly relations
-  mother_->updateRelative(std::static_pointer_cast<PhysicalObject>(this->shared_from_this()), new_cylinder);
+  mother_->updateRelative(std::static_pointer_cast<PhysicalObject>(this), new_cylinder);
   new_cylinder->setMother(getMother());
   setMother(new_cylinder);
-  new_cylinder->setDaughterLeft(std::static_pointer_cast<PhysicalCylinder>(this->shared_from_this()));
+  new_cylinder->setDaughterLeft(std::static_pointer_cast<PhysicalCylinder>(this));
   // SOM relation
   auto new_son = so_node_->getNewInstance(newProximalCylinderSpatialNodeLocation, new_cylinder);  // todo catch PositionNotAllowedException
   new_cylinder->setSoNode(new_son);
@@ -1030,7 +1030,7 @@ void PhysicalCylinder::removeProximalCylinder() {
   proximal_cylinder->getNeuriteElement()->removeYourself();
   // Re-organisation of the PhysicalObject tree structure: by-passing proximalCylinder
   proximal_cylinder->getMother()->updateRelative(proximal_cylinder,
-                                                 std::static_pointer_cast<PhysicalCylinder>(this->shared_from_this()));
+                                                 std::static_pointer_cast<PhysicalCylinder>(this));
   setMother(proximal_cylinder->getMother());
 
   // collecting (the quantities of) the intracellular substances of the removed cylinder.
@@ -1046,7 +1046,7 @@ void PhysicalCylinder::removeProximalCylinder() {
   // compute restingLength, and not the opposite...)
   // T = k*(A-R)/R --> R = k*A/(T+K)
   spring_axis_ = Matrix::subtract(
-      mass_location_, mother_->originOf(std::static_pointer_cast<PhysicalObject>(this->shared_from_this())));
+      mass_location_, mother_->originOf(std::static_pointer_cast<PhysicalObject>(this)));
   actual_length_ = Matrix::norm(spring_axis_);
   resting_length_ = spring_constant_ * actual_length_ / (tension_ + spring_constant_);
   // .... and volume_
@@ -1067,7 +1067,7 @@ void PhysicalCylinder::removeProximalCylinder() {
   // I incorporate the ones of the previous cyl:
   for (auto ex : proximal_cylinder->excrescences_) {
     excrescences_.push_back(ex);
-    ex->setPo(std::static_pointer_cast<PhysicalObject>(this->shared_from_this()));
+    ex->setPo(std::static_pointer_cast<PhysicalObject>(this));
   }
   // TODO: take care of Physical Bonds
   proximal_cylinder->setStillExisting(false);
@@ -1094,7 +1094,7 @@ void PhysicalCylinder::scheduleMeAndAllMyFriends() {
     }
   }
   for (auto bond : physical_bonds_) {
-    bond->getOppositePhysicalObject(std::static_pointer_cast<PhysicalObject>(this->shared_from_this()))
+    bond->getOppositePhysicalObject(std::static_pointer_cast<PhysicalObject>(this))
         ->setOnTheSchedulerListForPhysicalObjects(true);
   }
 }
@@ -1121,7 +1121,7 @@ std::shared_ptr<PhysicalCylinder> PhysicalCylinder::extendSideCylinder(double le
   new_branch->setDiameter(Param::kNeuriteDefaultDiameter, true);
   new_branch->updateLocalCoordinateAxis();
   // family relations
-  new_branch->setMother(std::static_pointer_cast<PhysicalObject>(this->shared_from_this()));
+  new_branch->setMother(std::static_pointer_cast<PhysicalObject>(this));
   daughter_right_ = new_branch;
   // new CentralNode
   auto new_center_location = Matrix::add(mass_location_, Matrix::scalarMult(0.5, new_spring_axis));

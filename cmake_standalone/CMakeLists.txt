@@ -59,9 +59,8 @@ include_directories(${CPP_MAIN_SRC_PATH}/swig)
 
 #add the sources into the project
 file(GLOB SOURCES "${CPP_MAIN_SRC_PATH}/src/*.cc"
-     "${CPP_MAIN_SRC_PATH}/src/spatial_organization/*.cc"
-     "${CPP_MAIN_SRC_PATH}/src/physics/*.cc"
-     "${CPP_MAIN_SRC_PATH}/src/local_biology/*.cc")
+"${CPP_MAIN_SRC_PATH}/src/spatial_organization/*.cc")
+  #  "${CPP_MAIN_SRC_PATH}/src/physics/physical_node.cc")
 
 #--------------------- build cx3d-cpp  ----------------
 # add_library(cx3d-cpp SHARED ${SOURCES})

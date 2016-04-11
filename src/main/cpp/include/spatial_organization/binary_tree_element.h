@@ -17,23 +17,23 @@ class BinaryTreeElement {
  public:
   static BinaryTreeElement* generateTreeHead();
 
-  BinaryTreeElement(std::shared_ptr<SpaceNode> content);
+  BinaryTreeElement(SpaceNode* content);
   virtual ~BinaryTreeElement();
 
-  virtual bool contains(const std::shared_ptr<SpaceNode>& content) const;
+  virtual bool contains(const SpaceNode* content) const;
 
-  virtual void insert(const std::shared_ptr<SpaceNode>& content);
+  virtual void insert(SpaceNode* content);
 
-  virtual void remove(const std::shared_ptr<SpaceNode>& content,
+  virtual void remove(const SpaceNode* content,
                       BinaryTreeElement* parent);
 
   // todo replace with STL iterator
-  virtual std::vector<std::shared_ptr<SpaceNode>>inOrderTraversal() const;
+  virtual std::vector<SpaceNode*>inOrderTraversal() const;
 
   std::string toString() const;
 
  protected:
-  std::shared_ptr<SpaceNode> content_;
+  SpaceNode* content_;
   BinaryTreeElement* smaller_;
   BinaryTreeElement* bigger_;
   int content_id_ = 0;
@@ -43,13 +43,13 @@ class BinaryTreeElement {
   BinaryTreeElement(const BinaryTreeElement&) = delete;
   BinaryTreeElement& operator=(const BinaryTreeElement&) = delete;
 
-  int getHash(std::shared_ptr<SpaceNode> content) const;
+  int getHash(const SpaceNode* content) const;
 
-  bool contains(int id, const std::shared_ptr<SpaceNode>& content) const;
+  bool contains(int id, const SpaceNode* content) const;
 
   void insert(BinaryTreeElement* element);
 
-  void remove(int id, const std::shared_ptr<SpaceNode>& content, BinaryTreeElement* parent);
+  void remove(int id, const SpaceNode* content, BinaryTreeElement* parent);
 
   void changeLink(BinaryTreeElement* old_el, BinaryTreeElement* new_el);
 };
@@ -59,14 +59,14 @@ class TreeHead : public BinaryTreeElement {
  public:
   TreeHead();
 
-  bool contains(const std::shared_ptr<SpaceNode>& content) const override;
+  bool contains(const SpaceNode* content) const override;
 
-  void insert(const std::shared_ptr<SpaceNode>& content) override;
+  void insert(SpaceNode* content) override;
 
-  void remove(const std::shared_ptr<SpaceNode>& content,
+  void remove(const SpaceNode* content,
               BinaryTreeElement* parent) override;
 
-  std::vector<std::shared_ptr<SpaceNode>>inOrderTraversal() const override;
+  std::vector<SpaceNode*>inOrderTraversal() const override;
 
 private:
   TreeHead(const TreeHead&) = delete;

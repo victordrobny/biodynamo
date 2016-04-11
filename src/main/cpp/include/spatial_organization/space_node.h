@@ -34,14 +34,14 @@ namespace spatial_organization {
  */
 
 class SpaceNode : public SpatialOrganizationNode,
-    public SimStateSerializable, public std::enable_shared_from_this<SpaceNode> {
+    public SimStateSerializable {
  public:
   /**
    * Creates a new SpaceNode object and returns it within a <code>std::shared_ptr</code>
    * @see Edge(...)
    *
    * If functions return a std::shared_ptr of <code>this</code> using
-   * <code>return shared_from_this();</code>, the following precondition must be met:
+   * <code>return this;</code>, the following precondition must be met:
    * There must be at least one std::shared_ptr p that owns *this!
    * Calling <code>shared_from_this</code> on a non-shared object results in undefined behaviour.
    * http://mortoray.com/2013/08/02/safely-using-enable_shared_from_this/
@@ -53,34 +53,32 @@ class SpaceNode : public SpatialOrganizationNode,
    * Once mapping to Java is not needed anymore, replace following create functions with:
    * <code>
    * template<typename ... T>
-   * static std::shared_ptr<SpaceNode> create(T&& ... all) {
-   *   return std::shared_ptr<SpaceNode>(new SpaceNode(std::forward(all)...));
+   * static SpaceNode* create(T&& ... all) {
+   *   return SpaceNode*(new SpaceNode(std::forward(all)...));
    * }
    * </code>
    */
-  static std::shared_ptr<SpaceNode> create(
-      const std::array<double, 3>& position, const std::shared_ptr<physics::PhysicalNode> content) {
+  static SpaceNode* create(
+      const std::array<double, 3>& position, physics::PhysicalNode* content) {
 #ifdef SPACENODE_DEBUG
-    SpaceNode* raw_pointer = new SpaceNodeDebug(position, content);
+    SpaceNode* space_node = new SpaceNodeDebug(position, content);
 #else
-    SpaceNode* raw_pointer = new SpaceNode(position, content);
+    SpaceNode* space_node = new SpaceNode(position, content);
 #endif
-    std::shared_ptr<SpaceNode> space_node(raw_pointer);
     return space_node;
   }
 
-  static std::shared_ptr<SpaceNode> create(
-      double x, double y, double z, const std::shared_ptr<physics::PhysicalNode> content) {
+  static SpaceNode* create(
+      double x, double y, double z, physics::PhysicalNode* content) {
 #ifdef SPACENODE_DEBUG
-    SpaceNode* raw_pointer = new SpaceNodeDebug(x, y, z, content);
+    SpaceNode* space_node = new SpaceNodeDebug(x, y, z, content);
 #else
-    SpaceNode* raw_pointer = new SpaceNode(x, y, z, content);
+    SpaceNode* space_node = new SpaceNode(x, y, z, content);
 #endif
-    std::shared_ptr<SpaceNode> space_node(raw_pointer);
     return space_node;
   }
 
-  static void setJavaUtil(std::shared_ptr<JavaUtil> java) {
+  static void setJavaUtil(JavaUtil* java) {
     java_ = java;
   }
 
@@ -88,7 +86,7 @@ class SpaceNode : public SpatialOrganizationNode,
    * Starting at a given tetrahedron, this function searches the triangulation
    * for a tetrahedron which contains a given coordinate.
    *
-   * @param 
+   * @param
    *            The type of user objects that are associated to nodes in the
    *            current triangulation.
    * @param start
@@ -98,8 +96,8 @@ class SpaceNode : public SpatialOrganizationNode,
    * @return A tetrahedron which contains the position of this node.
    * @//fnoexceptionthrows PositionNotAllowedException
    */
-  static std::shared_ptr<Tetrahedron> searchInitialInsertionTetrahedron(
-      const std::shared_ptr<Tetrahedron>& start,
+  static Tetrahedron* searchInitialInsertionTetrahedron(
+      Tetrahedron* start,
       const std::array<double, 3>& coordinate);
 //        //fnoexceptionthrows PositionNotAllowedException {
 
@@ -111,26 +109,26 @@ class SpaceNode : public SpatialOrganizationNode,
   }
 
   virtual void addSpatialOrganizationNodeMovementListener(
-      const std::shared_ptr<SpatialOrganizationNodeMovementListener>& listener)
+      SpatialOrganizationNodeMovementListener* listener)
           override;
 
-  virtual std::vector<std::shared_ptr<Edge> > getEdges() const override;  //TODO change back to SpatialOrganizationEdge afte porting has been finished
+  virtual std::vector<Edge* > getEdges() const override;  //TODO change back to SpatialOrganizationEdge afte porting has been finished
 
-  virtual std::vector<std::shared_ptr<cx3d::physics::PhysicalNode>> getNeighbors() const override;
+  virtual std::vector<cx3d::physics::PhysicalNode*> getNeighbors() const override;
 
-  virtual std::shared_ptr<SpaceNode> getNewInstance(
+  virtual SpaceNode* getNewInstance(
       const std::array<double, 3>& position,
-      const std::shared_ptr<physics::PhysicalNode>& user_object) override;
+      physics::PhysicalNode* user_object) override;
 
-  virtual std::vector<std::shared_ptr<cx3d::physics::PhysicalNode>> getPermanentListOfNeighbors() const
+  virtual std::vector<cx3d::physics::PhysicalNode*> getPermanentListOfNeighbors() const
       override;
 
   virtual std::array<double, 3> getPosition() const override;
 
-  virtual std::shared_ptr<physics::PhysicalNode> getUserObject() const override;
+  virtual physics::PhysicalNode* getUserObject() const override;
 
   //TODO clean up this hack after porting has been finished
-  virtual std::array<std::shared_ptr<cx3d::physics::PhysicalNode>, 4> getVerticesOfTheTetrahedronContaining(
+  virtual std::array<cx3d::physics::PhysicalNode*, 4> getVerticesOfTheTetrahedronContaining(
       const std::array<double, 3>& position,
       std::array<int, 1>& returned_null) const override;
 
@@ -145,14 +143,14 @@ class SpaceNode : public SpatialOrganizationNode,
   /**
    * @return The list of tetrahedra incident to this node.
    */
-  virtual std::vector<std::shared_ptr<Tetrahedron> > getAdjacentTetrahedra() const;
+  virtual std::vector<Tetrahedron* > getAdjacentTetrahedra() const;
 
   /**
    * Adds an element to the list of adjacent tetrahedra incident to this node.
    */
   // todo rename to addTetrahedron to be consistent
   virtual void addAdjacentTetrahedron(
-      const std::shared_ptr<Tetrahedron>& tetrahedron);
+      Tetrahedron* tetrahedron);
 
   /**
    * Removes a given tetrahedron from the list of incident tetrahedra.
@@ -161,7 +159,7 @@ class SpaceNode : public SpatialOrganizationNode,
    *            The tetrahedron to be remobed.
    */
   virtual void removeTetrahedron(
-      const std::shared_ptr<Tetrahedron>& tetrahedron);
+      Tetrahedron* tetrahedron);
 
   /**
    * Moves this node to a new position.
@@ -184,7 +182,7 @@ class SpaceNode : public SpatialOrganizationNode,
    * @param newEdge
    *            The edge to be added.
    */
-  virtual void addEdge(const std::shared_ptr<Edge>& edge);
+  virtual void addEdge(Edge* edge);
 
   /**
    * @return The identification number of this SpaceNode.
@@ -202,8 +200,8 @@ class SpaceNode : public SpatialOrganizationNode,
    *         such an edge didn't exist in the std::vector of edges incident to this
    *         node, a new edge is created.
    */
-  virtual std::shared_ptr<Edge> searchEdge(
-      const std::shared_ptr<SpaceNode>& opposite_node);
+  virtual Edge* searchEdge(
+      SpaceNode* opposite_node);
 
   /**
    * Removes a given edge from the std::vector of incident edges.
@@ -211,7 +209,7 @@ class SpaceNode : public SpatialOrganizationNode,
    * @param edge
    *            The edge to be removed.
    */
-  virtual void removeEdge(const std::shared_ptr<Edge>& edge);
+  virtual void removeEdge(Edge* edge);
 
   /**
    * Sets the list of movement listeners attached to this node to a specified
@@ -223,7 +221,7 @@ class SpaceNode : public SpatialOrganizationNode,
    */
   virtual void setListenerList(
       const std::vector<
-          std::shared_ptr<SpatialOrganizationNodeMovementListener> >& listeners);
+          SpatialOrganizationNodeMovementListener* >& listeners);
 
   /**
    * Starting at a given tetrahedron, this function searches the triangulation
@@ -234,8 +232,8 @@ class SpaceNode : public SpatialOrganizationNode,
    * @return A tetrahedron which contains the position of this node.
    * @//fnoexceptionthrows PositionNotAllowedException
    */
-  virtual std::shared_ptr<Tetrahedron> searchInitialInsertionTetrahedron(
-      const std::shared_ptr<Tetrahedron>& start);
+  virtual Tetrahedron* searchInitialInsertionTetrahedron(
+      Tetrahedron* start);
 
   /**
    * Inserts this node into a triangulation. Given any tetrahedron which is part of the triangulation,
@@ -248,8 +246,8 @@ class SpaceNode : public SpatialOrganizationNode,
    * @return A tetrahedron which was created while inserting this node.
    * @//fnoexceptionthrows PositionNotAllowedException
    */
-  virtual std::shared_ptr<Tetrahedron> insert(
-      const std::shared_ptr<Tetrahedron>& start);
+  virtual Tetrahedron* insert(
+      Tetrahedron* start);
 
   /**
    * Restores the Delaunay property for the current triangulation after a movement of this node.
@@ -271,7 +269,7 @@ class SpaceNode : public SpatialOrganizationNode,
    * Returns a list of all edges that are incident to this node.
    * @return A list of edges.
    */
-  virtual std::vector<std::shared_ptr<Edge> > getAdjacentEdges() const;
+  virtual std::vector<Edge* > getAdjacentEdges() const;
 
   /**
    * Returns a string representation of this node.
@@ -281,7 +279,7 @@ class SpaceNode : public SpatialOrganizationNode,
   /**
    * Determines if two instances of this object are equal
    */
-  virtual bool equalTo(const std::shared_ptr<SpaceNode>& other);
+  virtual bool equalTo(const SpaceNode* other) const;
 
  protected:
   /**
@@ -294,7 +292,7 @@ class SpaceNode : public SpatialOrganizationNode,
    *            The user object that should be associated with this SpaceNode.
    */
   SpaceNode(const std::array<double, 3>& position,
-            const std::shared_ptr<physics::PhysicalNode> content);
+            physics::PhysicalNode* content);
 
   /**
    * Creates a new SpaceNode with at a given coordinate and associates it with
@@ -309,7 +307,7 @@ class SpaceNode : public SpatialOrganizationNode,
    * @param content
    *            The user object that should be associated with this SpaceNode.
    */
-  SpaceNode(double x, double y, double z, const std::shared_ptr<physics::PhysicalNode> content);
+  SpaceNode(double x, double y, double z, physics::PhysicalNode* content);
 
  private:
   /**
@@ -327,7 +325,7 @@ class SpaceNode : public SpatialOrganizationNode,
   SpaceNode(const SpaceNode&);
   SpaceNode& operator=(const SpaceNode&) = delete;
 
-  static std::shared_ptr<JavaUtil> java_;
+  static JavaUtil* java_;
 
   /**
    * A static variable that is used to assign a unique number to each
@@ -348,14 +346,14 @@ class SpaceNode : public SpatialOrganizationNode,
   /**
    * The user object associated with this SpaceNode.
    */
-  std::shared_ptr<cx3d::physics::PhysicalNode> content_;
+  cx3d::physics::PhysicalNode* content_;
 
   /**
    * A std::vector of std::vectorener objects that are called whenever this node is beeing
    * moved.
    */
   // LinkedList<SpatialOrganizationNodeMovementListener> std::vectoreners = null;
-  std::vector<std::shared_ptr<SpatialOrganizationNodeMovementListener> > listeners_;
+  std::vector<SpatialOrganizationNodeMovementListener* > listeners_;
 
   /**
    * The coordinate of this SpaceNode.
@@ -366,20 +364,20 @@ class SpaceNode : public SpatialOrganizationNode,
    * A std::vector of all edges incident to this node.
    */
   // LinkedList<SpatialOrganizationEdge> adjacentEdges = new LinkedList<SpatialOrganizationEdge>();
-  std::vector<std::shared_ptr<Edge> > adjacent_edges_;
+  std::vector<Edge* > adjacent_edges_;
 
   /**
    * A std::vector of all tetrahedra incident to this node.
    */
   // LinkedList<Tetrahedron> adjacentTetrahedra = new LinkedList<Tetrahedron>();
-  std::vector<std::shared_ptr<Tetrahedron> > adjacent_tetrahedra_;
+  std::vector<Tetrahedron* > adjacent_tetrahedra_;
 
   /**
    * The volume associated with this SpaceNode.
    */
   double volume_;
 
-  std::shared_ptr<Tetrahedron> removeAndReturnCreatedTetrahedron();
+  Tetrahedron* removeAndReturnCreatedTetrahedron();
 
   /**
    * A private function used inside {@link #insert(Tetrahedron)} to remove a given tetrahedron,
@@ -389,9 +387,9 @@ class SpaceNode : public SpatialOrganizationNode,
    * @param queue The queue which is used to keep track of candidates that might have to be removed.
    * @param oto The open triangle organizer that keeps track of all open triangles.
    */
-  void processTetrahedron(std::shared_ptr<Tetrahedron>& tetrahedron,
-                          std::vector<std::shared_ptr<Triangle3D> >& queue,
-                          std::shared_ptr<OpenTriangleOrganizer>& oto);
+  void processTetrahedron(Tetrahedron* tetrahedron,
+                          std::vector<Triangle3D* >& queue,
+                          OpenTriangleOrganizer* oto);
 
   /**
    * Determines if the current triangulation would still be valid when this node would be moved to a
@@ -419,10 +417,10 @@ class SpaceNode : public SpatialOrganizationNode,
    * were modified during this function call.
    */
   bool removeTetrahedronDuringCleanUp(
-      std::shared_ptr<Tetrahedron>& tetrahedron_to_remove,
-      std::vector<std::shared_ptr<Tetrahedron> >& list,
-      std::vector<std::shared_ptr<SpaceNode> >& node_list,
-      std::shared_ptr<OpenTriangleOrganizer>& oto);
+      Tetrahedron* tetrahedron_to_remove,
+      std::vector<Tetrahedron* >& list,
+      std::vector<SpaceNode* >& node_list,
+      OpenTriangleOrganizer* oto);
   /**
    * Restores the Delaunay criterion for  a section of the triangulation which
    * cannot be restored using a flip algorithm.
@@ -434,7 +432,7 @@ class SpaceNode : public SpatialOrganizationNode,
    * flip algorithm.
    */
   void cleanUp(
-      const std::vector<std::shared_ptr<Tetrahedron> >& messed_up_tetrahedra);
+      const std::vector<Tetrahedron* >& messed_up_tetrahedra);
 };
 
 }  // namespace spatial_organization

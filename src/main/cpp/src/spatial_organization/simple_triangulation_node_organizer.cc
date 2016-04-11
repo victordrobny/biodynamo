@@ -22,24 +22,24 @@ SimpleTriangulationNodeOrganizer::~SimpleTriangulationNodeOrganizer() {
 }
 
 
-std::vector<std::shared_ptr<SpaceNode>>SimpleTriangulationNodeOrganizer::getNodes(const std::shared_ptr<SpaceNode>& reference_point) {
+std::vector<SpaceNode*>SimpleTriangulationNodeOrganizer::getNodes(const SpaceNode* reference_point) {
   return tree_head_->inOrderTraversal();
 }
 
 
 void SimpleTriangulationNodeOrganizer::removeNode(
-    const std::shared_ptr<SpaceNode>& node) {
+    const SpaceNode* node) {
   tree_head_->remove(node, nullptr);
 }
 
 
 void SimpleTriangulationNodeOrganizer::addNode(
-    const std::shared_ptr<SpaceNode>& node) {
+    SpaceNode* node) {
   tree_head_->insert(node);
 }
 
 
-std::shared_ptr<SpaceNode> SimpleTriangulationNodeOrganizer::getFirstNode() const {
+SpaceNode* SimpleTriangulationNodeOrganizer::getFirstNode() const {
   return tree_head_->bigger_->content_;
 }
 
@@ -54,7 +54,7 @@ std::string SimpleTriangulationNodeOrganizer::toString() const {
 
 // TODO move to AbstractTriangulationNodeOrganizer once porting has been finished
 void SimpleTriangulationNodeOrganizer::addTriangleNodes(
-    const std::shared_ptr<Triangle3D>& triangle) {
+    const Triangle3D* triangle) {
   auto nodes = triangle->getNodes();
   addNode(nodes[1]);
   addNode(nodes[2]);
@@ -62,8 +62,8 @@ void SimpleTriangulationNodeOrganizer::addTriangleNodes(
 }
 
 bool SimpleTriangulationNodeOrganizer::equalTo(
-    const std::shared_ptr<SimpleTriangulationNodeOrganizer>& other) {
-  return this == other.get();
+    const SimpleTriangulationNodeOrganizer* other) {
+  return this == other;
 }
 
 

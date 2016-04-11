@@ -25,7 +25,7 @@ namespace spatial_organization {
  * @param  The type of the user objects stored in the endpoints of an edge.
  */
 
-class Edge : public SpatialOrganizationEdge, public std::enable_shared_from_this<Edge> {
+class Edge : public SpatialOrganizationEdge {
  public:
 #ifndef EDGE_NATIVE
   Edge()
@@ -40,7 +40,7 @@ class Edge : public SpatialOrganizationEdge, public std::enable_shared_from_this
    * @see Edge(...)
    *
    * If functions return a std::shared_ptr of <code>*this</code> using
-   * <code>return shared_from_this();</code>, the following precondition must be met:
+   * <code>return this;</code>, the following precondition must be met:
    * There must be at least one std::shared_ptr p that owns *this!
    * Calling <code>shared_from_this</code> on a non-shared object results in undefined behaviour.
    * http://mortoray.com/2013/08/02/safely-using-enable_shared_from_this/
@@ -52,17 +52,17 @@ class Edge : public SpatialOrganizationEdge, public std::enable_shared_from_this
    * Once mapping to Java is not needed anymore, replace following create functions with:
    * <code>
    * template<typename ... T>
-   * static std::shared_ptr<Edge> create(T&& ... all) {
-   *   return std::shared_ptr<Edge>(new Edge(std::forward(all)...));
+   * static Edge* create(T&& ... all) {
+   *   return Edge*(new Edge(std::forward(all)...));
    * }
    * </code>
    */
-  static std::shared_ptr<Edge> create(const std::shared_ptr<SpaceNode>& a,
-                                         const std::shared_ptr<SpaceNode>& b) {
+  static Edge* create(SpaceNode* a,
+                                         SpaceNode* b) {
 #ifdef EDGE_DEBUG
-    std::shared_ptr<Edge> edge(new EdgeDebug(a, b));
+    Edge* edge(new EdgeDebug(a, b));
 #else
-    std::shared_ptr<Edge> edge(new Edge(a, b));
+    Edge* edge = new Edge(a, b);
 #endif
     edge->initializationHelper();
     return edge;
@@ -75,23 +75,23 @@ class Edge : public SpatialOrganizationEdge, public std::enable_shared_from_this
   /**
    * {@inheritDoc}
    */
-  std::shared_ptr<SpaceNode> getOpposite(const std::shared_ptr<const SpaceNode>& node) const
+  SpaceNode* getOpposite(const SpaceNode* node) const
       override;
 
   /**
    * {@inheritDoc}
    */
-  std::shared_ptr<physics::PhysicalNode> getOppositeElement(const std::shared_ptr<physics::PhysicalNode>& first) const override;
+  physics::PhysicalNode* getOppositeElement(const physics::PhysicalNode* first) const override;
 
   /**
    * {@inheritDoc}
    */
-  std::shared_ptr<physics::PhysicalNode> getFirstElement() const override;
+  physics::PhysicalNode* getFirstElement() const override;
 
   /**
    * {@inheritDoc}
    */
-  std::shared_ptr<physics::PhysicalNode> getSecondElement() const override;
+  physics::PhysicalNode* getSecondElement() const override;
 
   /**
    * {@inheritDoc}
@@ -106,7 +106,7 @@ class Edge : public SpatialOrganizationEdge, public std::enable_shared_from_this
   /**
    * Determines if two instances of this object are equal
    */
-  virtual bool equalTo(const std::shared_ptr<Edge>& other);
+  virtual bool equalTo(const Edge* other);
 
   /**
    * Tests whether this edge is connecting a pair of points.
@@ -114,21 +114,21 @@ class Edge : public SpatialOrganizationEdge, public std::enable_shared_from_this
    * @param b The second node.
    * @return <code>true</code>, if this edge connects <code>a</code> and <code>b</code>.
    */
-  virtual bool equals(const std::shared_ptr<SpaceNode>& a,
-                      const std::shared_ptr<SpaceNode>& b) const;
+  virtual bool equals(const SpaceNode* a,
+                      const SpaceNode* b) const;
   /**
    * Removes a tetrahedron from this edge's list of tetrahedra. If this edge is not incident to
    * any tetrahedra after the removal of the specified tetrahedron, the edge removes itself from
    * the triangulation by calling {@link #remove()}.
    * @param tetrahedron A tetrahedron incident to this edge which should be removed.
    */
-  virtual void removeTetrahedron(const std::shared_ptr<Tetrahedron>& tetrahedron);
+  virtual void removeTetrahedron(Tetrahedron* tetrahedron);
 
   /**
    * Adds a tetrahedron to this edge's list of tetrahedra.
    * @param tetrahedron A tetrahedron incident to this edge which should be added.
    */
-  virtual void addTetrahedron(const std::shared_ptr<Tetrahedron>& tetrahedron);
+  virtual void addTetrahedron(Tetrahedron* tetrahedron);
 
   /**
    * Removes this edge from the triangulation. To do so, the two endpoints are informed
@@ -140,7 +140,7 @@ class Edge : public SpatialOrganizationEdge, public std::enable_shared_from_this
    * Returns the list of incident tetrahedra.
    * @return The list of incident tetrahedra.
    */
-  virtual std::vector<std::shared_ptr<Tetrahedron> > getAdjacentTetrahedra() const;
+  virtual std::vector<Tetrahedron* > getAdjacentTetrahedra() const;
 
   /**
    * Changes the cross section area of this edge.
@@ -156,7 +156,7 @@ class Edge : public SpatialOrganizationEdge, public std::enable_shared_from_this
    * @param a The first endpoint of the new edge.
    * @param b The second endpoint of the new edge.
    */
-  Edge(const std::shared_ptr<SpaceNode>& a, const std::shared_ptr<SpaceNode>& b);
+  Edge(SpaceNode* a, SpaceNode* b);
 
  private:
 #ifdef EDGE_NATIVE
@@ -168,12 +168,13 @@ class Edge : public SpatialOrganizationEdge, public std::enable_shared_from_this
   /**
    * The two endpoints of this edge.
    */
-  std::shared_ptr<SpaceNode> a_, b_;
+  SpaceNode* a_;
+  SpaceNode* b_;
 
   /**
    * A list of all tetrahedra that are adjacent to this edge.
    */
-  std::vector<std::shared_ptr<Tetrahedron> > adjacent_tetrahedra_;
+  std::vector<Tetrahedron* > adjacent_tetrahedra_;
 
   /**
    * Stores the cross section area associated with this edge.
@@ -183,8 +184,8 @@ class Edge : public SpatialOrganizationEdge, public std::enable_shared_from_this
   /**
    * Initialization code that cannot be called inside the constructor, because it passes
    * a std::shared_ptr of itself to another function.
-   * It does that using shared_from_this(). @see create function documentation for a more
-   * detailed explanation of the requirements before calling shared_from_this()
+   * It does that using this. @see create function documentation for a more
+   * detailed explanation of the requirements before calling this
    */
   void initializationHelper();
 };

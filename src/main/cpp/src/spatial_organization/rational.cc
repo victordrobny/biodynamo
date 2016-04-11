@@ -42,12 +42,12 @@ bool Rational::isZero() const {
   return std::abs(value_) < 1e-10;
 }
 
-shared_ptr<Rational> Rational::negate() {
+Rational* Rational::negate() {
   value_ *= -1;
-  return shared_from_this();
+  return this;
 }
 
-shared_ptr<Rational> Rational::add(const shared_ptr<Rational>& other) const {
+Rational* Rational::add(const Rational* other) const {
 //  BigInteger gcd;
 //  mpz_gcd(gcd.get_mpz_t(), denominator_.get_mpz_t(), other->denominator_.get_mpz_t());
 //
@@ -58,7 +58,7 @@ shared_ptr<Rational> Rational::add(const shared_ptr<Rational>& other) const {
   return Rational::create(value);
 }
 
-shared_ptr<Rational> Rational::increaseBy(const shared_ptr<Rational>& other) {
+Rational* Rational::increaseBy(const Rational* other) {
 //  BigInteger gcd;
 //  mpz_gcd(gcd.get_mpz_t(), denominator_.get_mpz_t(), other->denominator_.get_mpz_t());
 //
@@ -66,10 +66,10 @@ shared_ptr<Rational> Rational::increaseBy(const shared_ptr<Rational>& other) {
 //  numerator_ = (numerator_ * other_non_div) + (other->numerator_ * (denominator_ / gcd));
 //  denominator_ = denominator_ * other_non_div;
   value_ += other->value_;
-  return shared_from_this();
+  return this;
 }
 
-shared_ptr<Rational> Rational::subtract(const shared_ptr<Rational>& other) const {
+Rational* Rational::subtract(const Rational* other) const {
 //  BigInteger gcd;
 //  mpz_gcd(gcd.get_mpz_t(), denominator_.get_mpz_t(), other->denominator_.get_mpz_t());
 //
@@ -82,7 +82,7 @@ shared_ptr<Rational> Rational::subtract(const shared_ptr<Rational>& other) const
   return Rational::create(value);
 }
 
-shared_ptr<Rational> Rational::decreaseBy(const shared_ptr<Rational>& other) {
+Rational* Rational::decreaseBy(const Rational* other) {
 //  BigInteger gcd;
 //  mpz_gcd(gcd.get_mpz_t(), denominator_.get_mpz_t(), other->denominator_.get_mpz_t());
 //
@@ -90,12 +90,12 @@ shared_ptr<Rational> Rational::decreaseBy(const shared_ptr<Rational>& other) {
 //  numerator_ = (numerator_ * other_non_div) - (other->numerator_ * (denominator_ / gcd));
 //  denominator_ = denominator_ * other_non_div;
 //
-//  return shared_from_this();
+//  return this;
   value_ -= other->value_;
-  return shared_from_this();
+  return this;
 }
 
-shared_ptr<Rational> Rational::multiply(const shared_ptr<Rational>& other) const {
+Rational* Rational::multiply(const Rational* other) const {
 //  BigInteger this_num_other_denom_gcd;
 //  mpz_gcd(this_num_other_denom_gcd.get_mpz_t(), numerator_.get_mpz_t(), other->denominator_.get_mpz_t());
 //  BigInteger other_num_this_denom_gcd;
@@ -109,7 +109,7 @@ shared_ptr<Rational> Rational::multiply(const shared_ptr<Rational>& other) const
   return create(value_ * other->value_);
 }
 
-shared_ptr<Rational> Rational::multiplyBy(const shared_ptr<Rational>& other) {
+Rational* Rational::multiplyBy(const Rational* other) {
 //  BigInteger this_num_other_denom_gcd;
 //  mpz_gcd(this_num_other_denom_gcd.get_mpz_t(), numerator_.get_mpz_t(), other->denominator_.get_mpz_t());
 //  BigInteger other_num_this_denom_gcd;
@@ -119,10 +119,10 @@ shared_ptr<Rational> Rational::multiplyBy(const shared_ptr<Rational>& other) {
 //  denominator_ = (denominator_ / other_num_this_denom_gcd) * (other->denominator_ / this_num_other_denom_gcd);
 //
   value_ *= other->value_;
-  return shared_from_this();
+  return this;
 }
 
-shared_ptr<Rational> Rational::divide(const shared_ptr<Rational>& other) const {
+Rational* Rational::divide(const Rational* other) const {
 //  if (other->numerator_ == 0) {
 //    //fnoexceptionthrow std::invalid_argument("Divisor must not be zero!");
 //  }
@@ -139,7 +139,7 @@ shared_ptr<Rational> Rational::divide(const shared_ptr<Rational>& other) const {
   return create(value_ / other->value_);
 }
 
-shared_ptr<Rational> Rational::divideBy(const shared_ptr<Rational>& other) {
+Rational* Rational::divideBy(const Rational* other) {
 //  if (other->numerator_ == 0) {
 //    //fnoexceptionthrow std::invalid_argument("Divisor must not be zero!");
 //  }
@@ -152,7 +152,7 @@ shared_ptr<Rational> Rational::divideBy(const shared_ptr<Rational>& other) {
 //  denominator_ = (denominator_ / other_num_this_denom_gcd) * (other->numerator_ / this_num_other_denom_gcd);
 
   value_ /= other->value_;
-  return shared_from_this();
+  return this;
 }
 
 double Rational::doubleValue() const {
@@ -184,7 +184,7 @@ void Rational::cancel() {
 //  return result;
 //}
 
-int Rational::compareTo(const shared_ptr<Rational>& other) const {
+int Rational::compareTo(const Rational* other) const {
   return STLUtil::sgn(this->subtract(other)->value_);
 }
 
@@ -196,7 +196,7 @@ int Rational::compareTo(const shared_ptr<Rational>& other) const {
 //  mpz_add_ui(representation, representation, static_cast<unsigned int>(value));
 //}
 
-bool Rational::equalTo(const std::shared_ptr<Rational>& other) {
+bool Rational::equalTo(const Rational* other) {
   return compareTo(other) == 0;
 }
 

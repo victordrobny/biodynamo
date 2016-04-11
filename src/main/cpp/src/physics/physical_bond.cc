@@ -108,14 +108,14 @@ void PhysicalBond::exchangePhysicalObject(const std::shared_ptr<PhysicalObject>&
   } else {
     b_ = newPo;
   }
-  oldPo->removePhysicalBond(this->shared_from_this());
-  newPo->addPhysicalBond(this->shared_from_this());
+  oldPo->removePhysicalBond(this);
+  newPo->addPhysicalBond(this);
 
 }
 
 void PhysicalBond::vanish() {
-  a_->removePhysicalBond(this->shared_from_this());
-  b_->removePhysicalBond(this->shared_from_this());
+  a_->removePhysicalBond(this);
+  b_->removePhysicalBond(this);
 }
 
 std::shared_ptr<PhysicalObject> PhysicalBond::getOppositePhysicalObject(const std::shared_ptr<PhysicalObject>& po) {
@@ -282,8 +282,8 @@ StringBuilder& PhysicalBond::simStateToJson(StringBuilder& sb) const {
 void PhysicalBond::dolocking(const std::shared_ptr<PhysicalObject>& a, const std::shared_ptr<PhysicalObject>& b) {
   a_ = a;
   b_ = b;
-  a_->addPhysicalBond(this->shared_from_this());
-  b_->addPhysicalBond(this->shared_from_this());
+  a_->addPhysicalBond(this);
+  b_->addPhysicalBond(this);
 }
 
 }  // namespace physics

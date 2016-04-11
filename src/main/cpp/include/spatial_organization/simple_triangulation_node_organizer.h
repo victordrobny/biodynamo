@@ -19,30 +19,29 @@ namespace spatial_organization {
 class SimpleTriangulationNodeOrganizer :
     public AbstractTriangulationNodeOrganizer {
  public:
-  static std::shared_ptr<SimpleTriangulationNodeOrganizer> create() {
-    return std::shared_ptr<SimpleTriangulationNodeOrganizer>(
-        new SimpleTriangulationNodeOrganizer());
+  static SimpleTriangulationNodeOrganizer* create() {
+    return new SimpleTriangulationNodeOrganizer();
   }
 
   SimpleTriangulationNodeOrganizer();
 
   virtual ~SimpleTriangulationNodeOrganizer();
 
-  virtual void removeNode(const std::shared_ptr<SpaceNode>& node) override;
+  virtual void removeNode(const SpaceNode* node) override;
 
-  virtual void addNode(const std::shared_ptr<SpaceNode>& node) override;
+  virtual void addNode(SpaceNode* node) override;
 
-  virtual std::shared_ptr<SpaceNode> getFirstNode() const override;
+  virtual SpaceNode* getFirstNode() const override;
 
   virtual std::string toString() const override;
 
   // TODO should be implemented in AbstractTriangulationNodeOrganizer, but SWIG does not generate
   // this function on the java side
-  virtual void addTriangleNodes(const std::shared_ptr<Triangle3D>& triangle) override;
+  virtual void addTriangleNodes(const Triangle3D* triangle) override;
 
-  std::vector<std::shared_ptr<SpaceNode>>getNodes(const std::shared_ptr<SpaceNode>& reference_point) override;
+  std::vector<SpaceNode*>getNodes(const SpaceNode* reference_point) override;
 
-  bool equalTo(const std::shared_ptr<SimpleTriangulationNodeOrganizer>& other);
+  bool equalTo(const SimpleTriangulationNodeOrganizer* other);
 
 private:
   BinaryTreeElement* tree_head_;

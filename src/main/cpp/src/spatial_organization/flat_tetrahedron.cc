@@ -12,7 +12,7 @@ namespace spatial_organization {
 
 
 void FlatTetrahedron::updateCirumSphereAfterNodeMovement(
-    const std::shared_ptr<SpaceNode>& moved_node) {
+    const SpaceNode* moved_node) {
   for (size_t i = 0; i < 4; i++) {
     if (this->adjacent_nodes_[i] != moved_node) {
       this->adjacent_triangles_[i]->informAboutNodeMovement();

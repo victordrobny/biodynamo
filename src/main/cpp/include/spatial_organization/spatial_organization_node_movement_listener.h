@@ -21,28 +21,28 @@ class SpatialOrganizationNodeMovementListener {
   virtual ~SpatialOrganizationNodeMovementListener() {
   }
 
-  virtual void nodeAboutToMove(const std::shared_ptr<SpaceNode>& node,
+  virtual void nodeAboutToMove(const SpaceNode* node,
                                const std::array<double, 3>& planned_movement) = 0;
 
-  virtual void nodeMoved(const std::shared_ptr<SpaceNode >& node) = 0;
+  virtual void nodeMoved(const SpaceNode* node) = 0;
 
-  virtual void nodeAboutToBeRemoved(const std::shared_ptr<SpaceNode >& node) = 0;
+  virtual void nodeAboutToBeRemoved(const SpaceNode* node) = 0;
 
-  virtual void nodeRemoved(const std::shared_ptr<SpaceNode >& node) = 0;
+  virtual void nodeRemoved(const SpaceNode* node) = 0;
 
   virtual void nodeAboutToBeAdded(
-      const std::shared_ptr<SpaceNode>& node, const std::array<double, 3>& planned_position,
-      const std::array<std::shared_ptr<physics::PhysicalNode>, 4>& vertices_of_the_tetrahedron_containing_the_position) = 0;
+      const SpaceNode* node, const std::array<double, 3>& planned_position,
+      const std::array<physics::PhysicalNode*, 4>& vertices_of_the_tetrahedron_containing_the_position) = 0;
 
-  virtual void nodeAdded(const std::shared_ptr<SpaceNode >& node) = 0;
+  virtual void nodeAdded(const SpaceNode* node) = 0;
 
   /**
    * Returns a String representation of this SpatialOrganizationNodeMovementListener
    */
   virtual std::string toString() const = 0;
 
-  virtual bool equalTo(const std::shared_ptr<SpatialOrganizationNodeMovementListener>& other) const {
-    return this == other.get();
+  virtual bool equalTo(const SpatialOrganizationNodeMovementListener* other) const {
+    return this == other;
   }
 };
 

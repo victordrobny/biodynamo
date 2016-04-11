@@ -34,7 +34,7 @@ class FlatTetrahedron : public Tetrahedron {  //, public std::enable_shared_from
    * @see Edge(...)
    *
    * If functions return a std::shared_ptr of <code>this</code> using
-   * <code>return shared_from_this();</code>, the following precondition must be met:
+   * <code>return this;</code>, the following precondition must be met:
    * There must be at least one std::shared_ptr p that owns *this!
    * Calling <code>shared_from_this</code> on a non-shared object results in undefined behaviour.
    * http://mortoray.com/2013/08/02/safely-using-enable_shared_from_this/
@@ -46,8 +46,8 @@ class FlatTetrahedron : public Tetrahedron {  //, public std::enable_shared_from
    * Once mapping to Java is not needed anymore, replace following create functions with:
    * <code>
    * template<typename ... T>
-   * static std::shared_ptr<FlatTetrahedron> create(T&& ... all) {
-   *   return std::shared_ptr<FlatTetrahedron>(new FlatTetrahedron(std::forward(all)...));
+   * static FlatTetrahedron* create(T&& ... all) {
+   *   return FlatTetrahedron*(new FlatTetrahedron(std::forward(all)...));
    * }
    * </code>
    *
@@ -63,10 +63,10 @@ class FlatTetrahedron : public Tetrahedron {  //, public std::enable_shared_from
    *            newly created triangles.
    */
 
-  static std::shared_ptr<Tetrahedron> create(
-      const std::shared_ptr<Triangle3D>& one_triangle,
-      const std::shared_ptr<SpaceNode>& fourth_point,
-      const std::shared_ptr<OpenTriangleOrganizer>& oto) {
+  static Tetrahedron* create(
+      Triangle3D* one_triangle,
+      SpaceNode* fourth_point,
+      OpenTriangleOrganizer* oto) {
 #ifdef TETRAHEDRON_DEBUG
     FlatTetrahedron* tetrahedron = new FlatTetrahedronDebug();
 #else
@@ -76,8 +76,7 @@ class FlatTetrahedron : public Tetrahedron {  //, public std::enable_shared_from
 #ifdef TETRAHEDRON_DEBUG
     logConstrFromStatic("Tetrahedron", tetrahedron, one_triangle, fourth_point, oto);
 #endif
-    std::shared_ptr<Tetrahedron> ret(tetrahedron);
-    return ret;
+    return tetrahedron;
   }
 
   /**
@@ -100,14 +99,14 @@ class FlatTetrahedron : public Tetrahedron {  //, public std::enable_shared_from
    * @param node_d
    *            The first point, must lie opposite to triangleD.
    */
-  static std::shared_ptr<Tetrahedron> create(const std::shared_ptr<Triangle3D>& triangle_a,
-                                                const std::shared_ptr<Triangle3D>& triangle_b,
-                                                const std::shared_ptr<Triangle3D>& triangle_c,
-                                                const std::shared_ptr<Triangle3D>& triangle_d,
-                                                const std::shared_ptr<SpaceNode>& node_a,
-                                                const std::shared_ptr<SpaceNode>& node_b,
-                                                const std::shared_ptr<SpaceNode>& node_c,
-                                                const std::shared_ptr<SpaceNode>& node_d) {
+  static Tetrahedron* create(Triangle3D* triangle_a,
+                                                Triangle3D* triangle_b,
+                                                Triangle3D* triangle_c,
+                                                Triangle3D* triangle_d,
+                                                SpaceNode* node_a,
+                                                SpaceNode* node_b,
+                                                SpaceNode* node_c,
+                                                 SpaceNode* node_d) {
 #ifdef TETRAHEDRON_DEBUG
     FlatTetrahedron* tetrahedron = new FlatTetrahedronDebug();
 #else
@@ -119,8 +118,7 @@ class FlatTetrahedron : public Tetrahedron {  //, public std::enable_shared_from
     logConstrFromStatic("FlatTetrahedron", tetrahedron, triangle_a, triangle_b, triangle_c, triangle_d, node_a, node_b,
         node_c, node_d);
 #endif
-    std::shared_ptr<Tetrahedron> ret(tetrahedron);
-    return ret;
+    return tetrahedron;
   }
 
   virtual ~FlatTetrahedron() {
@@ -132,7 +130,7 @@ class FlatTetrahedron : public Tetrahedron {  //, public std::enable_shared_from
    * informed about the movement of <code>movedNode</code>.
    * @param moved_node The node that was moved.
    */
-  void updateCirumSphereAfterNodeMovement(const std::shared_ptr<SpaceNode>& moved_node) override;
+  void updateCirumSphereAfterNodeMovement(const SpaceNode* moved_node) override;
 
   /**
    * Calculates the volume of this flat tetrahedron. Since the volume of a flat tetrahedron is

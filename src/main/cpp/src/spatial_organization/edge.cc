@@ -13,7 +13,7 @@ namespace cx3d {
 namespace spatial_organization {
 
 
-Edge::Edge(const std::shared_ptr<SpaceNode>& a, const std::shared_ptr<SpaceNode>& b)
+Edge::Edge(SpaceNode* a, SpaceNode* b)
     : a_(a),
       b_(b),
       cross_section_area_(0.0),
@@ -21,8 +21,8 @@ Edge::Edge(const std::shared_ptr<SpaceNode>& a, const std::shared_ptr<SpaceNode>
 }
 
 
-std::shared_ptr<SpaceNode> Edge::getOpposite(
-    const std::shared_ptr<const SpaceNode>& node) const {
+SpaceNode* Edge::getOpposite(
+    const SpaceNode* node) const {
   if (node == a_) {
     return b_;
   } else if (node == b_) {
@@ -34,24 +34,24 @@ std::shared_ptr<SpaceNode> Edge::getOpposite(
 }
 
 
-std::shared_ptr<physics::PhysicalNode> Edge::getOppositeElement(const std::shared_ptr<physics::PhysicalNode>& element) const {
-  if (a_.get() != nullptr && b_.get() != nullptr) {
+physics::PhysicalNode* Edge::getOppositeElement(const physics::PhysicalNode* element) const {
+  if (a_ != nullptr && b_ != nullptr) {
     if (element == a_->getUserObject()) {
       return b_->getUserObject();
     } else {
       return a_->getUserObject();
     }
   }
-  return std::shared_ptr<physics::PhysicalNode>(nullptr);
+  return nullptr;
 }
 
 
-std::shared_ptr<physics::PhysicalNode> Edge::getFirstElement() const {
+physics::PhysicalNode* Edge::getFirstElement() const {
   return a_->getUserObject();
 }
 
 
-std::shared_ptr<physics::PhysicalNode> Edge::getSecondElement() const {
+physics::PhysicalNode* Edge::getSecondElement() const {
   return b_->getUserObject();
 }
 
@@ -77,18 +77,18 @@ const std::string Edge::toString() const {
 }
 
 
-bool Edge::equalTo(const std::shared_ptr<Edge>& other) {
-  return other.get() == this;
+bool Edge::equalTo(const Edge* other) {
+  return other == this;
 }
 
 
-bool Edge::equals(const std::shared_ptr<SpaceNode>& a,
-                     const std::shared_ptr<SpaceNode>& b) const {
+bool Edge::equals(const SpaceNode* a,
+                     const SpaceNode* b) const {
   return ((a_ == a) && (b_ == b)) || ((b_ == a) && (a_ == b));
 }
 
 
-void Edge::removeTetrahedron(const std::shared_ptr<Tetrahedron>& tetrahedron) {
+void Edge::removeTetrahedron(Tetrahedron* tetrahedron) {
   STLUtil::vectorRemove(adjacent_tetrahedra_, tetrahedron);
   if (adjacent_tetrahedra_.empty()) {
     remove();
@@ -96,22 +96,22 @@ void Edge::removeTetrahedron(const std::shared_ptr<Tetrahedron>& tetrahedron) {
 }
 
 
-void Edge::addTetrahedron(const std::shared_ptr<Tetrahedron>& tetrahedron) {
+void Edge::addTetrahedron(Tetrahedron* tetrahedron) {
   adjacent_tetrahedra_.push_back(tetrahedron);
 }
 
 
 void Edge::remove() {
-  if (a_.get() != nullptr) {
-    a_->removeEdge(this->shared_from_this());
+  if (a_ != nullptr) {
+    a_->removeEdge(this);
   }
-  if (b_.get() != nullptr) {
-    b_->removeEdge(this->shared_from_this());
+  if (b_ != nullptr) {
+    b_->removeEdge(this);
   }
 }
 
 
-std::vector<std::shared_ptr<Tetrahedron> > Edge::getAdjacentTetrahedra() const {
+std::vector<Tetrahedron* > Edge::getAdjacentTetrahedra() const {
   return adjacent_tetrahedra_;
 }
 
@@ -121,11 +121,11 @@ void Edge::changeCrossSectionArea(double change) {
 }
 
 void Edge::initializationHelper() {
-  if (a_.get() != nullptr) {
-    a_->addEdge(this->shared_from_this());
+  if (a_ != nullptr) {
+    a_->addEdge(this);
   }
-  if (b_.get() != nullptr) {
-    b_->addEdge(this->shared_from_this());
+  if (b_ != nullptr) {
+    b_->addEdge(this);
   }
 }
 

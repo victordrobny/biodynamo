@@ -41,8 +41,8 @@ class TriangleHashKey {
    * @param b The second node.
    * @param c The third node.
    */
-  TriangleHashKey(const std::shared_ptr<SpaceNode>& a, const std::shared_ptr<SpaceNode>& b,
-                  const std::shared_ptr<SpaceNode>& c);
+  TriangleHashKey(SpaceNode* a, SpaceNode* b,
+                  SpaceNode* c);
 
   TriangleHashKey(const TriangleHashKey& other);
 
@@ -60,7 +60,7 @@ class TriangleHashKey {
    * @return <code>true</code>, iff <code>other</code> refers to the same three points as this
    * <code>TriangleHashKey</code>.
    */
-  bool equalTo(const std::shared_ptr<TriangleHashKey>& other) const;
+  bool equalTo(const TriangleHashKey* other) const;
 
  private:
 #ifdef TRIANGLEHASHKEY_NATIVE
@@ -71,7 +71,9 @@ class TriangleHashKey {
   /**
    * The points of the triangle for which a hash value should be calculated.
    */
-  std::shared_ptr<SpaceNode> a_, b_, c_;
+  SpaceNode* a_;
+  SpaceNode* b_;
+  SpaceNode* c_;
 
   /**
    * The hash value associated with this edge.

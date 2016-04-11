@@ -9,11 +9,12 @@
 namespace cx3d {
 namespace physics {
 
+using spatial_organization::SpaceNode;
 using std::size_t;
 
 int PhysicalNodeMovementListener::movement_operation_id_ = 0;
 
-void PhysicalNodeMovementListener::nodeAboutToMove(const std::shared_ptr<SpaceNode>& node,
+void PhysicalNodeMovementListener::nodeAboutToMove(const SpaceNode* node,
                                                    const std::array<double, 3>& planned_movement) {
   auto pn = node->getUserObject();
   neighbors_before_ = node->getPermanentListOfNeighbors();
@@ -65,10 +66,10 @@ void PhysicalNodeMovementListener::nodeAboutToMove(const std::shared_ptr<SpaceNo
   }
 }
 
-void PhysicalNodeMovementListener::nodeMoved(const std::shared_ptr<SpaceNode >& node) {
+void PhysicalNodeMovementListener::nodeMoved(const SpaceNode* node) {
   auto pn = node->getUserObject();
   auto neighbors_after = node->getNeighbors();
-  std::vector<std::shared_ptr<PhysicalNode>> new_neighbors;
+  std::vector<PhysicalNode*> new_neighbors;
 
   // 3) identifying the really new neighbors of n
   // (i.e. the ones that were not neighbors before the movement)
@@ -142,7 +143,7 @@ void PhysicalNodeMovementListener::nodeMoved(const std::shared_ptr<SpaceNode >& 
   }
 }
 
-void PhysicalNodeMovementListener::nodeAboutToBeRemoved(const std::shared_ptr<SpaceNode >& node) {
+void PhysicalNodeMovementListener::nodeAboutToBeRemoved(const SpaceNode* node) {
   auto pn = node->getUserObject();
   neighbors_before_ = node->getPermanentListOfNeighbors();
   auto pn_extracellular_substances = pn->getExtracellularSubstances();
@@ -164,7 +165,7 @@ void PhysicalNodeMovementListener::nodeAboutToBeRemoved(const std::shared_ptr<Sp
   }
 }
 
-void PhysicalNodeMovementListener::nodeRemoved(const std::shared_ptr<SpaceNode >& node) {
+void PhysicalNodeMovementListener::nodeRemoved(const SpaceNode* node) {
   // For all extracellularSubstances:
   for (int i = 0; i < substances_in_n_.size(); i++) {
 
@@ -196,9 +197,9 @@ void PhysicalNodeMovementListener::nodeRemoved(const std::shared_ptr<SpaceNode >
   }
 }
 
-void PhysicalNodeMovementListener::nodeAboutToBeAdded(const std::shared_ptr<SpaceNode>& node,
+void PhysicalNodeMovementListener::nodeAboutToBeAdded(const SpaceNode* node,
                                                       const std::array<double, 3>& planned_position,
-                                                      const std::array<std::shared_ptr<PhysicalNode>, 4>& vertices) {
+                                                      const std::array<PhysicalNode*, 4>& vertices) {
   auto pn = node->getUserObject();
   if (vertices[0] != nullptr) {  // fixme hack:  && vertices[0] != null
     auto pnn = vertices[0];  // a future neighbor of the PhysicalNode about to be inserted
@@ -218,7 +219,7 @@ void PhysicalNodeMovementListener::nodeAboutToBeAdded(const std::shared_ptr<Spac
   }
 }
 
-void PhysicalNodeMovementListener::nodeAdded(const std::shared_ptr<SpaceNode >& node) {
+void PhysicalNodeMovementListener::nodeAdded(const SpaceNode* node) {
   // 2) sum the quantity before update
   auto pn = node->getUserObject();
   // since there might be no substances yet in the point

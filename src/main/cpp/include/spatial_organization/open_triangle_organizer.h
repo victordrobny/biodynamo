@@ -42,8 +42,7 @@ class Rational;
  * @param  The type of user objects with the nodes in a given triangulation.
  */
 
-class OpenTriangleOrganizer : public std::enable_shared_from_this<
-    OpenTriangleOrganizer> {
+class OpenTriangleOrganizer {
  public:
 #ifndef OPENTRIANGLEORGANIZER_NATIVE
   OpenTriangleOrganizer()
@@ -53,16 +52,15 @@ class OpenTriangleOrganizer : public std::enable_shared_from_this<
   virtual ~OpenTriangleOrganizer() {
   }
 
-  static std::shared_ptr<OpenTriangleOrganizer> create(
+  static OpenTriangleOrganizer* create(
       int preferred_capacity,
-      const std::shared_ptr<SimpleTriangulationNodeOrganizer>& tno) {
+      SimpleTriangulationNodeOrganizer* tno) {
 #ifndef OPENTRIANGLEORGANIZER_DEBUG
     auto raw_ptr = new OpenTriangleOrganizer(preferred_capacity, tno);
 #else
     auto raw_ptr = new OpenTriangleOrganizerDebug(preferred_capacity, tno);
 #endif
-    std::shared_ptr<OpenTriangleOrganizer> s_ptr(raw_ptr);
-    return s_ptr;
+    return raw_ptr;
   }
 
   /**
@@ -73,7 +71,7 @@ class OpenTriangleOrganizer : public std::enable_shared_from_this<
    * @param  The type of user objects associated with nodes in the triangulation.
    * @return A new instance of <code>OpenTriangleOrganizer</code>.
    */
-  static std::shared_ptr<OpenTriangleOrganizer> createSimpleOpenTriangleOrganizer() {
+  static OpenTriangleOrganizer* createSimpleOpenTriangleOrganizer() {
     auto tno = SimpleTriangulationNodeOrganizer::create();
     return OpenTriangleOrganizer::create(30, tno);
   }
@@ -88,14 +86,14 @@ class OpenTriangleOrganizer : public std::enable_shared_from_this<
    * @return The list of newly created tetrahedra, if recording was turned on before
    * (Use {@link #recoredNewTetrahedra()}) or <code>null</code> else.
    */
-  virtual std::vector<std::shared_ptr<Tetrahedron > > getNewTetrahedra();
+  virtual std::vector<Tetrahedron* > getNewTetrahedra();
 
   /**
    * Returns an arbitrary tetrahedron which was created during the process of
    * triangulation.
    * @return A tetrahedron which was created during triangulation.
    */
-  virtual std::shared_ptr<Tetrahedron> getANewTetrahedron();
+  virtual Tetrahedron* getANewTetrahedron();
 
   /**
    * Removes one tetrahedron from the triangulation and possibly all adjacent tetrahedra that have the same circumsphere as the
@@ -103,7 +101,7 @@ class OpenTriangleOrganizer : public std::enable_shared_from_this<
    * @param startingTetrahedron The first tetrahedron to remove.
    */
   virtual void removeAllTetrahedraInSphere(
-      const std::shared_ptr<Tetrahedron>& starting_tetrahedron);
+      Tetrahedron* starting_tetrahedron);
 
   /**
    * Informs this open triangle organizer that a new
@@ -111,7 +109,7 @@ class OpenTriangleOrganizer : public std::enable_shared_from_this<
    * triangle is added to the hashmap.
    * @param triangle The new open triangle.
    */
-  virtual void putTriangle(const std::shared_ptr<Triangle3D>& triangle);
+  virtual void putTriangle(Triangle3D* triangle);
 
   /**
    * Informs this open triangle organizer that an open triangle
@@ -119,7 +117,7 @@ class OpenTriangleOrganizer : public std::enable_shared_from_this<
    * triangle is removed from the hashmap.
    * @param triangle The triangle that should be removed.
    */
-  virtual void removeTriangle(const std::shared_ptr<Triangle3D >& triangle);
+  virtual void removeTriangle(const Triangle3D* triangle);
 
   /**
    * Searches for a triangle which is incident to three specified nodes.
@@ -132,10 +130,10 @@ class OpenTriangleOrganizer : public std::enable_shared_from_this<
    * @param c The third node incident to the requested triangle.
    * @return A triangle with the requested three endpoints.
    */
-  virtual std::shared_ptr<Triangle3D> getTriangle(
-      const std::shared_ptr<SpaceNode>& a,
-      const std::shared_ptr<SpaceNode>& b,
-      const std::shared_ptr<SpaceNode>& c);
+  virtual Triangle3D* getTriangle(
+      SpaceNode* a,
+      SpaceNode* b,
+      SpaceNode* c);
 
   /**
    * Searches for a triangle which is incident to three specified nodes.
@@ -148,10 +146,10 @@ class OpenTriangleOrganizer : public std::enable_shared_from_this<
    * @param c The third node incident to the requested triangle.
    * @return A triangle with the requested three endpoints.
    */
-  virtual std::shared_ptr<Triangle3D> getTriangleWithoutRemoving(
-      const std::shared_ptr<SpaceNode>& a,
-      const std::shared_ptr<SpaceNode>& b,
-      const std::shared_ptr<SpaceNode>& c);
+  virtual Triangle3D* getTriangleWithoutRemoving(
+      SpaceNode* a,
+      SpaceNode* b,
+      SpaceNode* c);
 
   /**
    * Finishes an incomplete triangulation. Before calling this function the open triangle organizer
@@ -175,7 +173,7 @@ class OpenTriangleOrganizer : public std::enable_shared_from_this<
   /**
    * Determines if two instances of this object are equal
    */
-  virtual bool equalTo(const std::shared_ptr<OpenTriangleOrganizer>& other) const;
+  virtual bool equalTo(const OpenTriangleOrganizer* other) const;
 
  protected:
   /**
@@ -187,9 +185,9 @@ class OpenTriangleOrganizer : public std::enable_shared_from_this<
    * @return <code>true</code>, if an open triangle with the desired endpoints
    * is already stored in this triangle organizer.
    */
-  virtual bool contains(const std::shared_ptr<SpaceNode>& a,
-                const std::shared_ptr<SpaceNode>& b,
-                const std::shared_ptr<SpaceNode>& c) const;
+  virtual bool contains(SpaceNode* a,
+                SpaceNode* b,
+                SpaceNode* c) const;
 
   /**
    * Returns whether this triangle organizer is storing any more open triangles.
@@ -199,7 +197,7 @@ class OpenTriangleOrganizer : public std::enable_shared_from_this<
 
   OpenTriangleOrganizer(
       int preferredCapacity,
-      const std::shared_ptr<SimpleTriangulationNodeOrganizer>& tno);
+      SimpleTriangulationNodeOrganizer* tno);
 
  private:
 #ifdef OPENTRIANGLEORGANIZER_NATIVE
@@ -212,27 +210,27 @@ class OpenTriangleOrganizer : public std::enable_shared_from_this<
    * A hashmap to store open triangles that are created during any operation on the triangulation.
    * Used to keep track of which triangles are not open any more.
    */
-  std::unordered_map<TriangleHashKey, std::shared_ptr<Triangle3D>, TriangleHashKeyHash, TriangleHashKeyEqual>map_;
+  std::unordered_map<TriangleHashKey, Triangle3D*, TriangleHashKeyHash, TriangleHashKeyEqual>map_;
 
   /**
    * Stores all tetrahedra that are created by this instance. No tetrahedra will
    * be recorded if this reference is <code>null</code>, which is the default.
    * Use {@link #recoredNewTetrahedra()} to start recording.
    */
-  std::vector<std::shared_ptr<Tetrahedron>> new_tetrahedra_;
+  std::vector<Tetrahedron*> new_tetrahedra_;
 
   /**
    * A node organizer used to keep track of all nodes that are adjacent to
    * any 'hole' in the triangulation.
    * These nodes are potential candidates for combination with open triangles.
    */
-  std::shared_ptr<SimpleTriangulationNodeOrganizer> tno_;
+  SimpleTriangulationNodeOrganizer* tno_;
 
   /**
    * In addition to <code>map</code>, all open triangles are also stored in this stack.
    * Thereby, a fast extraction of any open triangle is guaranteed.
    */
-  std::stack<std::shared_ptr<Triangle3D > > open_triangles_;
+  std::stack<Triangle3D* > open_triangles_;
 
   /**
    * Stores the shortest signed delaunay distance that was found for a given open
@@ -244,7 +242,7 @@ class OpenTriangleOrganizer : public std::enable_shared_from_this<
    * A link to a tetrahedron that was created during the completion of an
    * incomplete triangulation.
    */
-  std::shared_ptr<Tetrahedron> a_new_tetrahedron_;  //fixme remove = null;
+  Tetrahedron* a_new_tetrahedron_;  //fixme remove = null;
 
   /**
    * Returns an open triangle if there is any left. This function uses the stack {@link #openTriangles}
@@ -252,7 +250,7 @@ class OpenTriangleOrganizer : public std::enable_shared_from_this<
    * @return An open triangle if there is still an open triangle left
    * and <code>null</code> else.
    */
-  std::shared_ptr<Triangle3D> getAnOpenTriangle();
+  Triangle3D* getAnOpenTriangle();
 
   /**
    * Stores an edge onto a hashmap for edges. This function implements the
@@ -265,19 +263,19 @@ class OpenTriangleOrganizer : public std::enable_shared_from_this<
    * @return An instance of <code>EdgeHashKey</code> which points to the specified
    * two endpoints.
    */
-  std::shared_ptr<EdgeHashKey> putEdgeOnMap(
-      const std::shared_ptr<SpaceNode>& a,
-      const std::shared_ptr<SpaceNode>& b,
-      const std::shared_ptr<SpaceNode>& opposite_node,
-      const std::shared_ptr<EdgeHashKey>& old_open_edge,
-      std::unordered_map<EdgeHashKey, std::shared_ptr<EdgeHashKey>, EdgeHashKeyHash, EdgeHashKeyEqual >& map);
+  EdgeHashKey* putEdgeOnMap(
+      SpaceNode* a,
+      SpaceNode* b,
+      SpaceNode* opposite_node,
+      EdgeHashKey* old_open_edge,
+      std::unordered_map<EdgeHashKey, EdgeHashKey*, EdgeHashKeyHash, EdgeHashKeyEqual >& map);
 
   /**
    * Finds the node with lowest id in a list of nodes.
    * @param nodes The list of nodes.
    * @return The node with lowest id.
    */
-  std::shared_ptr<SpaceNode> findCenterNode(const std::deque<std::shared_ptr<SpaceNode > >& nodes);
+  SpaceNode* findCenterNode(const std::deque<SpaceNode* >& nodes);
 
   /**
    * Creates a two-dimensional triangulation for a set of points that all lie on one plane and on the
@@ -289,11 +287,11 @@ class OpenTriangleOrganizer : public std::enable_shared_from_this<
    * added.
    * @return An open edge on the convex hull of the triangulated circle.
    */
-  std::shared_ptr<EdgeHashKey> triangulateSortedCirclePoints(
-      const std::vector<std::shared_ptr<SpaceNode > >& sorted_nodes,
-      const std::shared_ptr<SpaceNode>& center_node,
-      std::unordered_map<EdgeHashKey, std::shared_ptr<EdgeHashKey>, EdgeHashKeyHash, EdgeHashKeyEqual >& map,
-      std::vector<std::shared_ptr<Triangle3D > >& triangle_list);
+  EdgeHashKey* triangulateSortedCirclePoints(
+      const std::vector<SpaceNode* >& sorted_nodes,
+      SpaceNode* center_node,
+      std::unordered_map<EdgeHashKey, EdgeHashKey*, EdgeHashKeyHash, EdgeHashKeyEqual >& map,
+      std::vector<Triangle3D*>& triangle_list);
 
   /**
    * Given an order of nodes that all lie on the surface of one circle, this function searches for triangles in the triangulation that
@@ -304,7 +302,7 @@ class OpenTriangleOrganizer : public std::enable_shared_from_this<
    * @param sortedNodes A list of nodes that lie on one circle. This list is expected to be sorted in terms of angular
    * neighborhoodship of nodes.
    */
-  void removeForbiddenTriangles(const std::vector<std::shared_ptr<SpaceNode > >& sorted_nodes);
+  void removeForbiddenTriangles(const std::vector<SpaceNode* >& sorted_nodes);
 
   /**
    * Sorts a list of nodes that all lie on one circle.
@@ -314,9 +312,9 @@ class OpenTriangleOrganizer : public std::enable_shared_from_this<
    * @return A sorted list of nodes. The first node in this list will be the node with lowest ID, successive nodes are sorted
    * according to their occurrence on the circle.
    */
-  std::vector<std::shared_ptr<SpaceNode > > sortCircleNodes(
-      std::deque<std::shared_ptr<SpaceNode > >& nodes,
-      std::shared_ptr<EdgeHashKey> startingEdge, const std::shared_ptr<SpaceNode >& center_node);
+  std::vector<SpaceNode* > sortCircleNodes(
+      std::deque<SpaceNode* >& nodes,
+      EdgeHashKey* startingEdge, const SpaceNode* center_node);
 
   /**
    * Creates a two-dimensional triangulation for a set of 4 or more points that lie in the same plane and on the border of the same circle.
@@ -328,11 +326,11 @@ class OpenTriangleOrganizer : public std::enable_shared_from_this<
    * pass them to the calling function.
    * @return An open edge on the convex hull of the triangulated circle.
    */
-  std::shared_ptr<EdgeHashKey> triangulatePointsOnCircle(
-      std::deque<std::shared_ptr<SpaceNode > >& similar_distance_nodes,
-      const std::shared_ptr<EdgeHashKey>& starting_edge,
-      std::unordered_map<EdgeHashKey, std::shared_ptr<EdgeHashKey>, EdgeHashKeyHash, EdgeHashKeyEqual >& map,
-      std::vector<std::shared_ptr<Triangle3D > >& triangle_list);  //todo order of parameters not conform with coding style - output param at the end
+  EdgeHashKey* triangulatePointsOnCircle(
+      std::deque<SpaceNode* >& similar_distance_nodes,
+      EdgeHashKey* starting_edge,
+      std::unordered_map<EdgeHashKey, EdgeHashKey*, EdgeHashKeyHash, EdgeHashKeyEqual >& map,
+      std::vector<Triangle3D* >& triangle_list);  //todo order of parameters not conform with coding style - output param at the end
 
   /**
    * Creates a tetrahedralization for a set of 5 or more points that lie on the surface of one sphere.
@@ -341,9 +339,9 @@ class OpenTriangleOrganizer : public std::enable_shared_from_this<
    * @param startingTriangle An initial triangle which will be part of the triangulation.
    */
   void triangulatePointsOnSphere(
-      std::deque<std::shared_ptr<SpaceNode > >& nodes,
-      std::deque<std::shared_ptr<SpaceNode > >& on_circle_nodes,
-      const std::shared_ptr<Triangle3D>& starting_triangle);  //todo order of parameters not conform with coding style - output param at the end
+      std::deque<SpaceNode* >& nodes,
+      std::deque<SpaceNode* >& on_circle_nodes,
+      Triangle3D* starting_triangle);  //todo order of parameters not conform with coding style - output param at the end
 
   /**
    * Calculates the 2D-signed delaunay distance of a point to an edge.
@@ -357,7 +355,7 @@ class OpenTriangleOrganizer : public std::enable_shared_from_this<
    * @return A rational number that contains the squared signed delaunay distance of the
    * specified edge to the given coordinate.
    */
-  std::shared_ptr<Rational> calc2DSDDistanceExact(const std::array<double, 3>& av, const std::array<double, 3>& bv, const std::array<double, 3>& third_point);
+  Rational* calc2DSDDistanceExact(const std::array<double, 3>& av, const std::array<double, 3>& bv, const std::array<double, 3>& third_point);
 
   /**
    * Creates a triangle that can serve as an initial triangle for a triangulation.
@@ -377,7 +375,7 @@ class OpenTriangleOrganizer : public std::enable_shared_from_this<
    * @param openTriangle One side of the new tetrahedron.
    * @param oppositeNode The fourth point of the tetrahedron.
    */
-  void createNewTetrahedron(const std::shared_ptr<Triangle3D>& openTriangle, const std::shared_ptr<SpaceNode>& opposite_node);
+  void createNewTetrahedron(Triangle3D* openTriangle, SpaceNode* opposite_node);
 };
 
 }  // namespace spatial_organization

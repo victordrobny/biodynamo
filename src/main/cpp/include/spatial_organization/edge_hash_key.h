@@ -47,9 +47,9 @@ class EdgeHashKey {
    * @param b The second enpoint of the represented edge.
    * @param opposite_node A node on the non-open side of this edge.
    */
-  EdgeHashKey(const std::shared_ptr<SpaceNode>& a,
-              const std::shared_ptr<SpaceNode>& b,
-              const std::shared_ptr<SpaceNode>& opposite_node);
+  EdgeHashKey(SpaceNode* a,
+              SpaceNode* b,
+              SpaceNode* opposite_node);
 
   EdgeHashKey(const EdgeHashKey& other);
 
@@ -74,7 +74,7 @@ class EdgeHashKey {
    * @return <code>true</code>, if other has the same endpoints as this edge.
    * <code>false</code> is returned in all other cases.
    */
-  virtual bool equalTo(const std::shared_ptr<EdgeHashKey>& other) const;
+  virtual bool equalTo(const EdgeHashKey* other) const;
 
   /**
    * computes the cosine between this edge to another point measured at the
@@ -88,20 +88,20 @@ class EdgeHashKey {
   /**
    * @return endpoint A of this edge
    */
-  virtual std::shared_ptr<SpaceNode> getEndpointA() const;
+  virtual SpaceNode* getEndpointA() const;
 
   /**
    * @return endpoint B of this edge
    */
-  virtual std::shared_ptr<SpaceNode> getEndpointB() const;
+  virtual SpaceNode* getEndpointB() const;
 
   /**
    * Returns the opposite node of a given node if the latter is incident to this edge.
    * @param node The given node.
    * @return The incident node opposite to <code>node</code>.
    */
-  virtual std::shared_ptr<SpaceNode> oppositeNode(
-      const std::shared_ptr<SpaceNode>& node) const;
+  virtual SpaceNode* oppositeNode(
+      const SpaceNode* node) const;
 
  private:
 #ifdef EDGEHASHKEY_NATIVE
@@ -112,7 +112,8 @@ class EdgeHashKey {
   /**
    * The endpoints of the edge for which a hash value should be calculated.
    */
-  std::shared_ptr<SpaceNode> a_, b_;
+  SpaceNode* a_;
+  SpaceNode* b_;
 
   /**
    * The vector connecting the positions of <code>a</code> and <code>b</code>.

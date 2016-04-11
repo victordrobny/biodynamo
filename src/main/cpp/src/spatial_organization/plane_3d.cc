@@ -49,8 +49,8 @@ Plane3D::Plane3D(const std::array<double, 3>& direction_vector_1,
 }
 
 
-Plane3D::Plane3D(const std::array<std::shared_ptr<SpaceNode >, 4>& nodes,
-                    const std::shared_ptr<SpaceNode >& non_used_node, bool normalize)
+Plane3D::Plane3D(const std::array<SpaceNode*, 4>& nodes,
+                    SpaceNode* non_used_node, bool normalize)
     : normal_vector_({ 0.0, 0.0, 0.0 }),
       offset_(0.0),
       tolerance_(0.0),
@@ -74,14 +74,14 @@ Plane3D::Plane3D(const std::array<std::shared_ptr<SpaceNode >, 4>& nodes,
 }
 
 
-Plane3D::Plane3D(const std::array<std::shared_ptr<SpaceNode >, 4>& nodes,
-                    const std::shared_ptr<SpaceNode>& non_used_node)
+Plane3D::Plane3D(const std::array<SpaceNode*, 4>& nodes,
+                    SpaceNode* non_used_node)
     : Plane3D(nodes, non_used_node, Plane3D::normalize_) {
 }
 
 
-Plane3D::Plane3D(const std::shared_ptr<Tetrahedron>& tetrahedron,
-                    const std::shared_ptr<SpaceNode>& non_used_node)
+Plane3D::Plane3D(Tetrahedron* tetrahedron,
+                    SpaceNode* non_used_node)
     : Plane3D(tetrahedron->getAdjacentNodes(), non_used_node) {
 }
 

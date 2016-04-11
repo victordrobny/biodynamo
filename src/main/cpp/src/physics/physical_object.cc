@@ -109,7 +109,7 @@ void PhysicalObject::removePhysicalBond(const std::shared_ptr<PhysicalBond>& bon
 
 bool PhysicalObject::getHasAPhysicalBondWith(const std::shared_ptr<PhysicalObject>& po) {
   for (auto pb : physical_bonds_) {
-    if (po == pb->getOppositePhysicalObject(std::static_pointer_cast<PhysicalObject>(this->shared_from_this()))) {
+    if (po == pb->getOppositePhysicalObject(std::static_pointer_cast<PhysicalObject>(this))) {
       return true;
     }
   }
@@ -117,7 +117,7 @@ bool PhysicalObject::getHasAPhysicalBondWith(const std::shared_ptr<PhysicalObjec
 }
 
 std::shared_ptr<PhysicalBond> PhysicalObject::makePhysicalBondWith(const std::shared_ptr<PhysicalObject>& po) {
-  return PhysicalBond::create(std::static_pointer_cast<PhysicalObject>(this->shared_from_this()), po);
+  return PhysicalBond::create(std::static_pointer_cast<PhysicalObject>(this), po);
 }
 
 bool PhysicalObject::removePhysicalBondWith(const std::shared_ptr<PhysicalObject>& po, bool removeThemAll) {
@@ -126,7 +126,7 @@ bool PhysicalObject::removePhysicalBondWith(const std::shared_ptr<PhysicalObject
   auto it = physical_bonds_.begin();
   while (it != physical_bonds_.end()) {
     auto pb = *it;
-    if (po == pb->getOppositePhysicalObject(std::static_pointer_cast<PhysicalObject>(this->shared_from_this()))) {
+    if (po == pb->getOppositePhysicalObject(std::static_pointer_cast<PhysicalObject>(this))) {
       physical_bonds_.erase(it);
       po->physical_bonds_.erase(it);
       if (!removeThemAll) {
