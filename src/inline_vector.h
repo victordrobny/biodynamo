@@ -46,6 +46,15 @@ class InlineVector {
   /// allocated space for.
   size_t capacity() const { return capacity_; }
 
+  /// Removes all elements from the container.
+  /// Leaves capacity() unchanged.
+  void clear() {
+    for (size_t i = 0; i < size_; i++) {
+      (*this)[i].~T();
+    }
+    size_ = 0;
+  }
+
   /// Increase the capacity of the container to a value that's greater or equal
   /// to new_capacity. If new_cap is greater than the current `capacity()`,
   /// new storage is allocated, otherwise the method does nothing.
@@ -111,7 +120,9 @@ class InlineVector {
   }
 
   T& operator[](size_t index) {
-    if (index < N) {
+    if (heap_data_ == nullptr) {
+      return data_[index];
+    } else if (index < N) {
       return data_[index];
     } else {
       return heap_data_[index - N];
@@ -119,7 +130,9 @@ class InlineVector {
   }
 
   const T& operator[](size_t index) const {
-    if (index < N) {
+    if (heap_data_ == nullptr) {
+      return data_[index];
+    } else if (index < N) {
       return data_[index];
     } else {
       return heap_data_[index - N];
